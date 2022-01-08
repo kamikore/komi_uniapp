@@ -1,0 +1,42 @@
+<template>
+	<view class="me-container">
+		<view class="userInfo">
+			<view class="avatar">
+				<image src="@/static/images/test/7.jpg" mode=""></image>
+			</view>
+			<view class="info">
+				<view class="">
+					Rcode
+				</view>
+			</view>
+		</view>
+		<view class="intro">
+			<view class="content">
+				intro
+			</view>
+		</view>
+		<view class=""><button type="default">退出登录</button></view>
+	</view>
+</template>
+
+<script>
+	
+export default {
+	name: "me",
+	data() {
+		return {
+			
+		};
+	},
+	methods: {
+		goBack() {
+			uni.navigateBack({
+				delta: 1
+			});
+		},
+	}
+};
+</script>
+
+<style lang="scss" scoped>
+</style>
