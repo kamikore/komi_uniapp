@@ -19,7 +19,7 @@
 				</view>
 				<view class="content">
 					<view class="content-title">
-						<text class="title">title</text>
+						<text class="title">{{item.nickname}}</text>
 						<!-- 消息时间 -->
 						<text class="dateTime">19:00</text>
 					</view>
@@ -27,7 +27,7 @@
 						<!-- 未读信息大于1时显示 -->
 						<view>
 							<text class="count">[2条]</text>
-							<text class="last-message">sdsfsfgsg</text>
+							<text class="last-message">{{item.msg}}</text>
 						</view>
 						<!-- 设置状态，如消息免打扰 -->
 						<icon type="success" size="26"/>
@@ -41,8 +41,6 @@
 				</view>
 			</view>
 		</view>
-		<navigator url="/subpages/login/index">login</navigator>
-		<button type="default" @click="logout">logout</button>
 	</view>
 </template>
 
@@ -56,7 +54,7 @@ export default {
 	data() {
 		return {
 			// 标识可以直接使用唯一的fid
-			contentList:[],
+			contentList:uni.getStorageSync(`uid${uni.getStorageSync("uid")}contentList`)|| [],
 			// 鼠标点击位置X
 			startX: 0,
 			isDrag: false,
@@ -67,6 +65,7 @@ export default {
 			dragType: 0,
 			// 如果显示了按钮组，则不能跳转
 			flag: 0,
+			
 		};
 	},
 	methods: {
@@ -126,33 +125,30 @@ export default {
 			// 重置
 			this.moveDis = 0;
 		},
-		logout() {
-			try {
-			    uni.removeStorageSync("token");
-				uni.setStorageSync("islogin",false)
-				console.log("退出")
-			} catch (e) {
-			    console.log(e)
-			}
-		}
 	},
 	onLoad() {
-		console.log("缓存里的",uni.getStorageSync("contentList"))
-		this.contentList = uni.getStorageSync("contentList")|| [];
-		
 
 		// 用于更新首页聊天列表, 别人发过来的，自己发的
 		uni.$on("sendAndGet",res=>{
-			console.log("自己发送消息",res)
-			// 把fid作为key，以及msg最新的一条消息
-			console.log(this.contentList)
-			this.contentList.push({id:res.fid,msg: res.msg})
-			// uni.setStorageSync("contentList",this.contentList)
+			console.log("有消息更新",res)
+			// 把fid作为key，以及msg最新的一条消息, 需要避免重复推入
+			const index = this.contentList.findIndex((item) => {
+				 if(item.id == res.fid) return true
+			})
+			if(index != -1) {
+				this.contentList[index].msg = res.msg;
+			}
+			else {
+				const nickname = uni.getStorageSync("contacts")[res.fid].remarkName
+				this.contentList.push({id:res.fid,msg: res.msg,nickname})
+			}
+			uni.setStorageSync(`uid${uni.getStorageSync("userInfo").uid}contentList`,this.contentList)
+
 		})
 		
 		// 监听发过来的消息
-		console.log("socket 监听：",uni.getStorageSync("uid"))
-		this.$socket.on(`chat${uni.getStorageSync("uid")}`,res=>{
+		console.log("socket 监听：",uni.getStorageSync("userInfo"))
+		this.$socket.on(`chat${uni.getStorageSync("userInfo").uid}`,res=>{
 			console.log(res.fid,"socket消息",res)
 			uni.$emit("sendAndGet",{
 				msg: res.msg,
@@ -162,6 +158,7 @@ export default {
 			})
 	
 		})
+	
 		
 	},
 	mounted() {
@@ -172,6 +169,10 @@ export default {
 				this.btnWidth = data.width;
 			}).exec();
 		}
+
+	},
+	onShow() {
+		this.contentList = uni.getStorageSync(`uid${uni.getStorageSync("userInfo").uid}contentList`)
 
 	}
 };
@@ -186,13 +187,13 @@ export default {
 
 
 	.content-list {
-		// padding: 20rpx 20rpx;
+		padding: 20rpx 20rpx;
 		
 		.list-item {
 			width: 100%;
 			display: flex;
 			position: relative;
-			padding: 20rpx 0;
+			// padding: 20rpx 0;
 			column-gap: 20rpx;
 			// transform: translateX(-10%);
 			

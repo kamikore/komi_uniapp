@@ -101,7 +101,6 @@ export default {
 	},
 	methods: {
 		sendMsg(){
-			console.log("fid",this.fid)
 			
 			// 自己发的信息触发更新首页聊天列表,以及聊天室列表
 			uni.$emit("sendAndGet",{
@@ -117,7 +116,7 @@ export default {
 				fid: this.fid,		// 发出去，发别人的id	
 				type: 0,
 			})
-
+			this.inputs = ""
 		},
 		recording() {
 			// 根据音频长度划分css长度等级

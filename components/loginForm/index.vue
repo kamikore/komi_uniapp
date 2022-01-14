@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import {fetchContact} from "../../api"
 export default {
 	name: 'loginForm',
 	data() {
@@ -56,25 +57,23 @@ export default {
 				    //     'custom-header': 'hello' //自定义请求头信息
 				    // },
 				    success: (res) => {
-						console.log("res:")
 						if(res.statusCode != 200) {
 							console.log(res.data.errMsg)
 						} else {
-							uni.setStorageSync('islogin',true)
-							uni.setStorageSync("uid",res.data.uid)
+							uni.$emit("fetchContentList",{uid:res.data.userInfo.uid});
+							this.$store.dispatch("login",res.data.userInfo)
+							fetchContact();
+							this.$socket.emit("login",{
+								uid: res.data.userInfo.uid
+							});	
 							uni.redirectTo({
 								url:"pages/index/index"
 							})
-							// 告知服务器我的用户id
-							this.$socket.emit("login",{
-								uid: uni.getStorageSync("uid")
-							});
-							console.log("登录成功")
-							try {
-							    uni.setStorageSync('token', res.data.token);
-							} catch (err) {
-							    console.log(err)
-							}
+							// try {
+							//     uni.setStorageSync('token', res.data.token);
+							// } catch (err) {
+							//     console.log(err)
+							// }
 						}
 				    },
 					fail: res => {

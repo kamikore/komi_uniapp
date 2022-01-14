@@ -4,7 +4,7 @@
 			{{userInfo}}
 		</view>
 		<button type="default" @click="goChat">发送消息, 自己或是已在联系人中</button>
-		<button type="default" @click="addContact">添加到通讯录</button>
+		<button type="default" v-if="!isContact" @click="addContact">添加到通讯录</button>
 		
 	</view>
 </template>
@@ -16,6 +16,7 @@ export default {
 	data() {
 		return {
 			userInfo:"",
+			isContact: false,
 		};
 	},
 	methods: {
@@ -25,34 +26,41 @@ export default {
 			})
 		},
 		addContact() {
-			console.log(uni.getStorageInfoSync("userInfo"))
-			uni.request({
-				url: "http://localhost:3000/komi/users/add",
-				method:"POST",
-				// 提供添加人的ID, 以及自己的ID
-				data: {
-					fid: this.userInfo.id,
-					uid: uni.getStorageSync("uid"),
-					remarkName: this.userInfo.nickName,
-				},
-				success: res =>  {
-					if(res.statusCode != 200) {
-						console.log(res.data.errMsg)
-					} else {
-						console.log("添加成功")
-					}
-				}
-				
+			// uni.request({
+			// 	url: "http://localhost:3000/komi/users/add",
+			// 	method:"POST",
+			// 	// 提供添加人的ID, 以及自己的ID
+			// 	data: {
+			// 		fid: this.userInfo.id,
+			// 		uid: uni.getStorageSync("uid"),
+			// 		remarkName: this.userInfo.nickName,
+			// 	},
+			// 	success: res =>  {
+			// 		if(res.statusCode != 200) {
+			// 			console.log(res.data.errMsg)
+			// 		} else {
+			// 			console.log("添加成功")
+			// 		}
+			// 	}
+			// })
+			this.$socket.emit("addContact",{
+				// 当前详情页用户信息
+				fid: this.userInfo.id,
+				// 发起好友请求的用户信息
+				userInfo: uni.getStorageSync("userInfo"),
 			})
 		}
 	},
 	onLoad(option) {
 		console.log(option)
+		if(uni.getStorageSync("contacts").hasOwnProperty(option.uid)) {
+			this.isContact = true;
+		}
+		// 判断对象为空
 		if(Object.keys(option).length == 0) {
 			console.log("没有提供ID")
 			return;
-		}
-		uni.request({
+		}		uni.request({
 			url: "http://localhost:3000/komi/users/detail",
 			method:"GET",
 			data: option,

@@ -1,13 +1,27 @@
 <script>
+import {fetchContact} from "api"
 export default {
 	onLaunch: function() {
-		console.log('App Launch');
+		const uid = uni.getStorageSync("userInfo").uid;
+
+		if(this.$store.state.isLogin) {
+			fetchContact();
+			this.$socket.emit("login",{
+				uid,
+			});	
+		}
+		
+		// 监听发给自己的好友请求
+		this.$socket.on(`add${uid}`, res => {
+			console.log("添加好友",res)
+			// this.newFriends.push(res)
+		})
 	},
 	onShow: function() {
-		console.log('App Show');
+		// console.log('App Show');
 	},
 	onHide: function() {
-		console.log('App Hide');
+		// console.log('App Hide');
 	}
 };
 </script>

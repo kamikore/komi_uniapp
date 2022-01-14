@@ -115,7 +115,6 @@ export default {
 	},
 	onLoad(option) {
 		this.fid = option.uid;
-		console.log(this.message_list)
 		
 		// 聊天室监听自己发的消息，以及当前fid 发来的消息，是监听自己的id
 		uni.$on("sendAndGet",res => {

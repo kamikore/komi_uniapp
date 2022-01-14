@@ -104,8 +104,14 @@ export default {
 				    //     'custom-header': 'hello' //自定义请求头信息
 				    // },
 				    success: (res) => {
-				        console.log(res.data);
-				        console.log('request success');
+						if(res.statusCode !=200) {
+							console.log(res.errMsg)
+						} else {
+							// 表单置空
+							Object.keys(this.formData).forEach(key=>{this.formData[key]=''})
+							console.log('request success');
+						}
+
 				    }
 				});
 			}).catch(err =>{

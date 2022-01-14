@@ -15,7 +15,7 @@
 				intro
 			</view>
 		</view>
-		<view class=""><button type="default">退出登录</button></view>
+		<view class=""><button type="default" @click="logout">退出登录</button></view>
 	</view>
 </template>
 
@@ -34,6 +34,15 @@ export default {
 				delta: 1
 			});
 		},
+		logout() {
+				this.$store.state.isLogin = false;
+			    uni.removeStorageSync("userInfo");
+				// uni.setStorageSync("islogin",false)
+				uni.navigateTo({
+					url: "/subpages/login/index"
+				})
+	
+		}
 	}
 };
 </script>

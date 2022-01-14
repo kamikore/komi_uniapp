@@ -1,12 +1,12 @@
 import App from './App'
 // 引入了一整个function，命名为io而已
 import io from "libs/socket.js"
+import store from "store"
 
 
 // #ifndef VUE3
 import Vue from 'vue'
 import {router,RouterMount} from './router.js' 
-console.log("main.js")
 Vue.config.productionTip = false
 Vue.use(router)
 
@@ -14,10 +14,19 @@ Vue.use(router)
 //  socket.io , 连接时并不用知道用户id，登录再给就行
 const socket = io('http://localhost:3000')
 Vue.prototype.$socket = socket;
+Vue.prototype.$store = store;
 
 socket.on('connect', () => {
 	console.log('my socketID: ' + socket.id)
-	uni.setStorageSync("socketID", socket.id)		
+	uni.setStorageSync("socketID", socket.id)	
+	
+	// if(store.state.isLogin){
+	// 	console.log("socket 登录")
+	// 	// 告知服务器我的用户id
+	// 	socket.emit("login",{
+	// 		uid: store.state.userInfo.uid
+	// 	});	
+	// }
 })
 
 // 主动刷新，关闭没法触发，断开服务器可以
@@ -35,6 +44,7 @@ const app = new Vue({
 
 // #ifdef H5
 	RouterMount(app,router,'#app')
+	// app.$mount();
 // #endif
 
 // #ifndef H5

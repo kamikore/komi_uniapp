@@ -2,14 +2,22 @@
 	<view class="contacts-container">
 		<Header title="contacts"></Header>
 		<view class="fun-area">扩展区域
-			<view class="newFriends" @click="goNewFriends">新的朋友</view>
+			<view class="newFriends" @click="goNewFriends">
+				新的朋友
+				<view class="newFriendsList" v-if="newFriends" >
+					 <view class="" v-for="(item,index) in newFriends" :key="index">
+					 	好友请求来自{{item.fid}}
+					 </view>
+				</view>
+			</view>
+			
 		</view>
 		<view class="contact-list">
 			<view class="contact-item">
 				<view class="initials">A</view>
-				<view class="user" v-for="(item,index) in contacts" :key="index" @click="goDetail(item.fid.id)">
+				<view class="user" v-for="(val,key) in contacts" :key="key" @click="goDetail(key)">
 					<view class="avatar"><image src="../../static/images/chatroom/emoji.png" mode=""></image></view>
-					<view class="username">{{item.remarkName}}</view>
+					<view class="username">{{val.remarkName}}</view>
 				</view>
 			</view>
 		</view>
@@ -25,7 +33,9 @@ export default {
 	},
 	data() {
 		return {
-			contacts: [],
+			// 对象结构，便于以key为fid找到信息
+			contacts: {},
+			newFriends: [],
 		};
 	},
 	methods: {
@@ -39,15 +49,12 @@ export default {
 		},
 	},
 	onLoad() {
-		uni.request({
-			url: "http://localhost:3000/komi/users/contacts",
-			method:"GET",
-			data: {uid: uni.getStorageSync("userInfo")},
-			success: (res) => {
-				this.contacts = res.data;
-			}
-		})
-	}
+
+	},
+	onShow() {
+		console.log(this.contacts)
+		this.contacts = uni.getStorageSync("contacts") ;
+	},
 };
 </script>
 
