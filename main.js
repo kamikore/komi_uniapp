@@ -1,7 +1,9 @@
 import App from './App'
 // 引入了一整个function，命名为io而已
 import io from "libs/socket.js"
+import "./common/iconfont.css"
 import store from "store"
+
 
 
 // #ifndef VUE3
@@ -19,7 +21,7 @@ Vue.prototype.$store = store;
 socket.on('connect', () => {
 	console.log('my socketID: ' + socket.id)
 	uni.setStorageSync("socketID", socket.id)	
-	
+	console.log('vue2???')
 	// if(store.state.isLogin){
 	// 	console.log("socket 登录")
 	// 	// 告知服务器我的用户id
@@ -34,7 +36,7 @@ socket.on("disconnect", (reason) => {
 	uni.removeStorageSync("socketID")
 	console.log("断开连接:",reason)
 });
-console.log('vue2???')
+
 
 App.mpType = 'app'
 const app = new Vue({
@@ -43,11 +45,13 @@ const app = new Vue({
 
 
 // #ifdef H5
+	console.log("H5")
 	RouterMount(app,router,'#app')
 	// app.$mount();
 // #endif
 
 // #ifndef H5
+	console.log("除了H5")
 	app.$mount(); //为了兼容小程序及app端必须这样写才有效果
 // #endif
 

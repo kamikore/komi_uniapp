@@ -1,20 +1,151 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "subpages/login/index",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/index/index",
 			"style": {
+				"navigationStyle": "default",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+								"fontSrc": "./static/iconfont.ttf",
+								"fontSize": "52rpx",
+								"text": "\ue67b",
+								"width": "62rpx"
+							},
+							{
+								"fontSrc": "./static/iconfont.ttf",
+								"fontSize": "52rpx",
+								"text": "\ue63c",
+								"width": "62rpx"
+							}
+						]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/login/index",
+			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "subpages/live/index",
+			"path": "pages/live/index",
 			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/dropdownMenu/index",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom",
+				"backgroundColor": "transparent",
+				"app-plus": {
+					"animationType": "fade-in",
+					"animationDuration": 100,
+					"background": "transparent",
+					"backgroundColor": "transparent",
+					"webviewBGTransparent": true,
+					"mask": "none,"
+				}
+			}
+		},
+		{
+			"path": "pages/contacts/index",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationStyle": "default",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [{
+								"fontSize": "24rpx",
+								"text": "编辑"
+							},
+							{
+								"type": "menu" //按钮类型(菜单按钮)  
+							}
+						]
+					}
+				}
+		
+			}
+		},
+		{
+			"path": "pages/search/index",
+			"style": {
+				"navigationBarTitleText": "添加好友",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "default"
+			}
+		},
+		{
+			"path": "pages/userDetails/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "default"
+			}
+		},
+		{
+			"path": "pages/newFriends/index",
+			"style": {
+				"navigationBarTitleText": "新的朋友",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "default",
+				"app-plus": {
+					"scrollIndicator": "none", //app端隐藏滚动条，H5 无效
+					// "bounce":"none",
+					"titleNView": {
+						"buttons": [{
+							"text": "添加朋友",
+							"fontSize": "32rpx"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/live/index",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/livePlay/index",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/chatroom/index",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "",
+				"app-plus": {
+					"scrollIndicator": "none", //app端隐藏滚动条，H5 无效
+					// "bounce":"none",
+					"titleNView": {
+						"buttons": [{
+							"type": "menu" //按钮类型(菜单按钮)
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/videoPlayer/index",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/me/index",
+			"style": {
+				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
 		}
@@ -39,94 +170,32 @@
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
-			"pagePath": "pages/index/index",
-			"iconPath": "static/images/聊天.png",
-			"selectedIconPath": "static/images/聊天.png",
-			"text": "组件"
-		},
-		{
-			"pagePath": "subpages/contacts/index",
-			"iconPath": "static/images/future.png",
-			"selectedIconPath": "static/images/future.png",
-			"text": "联系人"
-		
-		},
-		{
-			"pagePath": "subpages/livePlay/index",
-			"iconPath": "static/images/future.png",
-			"selectedIconPath": "static/images/future.png",
-			"text": "拉流"
-		
-		},
-		{
-			"pagePath": "subpages/me/index",
-			"iconPath": "static/images/future.png",
-			"selectedIconPath": "static/images/future.png",
-			"text": "我"
-		
-		}]
-	},
-	"subPackages": [{
-		"root":"subpages",
-		"pages": [
-			{
-				"path": "login/index",
-				"style": {
-					"enablePullDownRefresh": false,
-					"navigationStyle": "custom"
-				}
+				"pagePath": "pages/index/index",
+				"iconPath": "static/images/聊天.png",
+				"selectedIconPath": "static/images/聊天.png",
+				"text": "组件"
 			},
 			{
-				"path": "contacts/index",
-				"style": {
-					"enablePullDownRefresh": false,
-					"navigationStyle": "custom"
-				}
+				"pagePath": "pages/contacts/index",
+				"iconPath": "static/images/future.png",
+				"selectedIconPath": "static/images/future.png",
+				"text": "联系人"
+
 			},
 			{
-				"path": "search/index",
-				"style": {
-					"navigationBarTitleText": "添加好友",
-					"enablePullDownRefresh": false,
-					"navigationStyle": "default"
-				}
+				"pagePath": "pages/livePlay/index",
+				"iconPath": "static/images/future.png",
+				"selectedIconPath": "static/images/future.png",
+				"text": "拉流"
+
 			},
 			{
-				"path": "userDetails/index",
-				"style": {
-					"navigationBarTitleText": "",
-					"enablePullDownRefresh": false,
-					"navigationStyle": "default"
-				}
-			},
-			{
-				"path": "live/index",
-				"style": {
-					"enablePullDownRefresh": false,
-					"navigationStyle": "custom"
-				}
-			},
-			{
-				"path": "livePlay/index",
-				"style": {
-					"enablePullDownRefresh": false,
-					"navigationStyle": "custom"
-				}
-			},
-			{
-				"path": "chatroom/index",
-				"style": {
-					"enablePullDownRefresh": false,
-					"navigationStyle": "custom"
-				}
-			},
-			{
-				"path": "me/index",
-				"style": {
-					"enablePullDownRefresh": false,
-					"navigationStyle": "custom"
-				}
+				"pagePath": "pages/me/index",
+				"iconPath": "static/images/future.png",
+				"selectedIconPath": "static/images/future.png",
+				"text": "我"
+
 			}
 		]
-	}]
+	}
 }

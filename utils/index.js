@@ -42,3 +42,22 @@ export function calculateOpacity(start, end, rowHeight,backTop, scrollTop,) {
 		return 0;
 	}
 }
+
+//  防抖
+export function debounce(func,timeout = 100) {
+    let timer;
+	// 传递的参数
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func.apply(this, args);
+        }, timeout);
+    }
+}
+
+
+// 秒数转换为 00:00
+
+
+
+// Date 转换为日期 year-month-day 00:00

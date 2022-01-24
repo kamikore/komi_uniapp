@@ -3,8 +3,21 @@
 		<view class="send-box" :class="{ show: !extendBox.hidden }">
 			<view class="nav-bar">
 				<view :class="showVoice ? 'voice' : 'keyboard'" @tap="showMike"><button></button></view>
-				<textarea v-show="showInput" v-model="inputs" auto-height="true" fixed="true" :focus="isfocus" />
-				<button v-show="!showInput" @touchstart="recording" style="flex-grow: 1;">按住说话</button>
+				<textarea 
+					v-show="showInput" 
+					v-model="inputs" 
+					auto-height="true" 
+					fixed="true" 
+					:focus="isfocus"
+					@blur="isfocus = false"
+					@tap="getFocus"
+				/>
+				<button 
+					v-show="!showInput" 
+					@touchstart="showRecording = true"
+					@touchend="showRecording=false"
+					style="flex-grow: 1;"
+				>按住说话</button>
 				<view :class="showEmoji ? 'emoji' : 'keyboard'" @tap="showExtend('emoji')"><button></button></view>
 				<view v-show="!showSend" class="tools" @tap="showExtend('tools')"><button></button></view>
 				<view v-show="showSend" class="send"><button type="default" @click="sendMsg">发送</button></view>
@@ -14,7 +27,24 @@
 					<label id="backspace" @tap="backspace" @longtap="longBackspace" @touchend="endBackspace"><image src="@/static/images/chatroom/backspace.png"></image></label>
 					<view>
 						<ul class="row" :id="'row' + RowIndex" v-for="(row, RowIndex) in emojiList" :key="RowIndex">
-							<li v-for="(item, columnIndex) in row" :key="columnIndex" @tap="enterEmoji(RowIndex, columnIndex)" :ref="columnIndex">{{ item }}</li>
+							<!-- 
+								只把第几列上的li 推入ref
+								0: (6) [li, li, li, li, li, li]
+								1: (6) [li, li, li, li, li, li]
+								2: (6) [li, li, li, li, li, li]
+								3: (5) [li, li, li, li, li]
+								4: (5) [li, li, li, li, li]
+								5: (5) [li, li, li, li, li]
+								6: (5) [li, li, li, li, li]
+								7: (5) [li, li, li, li, li]
+							-->							
+							<li 
+								v-for="(item, columnIndex) in row" 
+								:key="columnIndex" 
+								@tap="enterEmoji(RowIndex, columnIndex)" 
+								:ref="columnIndex"
+								:style="{opacity:(columnIndex==6 || columnIndex==7)?itemList[columnIndex][RowIndex]:1}"
+							>{{ item }}</li>
 						</ul>
 					</view>
 				</scroll-view>
@@ -32,8 +62,8 @@
 
 <script>
 import data from '@/common/data.js';
-import {calculateOpacity} from '@/utils/index.js'
-import recordingPage from '@/components/recordingPage'
+import {calculateOpacity,debounce} from '@/utils/index.js'
+import recordingPage from '@/components/recordingPage/index.vue'
 
 export default {
 	components:{
@@ -70,20 +100,29 @@ export default {
 	data() {
 		return {
 			inputs: '',
+			// 默认进入 focus 为false
+			isfocus: false,
 			showInput: true,
+			// showVoice showEmoji 其中一个为false，就是点 keyboard
 			showVoice: true,
 			showEmoji: true,
 			// 显示发送按钮
 			showSend: false,
 			// 显示长按录音页面
 			showRecording: false,
-			isfocus: true,
 			extendBox: { type: 'emoji', hidden: true },
-			// 每一行表情的信息
-			rowList: [],
 			// 退格键的top
 			backspaceTop:0,
-			emojiList: data.emoji()
+			emojiList: data.emoji(),
+			// 记录每一行样式信息
+			rowList: [],
+			/*
+				由于app端需要动态绑定style更改样式，在data维护一个类似this.$refs的数组结构，以列为索引,并简化为只取7，8列
+				6: (5) [0, 0, 0, 0, 0]
+				7: (5) [0, 0, 0, 0, 0]
+			*/
+			itemList:{},
+			
 		};
 	},
 	watch: {
@@ -100,44 +139,61 @@ export default {
 		},
 	},
 	methods: {
+		// tap 代替getFocus
+		getFocus() {
+			// uni.$emit("scrollTo")
+		},
 		sendMsg(){
-			
 			// 自己发的信息触发更新首页聊天列表,以及聊天室列表
-			uni.$emit("sendAndGet",{
+			uni.$emit("homeMsg",{
 				msg: this.inputs,
-				time: "20:00",
+				time: Date.now(),
 				type: 0,
-				fid: this.fid,   //自己发，也是提供联系人id
+				fid: this.fid,   //提供联系人id
+			})
+			
+			uni.$emit("chatroomMsg",{
+				msg: this.inputs,
+				time: Date.now(),
+				type: 0,
+				fid: this.fid,   //提供联系人id
+				self: 1,
 			})
 			
 			// 触发socket 
 			this.$socket.emit("chatMsg",{
 				msg: this.inputs,
 				fid: this.fid,		// 发出去，发别人的id	
+				uid: uni.getStorageSync("userInfo").uid,		// 还需要附上自己的id
 				type: 0,
+				dateTime: Date.now()
 			})
-			this.inputs = ""
+			this.inputs = "";
 		},
-		recording() {
-			// 根据音频长度划分css长度等级
-			this.showRecording = true;
 
-		},
 		showExtend(type) {
 			if( type==='emoji') {
+				
+				if(!this.showEmoji) {
+					console.log("设置true",this.isfocus)
+					this.isfocus = true
+				}
 				this.showEmoji=!this.showEmoji
 				if(!this.showVoice) {
 					this.showInput = true;
 					this.showVoice = true;
 				}
-
+				
+				const query = uni.createSelectorQuery().in(this);
+				// 延迟让 extendBox 整个出来
 				setTimeout(() =>{
-					const query = uni.createSelectorQuery();
+					// const query = uni.createSelectorQuery();
 					query.selectAll(".row").boundingClientRect(data => {
 						this.rowList.push(...data);
 					}).select("#backspace").boundingClientRect(data =>{
 						this.backspaceTop = Math.ceil(data.top);
 					}).exec()
+					
 					// 调用一次判断
 					this.scrollHandler()
 				},100)
@@ -148,6 +204,10 @@ export default {
 
 		},
 		showMike() {
+			// 需要在修改showVoice 前判断
+			if(!this.showVoice) {
+				this.isfocus = true
+			}
 			this.showVoice = !this.showVoice;
 			if(!this.showEmoji) {
 				this.showEmoji = true
@@ -166,36 +226,53 @@ export default {
 		longBackspace() {},
 		endBackspace() {},
 		scrollHandler() {
+			const query = uni.createSelectorQuery().in(this);
+			
 			if(!this.extendBox.type === 'emoji') return;
 			// 表情退格键处的表情透明度变化
-			const query = uni.createSelectorQuery().in(this);
-			query.select(".emoji-box").scrollOffset(data => {
-				this.rowList.forEach(row=>{
-					const rowIndex = row.id.split('row')[1];
-
-					// document.querySelectorAll(`#${row.id} li:nth-child(n+7)`).forEach(item=>{
-					// 	item.style.opacity = calculateOpacity(Math.ceil(row.top),Math.ceil(row.top+row.height), row.height,this.backspaceTop,data.scrollTop)
-					// })
-
-					/*
-						由于是双循环渲染，所以 this.$refs 是每一列的li集合，我们只需取第7,8列即可,
-						但注意这里是row 的循环，我们只能取当前row 的7，8个li
-						还需要判断该行是否有第7、8个li
-					*/
-
-					if(this.$refs[6][rowIndex]) {
-						this.$refs[6][rowIndex].style.opacity = calculateOpacity(Math.ceil(row.top),Math.ceil(row.top+row.height), row.height,this.backspaceTop,data.scrollTop)
-					}
-					if(this.$refs[7][rowIndex]) {
-						this.$refs[7][rowIndex].style.opacity = calculateOpacity(Math.ceil(row.top),Math.ceil(row.top+row.height), row.height,this.backspaceTop,data.scrollTop)
-					}
-
-
-
-
-				})
-			}).exec()
-
+			
+			let that = this;
+			function comput() {	
+				query.select(".emoji-box").scrollOffset(data => {
+					// data 为emoji-box 对象包含滚动信息, rowList 由于多层遍历内部会执行多次
+					that.rowList.forEach(row=>{
+						const rowIndex = row.id.split('row')[1];
+						const opc = calculateOpacity(Math.ceil(row.top),Math.ceil(row.top+row.height), row.height,that.backspaceTop,data.scrollTop);
+				
+						// document.querySelectorAll(`#${row.id} li:nth-child(n+7)`).forEach(item=>{
+						// 	item.style.opacity = calculateOpacity(Math.ceil(row.top),Math.ceil(row.top+row.height), row.height,this.backspaceTop,data.scrollTop)
+						// })
+				
+						/*
+							由于是双循环渲染，ul为行li为列元素，所以 this.$refs 是每一列的li集合，我们只需取第7,8列即可,
+							但注意这里是row 的循环，我们只能取当前row 的7，8个li
+							还需要判断该行是否有第7、8个li
+						*/
+						// // #ifdef H5
+						// if(that.$refs[6][rowIndex]) {
+						// 	that.$refs[6][rowIndex].style.opacity = calculateOpacity(Math.ceil(row.top),Math.ceil(row.top+row.height), row.height,that.backspaceTop,data.scrollTop)
+						// }
+						// if(that.$refs[7][rowIndex]) {
+						// 	that.$refs[7][rowIndex].style.opacity = calculateOpacity(Math.ceil(row.top),Math.ceil(row.top+row.height), row.height,that.backspaceTop,data.scrollTop)
+						// }
+						// // #endif
+						
+						// 使用 assgin 修改对象触发视图更新, 条件也要修改，即使透明度是0也要赋值
+						
+						if(that.itemList[6][rowIndex] != undefined) {
+							that.itemList[6][rowIndex] = opc;
+						}
+						if(that.itemList[7][rowIndex] != undefined) {
+							that.itemList[7][rowIndex] = opc;
+						}
+						that.itemList = Object.assign({},that.itemList)
+						
+					})
+				}).exec()
+				
+			}
+			// 防抖
+			debounce(comput,10)()
 		},
 		selectTool(index) {
 			switch(index) {
@@ -219,11 +296,21 @@ export default {
 		}
 
 	},
+	created() {
+		let column7 = [];
+		let column8 = [];
+		this.emojiList.forEach((row)=>{
+			row[6]?column7.push(1):""
+			row[7]?column8.push(1):""
+		})
+		this.itemList[6] = column7;
+		this.itemList[7] = column8;
+	},
 	mounted() {
 		const backspaceTop = uni.$on("closeExtend", () => {
 			this.extendBox.hidden = true;
 		});
-	}
+	},
 };
 </script>
 
@@ -249,6 +336,7 @@ export default {
 		width: 100%;
 		transform: translateY(450rpx);
 		transition: all 0.1s ease-in-out;
+		background-color: #f7f7f5;
 
 		.nav-bar {
 			// height: 100rpx;
@@ -256,7 +344,7 @@ export default {
 			align-items: flex-end;
 			column-gap: 20rpx;
 			padding: 14rpx 10rpx;
-			background-color: #f7f7f5;
+
 
 			// 发送按钮自己的样式
 			.send {

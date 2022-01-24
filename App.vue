@@ -5,17 +5,13 @@ export default {
 		const uid = uni.getStorageSync("userInfo").uid;
 
 		if(this.$store.state.isLogin) {
+			// 获取联系人
 			fetchContact();
 			this.$socket.emit("login",{
 				uid,
 			});	
 		}
-		
-		// 监听发给自己的好友请求
-		this.$socket.on(`add${uid}`, res => {
-			console.log("添加好友",res)
-			// this.newFriends.push(res)
-		})
+				
 	},
 	onShow: function() {
 		// console.log('App Show');
@@ -31,6 +27,7 @@ export default {
 button {
 	padding: 0;
 }
+
 
 // 占住位置高度
 .header-wrap {
@@ -82,11 +79,11 @@ button {
 // 	margin:0;
 // }
 // 官方提供的隐藏方法，但对移动端无效
-::-webkit-scrollbar {
-	display: none;
-	width: 0 !important;
-	height: 0 !important;
-	-webkit-appearance: none;
-	background: transparent;
-}
+// ::-webkit-scrollbar {
+// 	display: none;
+// 	width: 0 !important;
+// 	height: 0 !important;
+// 	-webkit-appearance: none;
+// 	background: transparent;
+// }
 </style>

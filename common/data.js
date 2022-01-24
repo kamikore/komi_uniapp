@@ -14,8 +14,8 @@ export default {
 			{
 				id: 2,
 				time: "20:00",
-				type: 0,
-				msg: 'qwrqwetweryery',
+				msg: "https://img.cdn.aliyun.dcloud.net.cn/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20200317.mp4",
+				type: 3,
 				self: 1,
 			},
 			{
@@ -43,7 +43,7 @@ export default {
 				id: 6,
 				time: "24:00",
 				type: 0,
-				msg: '12874h12othr01235n1oi50',
+				msg: '12874h12othr01235n1odgsdgseeti50',
 				self: 1,
 			},
 			{
@@ -90,12 +90,14 @@ export default {
 			{
 				id: 12,
 				time: "3:00",
+				msg: "https://img.cdn.aliyun.dcloud.net.cn/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20200317.mp4",
 				type: 3,
 				self: 0,
 			},
 			{
 				id: 13,
 				time: "4:00",
+				msg: "https://img.cdn.aliyun.dcloud.net.cn/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20200317.mp4",				
 				type: 3,
 				self: 1,
 			},
