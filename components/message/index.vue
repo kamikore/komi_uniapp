@@ -1,6 +1,6 @@
 <template>
 	<view class="message-container">
-		<view class="dateTime">{{ item.time }}</view>
+		<view class="dateTime">{{item.time}}</view>
 		<view class="content" :class="{ 'content-right': item.self }" :id="'fid' + item.id">
 			<view class="avatar" @tap.stop="userDetail"><image src="@/static/images/Group.png" mode=""></image></view>
 			<view class="info" @tap.stop>
@@ -9,6 +9,7 @@
 				<!-- audio -->
 				<view v-if="item.type === 1" class="message audio" @tap="playAudio(item.msg.src)">
 					<image src="@/static/images/chatroom/audio.png" mode=""></image>
+					<!-- 音频时间，直接从消息字段获取，API返回信息有很大延迟 -->
 					<text>{{ item.msg.clock }}</text>
 				</view>
 
@@ -46,6 +47,9 @@
 
 <script>
 import data from '@/common/data.js';
+import {SecondToTime} from "@/utils"
+import {createInnerAudioContext, DateToDateTime} from "@/utils"
+const innerAudioContext = createInnerAudioContext().getInstance();
 	
 export default {
 	name: 'message',
@@ -82,6 +86,22 @@ export default {
 			});
 		},
 		
+		playAudio(src) {
+			// 函数内的变量执行完会被销毁, 音频状态也就没了
+			// const innerAudioContext = createInnerAudioContext().getInstance();
+			// 点击新的音频会直接播放
+			if (innerAudioContext.paused || innerAudioContext.src != src) {
+				innerAudioContext.src = src;
+				innerAudioContext.play();
+				console.log('开始播放');
+			} else {
+				innerAudioContext.pause();
+				console.log('暂停');
+				// innerAudioContext.destroy();
+				// console.log(innerAudioContext);
+			}
+		},
+		
 		// 视频播放
 		videoPlay(url) {
 			uni.navigateTo({
@@ -90,17 +110,29 @@ export default {
 		}
 	},
 	created() {
-		if(this.item.type === 3) {
-			uni.getVideoInfo({
-				src: this.item.msg,
-				success: (res) => {
-					this.videoDuration = Math.ceil(res.duration)
-				},
-				fail: (err) => {
-					console.log("视频错误",err.errMsg)
-				}
-			})
+		
+		// DateToDateTime(this.item.type)
+		
+		switch(this.item.type) {		
+
+			case 3: 
+				uni.getVideoInfo({
+					src: this.item.msg,
+					success: (res) => {
+						// 秒数向下取整
+						this.videoDuration = SecondToTime( Math.floor(res.duration))
+					},
+					fail: (err) => {
+						console.log("视频错误",err.errMsg)
+					}
+				})
+			break;
 		}
+	},
+	mounted() {
+	},
+	destroyed() {
+		innerAudioContext.destroy();
 	}
 };
 </script>

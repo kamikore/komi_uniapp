@@ -44,7 +44,7 @@ export default {
 		},
 		clickHandler() {
 			uni.navigateTo({
-				url: `/subpages/userDetails/index?uid=${this.result.id}`,
+				url: `../userDetails/index?uid=${this.result.user_id}`,
 			})
 		}
 	}

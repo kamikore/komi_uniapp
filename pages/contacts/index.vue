@@ -1,8 +1,9 @@
 <template>
 	<view class="contacts-container">
-		<view class="fun-area">扩展区域
-			<view class="newFriends" @click="goNewFriends">
-				新的朋友
+		<view class="fun-area">
+			<view class="item newFriends" @click="goNewFriends">
+				<i class="iconfont icon-addfriends"></i>
+				<text>新的朋友</text>
 			</view>
 		</view>
 		<view class="contact-list">
@@ -10,7 +11,7 @@
 				<view class="initials">A</view>
 				<view class="user" v-for="(val,key) in contacts" :key="key" @click="goDetail(key)">
 					<view class="avatar"><image src="../../static/images/chatroom/emoji.png" mode=""></image></view>
-					<view class="username">{{val.remarkName}}</view>
+					<view class="nickName">{{val.remarkName}}</view>
 				</view>
 			</view>
 		</view>
@@ -30,7 +31,7 @@ export default {
 	methods: {
 		goDetail(fid) {
 			uni.navigateTo({
-				url: `/userDetails/index?uid=${fid}`
+				url: `../userDetails/index?uid=${fid}`
 			})
 		},
 		goNewFriends() {
@@ -40,7 +41,6 @@ export default {
 		},
 	},
 	onLoad() {
-		console.log("onLoad 一次")
 	},
 	onShow() {
 		fetchContact()
@@ -53,26 +53,61 @@ export default {
 
 .fun-area {
 	width: 100%;
-	height: 300rpx;
+	// height: 300rpx;
+	background: #00B0FF;
+	
+	.item {
+		width: 100%;
+		height: 100rpx;
+		background: #FFFFFF;
+		line-height: 80rpx;
+		vertical-align: middle;
+		padding: 10rpx 20rpx;
+		
+		i {
+			display: inline-block;
+			width: 80rpx;
+			height: 80rpx;	
+			text-align: center;
+			margin-right: 20rpx;
+			border-radius: 10rpx;
+			background: #F3A73F;
+			
+			&::before {
+				color: #F0F0F0;
+				font-size: 60rpx;
+			}
+		}
+		
+		text {
+			//需要指定top 才对齐 ？？？？
+			vertical-align: top;
+		}
+	}
 }
 	
 .contact-list {
 	.contact-item {
 		.initials{
 			height: 50rpx;
-			background: #C0C0C0;
+			background: #ededed;
 		}
 		
 		.user {
 			display: flex;
-			column-gap: 20rpx;
+			padding: 10rpx 20rpx;
 			
 			.avatar {
 				image {
-					height: 40rpx;
-					width: 40rpx;
+					height: 60rpx;
+					width: 60rpx;
+					padding-right: 20rpx;
 				}
 			}	
+			
+			.nickName {
+				line-height:60rpx ;
+			}
 		}
 	}
 }

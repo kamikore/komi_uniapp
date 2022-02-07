@@ -57,7 +57,43 @@ export function debounce(func,timeout = 100) {
 
 
 // 秒数转换为 00:00
-
+export function SecondToTime(second) {
+	let M = Math.floor(second/60);
+	let S = second - (M*60);
+	M = (M < 10)?"0"+M:M;
+	S = (S < 10)?"0"+S:S;
+	return M+":"+S
+}
 
 
 // Date 转换为日期 year-month-day 00:00
+export function DateToDateTime(date) {
+	const nowDate = new Date();
+	const oneDay = 60*1000*60*24;
+	
+	// new Date() 的对象传递时，另一端变成了普通字符串
+	date = new Date(date);
+	const offset = nowDate - date;
+	
+	let result;
+	const Time = `${date.getHours()}:${date.getMinutes()}`;
+	const DateTime = `${date.getMonth()+1}月${date.getDate()} `;
+	
+	if(offset < oneDay) {
+		result = Time;
+	}
+	else if(offset < 2*oneDay || offset > oneDay) {
+		result = `昨天 ${Time}`;
+	}
+	else if(offset > 2*oneDay || offset < 365*oneDay) {
+		result = `${DateTime} ${Time}`
+	}
+	else {
+		result = `${date.toLocaleString()} ${Time}`
+	}
+	
+
+	return result;
+	
+ 
+}

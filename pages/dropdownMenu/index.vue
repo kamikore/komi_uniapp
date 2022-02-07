@@ -4,9 +4,9 @@
 		<view class="menu-wrap">
 			<view class="menu">
 				<ul>
-					<li>发起群聊</li>
+					<li class="iconfont icon-group">发起群聊</li>
 					<!-- 防止冒泡 -->
-					<li @tap.stop="addFriend">添加好友</li>
+					<li class="iconfont icon-ic_addfriend" @tap.stop="addFriend">添加好友</li>
 					<li>帮助</li>
 					<li>...</li>
 				</ul>
@@ -91,6 +91,11 @@ page {
 				letter-spacing: 2rpx;
 				color: #ebebeb;
 				border-bottom: 2rpx solid #525252;
+				
+				&::before {
+					font-size: 44rpx;
+					padding-right: 20rpx;
+				}
 			}
 		}
 	}

@@ -2,10 +2,10 @@
 	<view class="loginForm">
 		<uni-forms :modelValue="formData" :rules="rules" ref="form">
 			<uni-forms-item name="account">
-				<uni-easyinput type="text" v-model="formData.account" :styles="inputStyles" :placeholderStyle="placeholderStyle" placeholder="请输入账号/邮箱" />
+				<uni-easyinput type="text" v-model="formData.account" :styles="styles" :placeholderStyle="placeholderStyle" placeholder="请输入账号/邮箱" />
 			</uni-forms-item>
 			<uni-forms-item name="password">
-				<uni-easyinput type="password" v-model="formData.password" :styles="inputStyles" :placeholderStyle="placeholderStyle" placeholder="请输入密码" />
+				<uni-easyinput type="password" v-model="formData.password" :styles="styles" :placeholderStyle="placeholderStyle" placeholder="请输入密码" />
 			</uni-forms-item>
 		</uni-forms>
 		<button @click="submitForm">Login</button>
@@ -40,7 +40,7 @@ export default {
 					]
 				}
 			},
-			inputStyles: {
+			styles: {
 				color: 'blue'
 			},
 			placeholderStyle: 'font-size: 30rpx'
@@ -57,14 +57,16 @@ export default {
 				    //     'custom-header': 'hello' //自定义请求头信息
 				    // },
 				    success: (res) => {
+						const data = res.data;
 						if(res.statusCode != 200) {
-							console.log(res.data.errMsg)
+							console.log(data.errMsg)
 						} else {
-							uni.$emit("fetchContentList",{uid:res.data.userInfo.uid});
-							this.$store.dispatch("login",res.data.userInfo)
+							console.log(res)
+							uni.$emit("fetchContentList",{uid:data.uid});
+							this.$store.dispatch("login",data)
 							fetchContact();
 							this.$socket.emit("login",{
-								uid: res.data.userInfo.uid
+								uid: data.uid
 							});	
 							uni.redirectTo({
 								url:"pages/index/index"

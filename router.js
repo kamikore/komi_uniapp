@@ -10,7 +10,7 @@ const router = createRouter({
 });
 //全局路由前置守卫
 router.beforeEach((to, from, next) => {
-	// store.state.isLogin = true;
+	store.state.isLogin = true;
 	if (uni.getStorageSync("userInfo")) {
 		store.state.isLogin = true;
 	}

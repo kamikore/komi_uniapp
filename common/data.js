@@ -68,7 +68,7 @@ export default {
 				time: "2:00",
 				type: 1,
 				msg: {
-					src: 'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-hello-uniapp/2cc220e0-c27a-11ea-9dfb-6da8e309e0d8.mp3',
+					src: 'https://www.cambridgeenglish.org/images/153149-movers-sample-listening-test-vol2.mp3',
 					clock: 36
 				},
 				self: 0,
@@ -115,14 +115,4 @@ export default {
 			}
 		]
 	},
-	emoji: function() {
-		return [
-			['😃', '😄', '😁', '😆', '😅', '😂', '😉', '😊'],
-			['😇', '😍', '😘', '😚', '😋', '😜', '😝', '😐'],
-			['😶', '😏', '😒', '😌', '😔', '😪', '😷', '😵'],
-			['😎', '😲', '😳', '😨', '😰', '😥', '😢', '😭'],
-			['😱', '😖', '😣', '😞', '😓', '😩', '😫', '😤'],
-			['😡', '😈', '😠']
-		]
-	}
 }

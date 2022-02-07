@@ -30,7 +30,13 @@
 			}
 		},
 		{
-			"path": "pages/live/index",
+			"path": "pages/livePlay/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/livePush/index",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -38,7 +44,6 @@
 		{
 			"path": "pages/dropdownMenu/index",
 			"style": {
-				"enablePullDownRefresh": false,
 				"navigationStyle": "custom",
 				"backgroundColor": "transparent",
 				"app-plus": {
@@ -54,7 +59,6 @@
 		{
 			"path": "pages/contacts/index",
 			"style": {
-				"enablePullDownRefresh": false,
 				"navigationStyle": "default",
 				"app-plus": {
 					"titleNView": {
@@ -75,7 +79,6 @@
 			"path": "pages/search/index",
 			"style": {
 				"navigationBarTitleText": "添加好友",
-				"enablePullDownRefresh": false,
 				"navigationStyle": "default"
 			}
 		},
@@ -83,7 +86,13 @@
 			"path": "pages/userDetails/index",
 			"style": {
 				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false,
+				"navigationStyle": "default"
+			}
+		},
+		{
+			"path": "pages/addContacts/index",
+			"style": {
+				"navigationBarTitleText":"add to contacts",
 				"navigationStyle": "default"
 			}
 		},
@@ -91,7 +100,6 @@
 			"path": "pages/newFriends/index",
 			"style": {
 				"navigationBarTitleText": "新的朋友",
-				"enablePullDownRefresh": false,
 				"navigationStyle": "default",
 				"app-plus": {
 					"scrollIndicator": "none", //app端隐藏滚动条，H5 无效
@@ -106,23 +114,20 @@
 			}
 		},
 		{
-			"path": "pages/live/index",
+			"path": "pages/livePush/index",
 			"style": {
-				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/livePlay/index",
 			"style": {
-				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/chatroom/index",
 			"style": {
-				"enablePullDownRefresh": false,
 				"navigationBarTitleText": "",
 				"app-plus": {
 					"scrollIndicator": "none", //app端隐藏滚动条，H5 无效
@@ -136,16 +141,26 @@
 			}
 		},
 		{
+			"path": "pages/recording/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/videoPlayer/index",
 			"style": {
-				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/moments/index",
+			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/me/index",
 			"style": {
-				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
 		}
@@ -183,11 +198,11 @@
 
 			},
 			{
-				"pagePath": "pages/livePlay/index",
+				"pagePath": "pages/moments/index",
 				"iconPath": "static/images/future.png",
 				"selectedIconPath": "static/images/future.png",
-				"text": "拉流"
-
+				"text": "discover"
+			
 			},
 			{
 				"pagePath": "pages/me/index",

@@ -4,7 +4,7 @@
 			{{userInfo}}
 		</view>
 		<button type="default" @click="goChat">发送消息, 自己或是已在联系人中</button>
-		<button type="default" v-if="!isContact" @click="add">添加到通讯录</button>
+		<button type="default" v-if="!isContact" @click="addToContacts">添加到通讯录</button>
 		
 	</view>
 </template>
@@ -22,20 +22,17 @@ export default {
 	methods: {
 		goChat() {
 			uni.navigateTo({
-				url:`/subpages/chatroom/index?uid=${this.userInfo.id}`
+				url:`../chatroom/index?uid=${this.userInfo.user_id}`
 			})
 		},
-		add() {
-			this.$socket.emit("addContact",{
-				// 当前详情页用户信息
-				fid: this.userInfo.id,
-				// 发起好友请求的用户信息
-				userInfo: uni.getStorageSync("userInfo"),
+		addToContacts() {
+			uni.navigateTo({
+				url: "../addContacts/index"
 			})
 		}
 	},
 	onLoad(option) {
-		if(uni.getStorageSync("contacts").hasOwnProperty(option.uid)) {
+		if(uni.getStorageSync("contacts").hasOwnProperty(option.uid) || uni.getStorageSync("userInfo").uid == option.uid)  {
 			this.isContact = true;
 		}
 		// 判断对象为空
@@ -48,6 +45,7 @@ export default {
 			method:"GET",
 			data: option,
 			success: res =>  {
+				// 当前详情页用户信息
 				this.userInfo = res.data
 			}
 			

@@ -25,8 +25,7 @@
 import data from '@/common/data.js';
 import sendBox from '@/components/sendBox';
 import message from '@/components/message';
-import { createInnerAudioContext } from '@/utils/index.js';
-const innerAudioContext = createInnerAudioContext().getInstance();
+import {DateToDateTime} from "@/utils"
 
 export default {
 	name: 'chatroom',
@@ -38,7 +37,7 @@ export default {
 		return {
 			message_list: data.message(),
 			// 当前聊天用户id
-			fid: '',
+			fid: 0,
 			msgId: 0,
 			scrollTop: 0,
 			old: {
@@ -56,32 +55,10 @@ export default {
 		userDetail() {
 			console.log('click');
 		},
-		playAudio(src) {
-			// 函数内的变量执行完会被销毁
-
-			// 点击新的音频会直接播放
-			if (innerAudioContext.paused || innerAudioContext.src != src) {
-				innerAudioContext.src = src;
-				innerAudioContext.play();
-				console.log('开始播放');
-			} else {
-				innerAudioContext.pause();
-				console.log('暂停');
-				innerAudioContext.destroy();
-				console.log(innerAudioContext);
-			}
-			// this.innerAudioContext.onPlay(() => {
-			//   console.log('开始播放');
-			//   console.log(this.innerAudioContext.paused)
-			// });
-			// this.innerAudioContext.onError((res) => {
-			//   console.log(res.errMsg);
-			//   console.log(res.errCode);
-			// });
-		}
 	},
 	onLoad(option) {
-		this.fid = option.uid;
+		this.fid = Number(option.uid);
+
 		// this.scrollTop = 1000;
 		this.msgId = this.message_list.length;
 
@@ -105,11 +82,13 @@ export default {
 
 		// 聊天室监听自己发的消息，以及当前fid 发来的消息，是监听自己的id
 		uni.$on('chatroomMsg', res => {
+			console.log( DateToDateTime(res.dateTime))
 			this.message_list.push({
 				id: this.msgId + 1,
-				time: res.time,
-				msg: res.msg,
-				type: res.type,
+				time: DateToDateTime(res.dateTime),
+				msg: res.msg_content,
+				type: res.msg_type,
+				voice_duration: res.voice_duration || null,
 				self: res.self
 			});
 
@@ -117,7 +96,7 @@ export default {
 		});
 	},
 	onUnload() {
-		console.log('页面unLoad');
+
 	}
 };
 </script>

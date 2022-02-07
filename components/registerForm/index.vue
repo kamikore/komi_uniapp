@@ -109,7 +109,7 @@ export default {
 						} else {
 							// 表单置空
 							Object.keys(this.formData).forEach(key=>{this.formData[key]=''})
-							console.log('request success');
+							console.log('注册成功！！');
 						}
 
 				    }

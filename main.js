@@ -22,13 +22,13 @@ socket.on('connect', () => {
 	console.log('my socketID: ' + socket.id)
 	uni.setStorageSync("socketID", socket.id)	
 	console.log('vue2???')
-	// if(store.state.isLogin){
-	// 	console.log("socket 登录")
-	// 	// 告知服务器我的用户id
-	// 	socket.emit("login",{
-	// 		uid: store.state.userInfo.uid
-	// 	});	
-	// }
+	if(store.state.isLogin){
+		console.log("socket 登录")
+		// 告知服务器我的用户id
+		socket.emit("login",{
+			uid: uni.getStorageSync("userInfo").uid
+		});	
+	}
 })
 
 // 主动刷新，关闭没法触发，断开服务器可以
@@ -45,7 +45,6 @@ const app = new Vue({
 
 
 // #ifdef H5
-	console.log("H5")
 	RouterMount(app,router,'#app')
 	// app.$mount();
 // #endif
