@@ -4,7 +4,7 @@
 		<view class="menu-wrap">
 			<view class="menu">
 				<ul>
-					<li class="iconfont icon-group">发起群聊</li>
+					<li class="iconfont icon-group" @tap.stop="newChat">发起群聊</li>
 					<!-- 防止冒泡 -->
 					<li class="iconfont icon-ic_addfriend" @tap.stop="addFriend">添加好友</li>
 					<li>帮助</li>
@@ -23,16 +23,21 @@ export default {
 		};
 	},
 	methods: {
-		closeMenu() {
-			console.log("close")
-			uni.navigateBack()
+		newChat() {
+			uni.redirectTo({
+				url: "/pages/groupChat/index"
+			})
 		},
 		addFriend() {
 			// 需要点击菜单项同时关闭页面
 			uni.redirectTo({
 				url: "/pages/search/index"
 			})
-		}
+		},
+		closeMenu() {
+			console.log("close")
+			uni.navigateBack()
+		},
 	},
 };
 </script>

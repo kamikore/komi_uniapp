@@ -5,16 +5,16 @@
 				<view :class="showVoice ? 'voice' : 'keyboard'" @tap="showMike"><button></button></view>
 				<textarea v-show="showInput" v-model="inputs" auto-height="true" fixed="true" :focus="isfocus" @blur="isfocus = false" />
 				<!-- 即使切换了页面，touchend 同样有效 -->
-				<button v-show="!showInput" @touchstart="recordStart" @touchmove="touchmove" @touchend="recordEnd" style="flex-grow: 1;">按住说话</button>
+				<button v-show="!showInput" @touchstart="recordStart" @touchmove="touchmove($event,screenHeight)" @touchend="recordEnd" style="flex-grow: 1;">按住说话</button>
 				<view :class="showEmoji ? 'emoji' : 'keyboard'" @tap="showExtend('emoji')"><button></button></view>
 				<view v-show="!showSend" class="tools" @tap="showExtend('tools')"><button></button></view>
-				<view v-show="showSend" class="send"><button type="default" @click="sendMsg">发送</button></view>
+				<view v-show="showSend" class="send"><button type="default" @click="send">发送</button></view>
 			</view>
 			<view class="extend-box">
 				<!-- 表情栏 -->
 				<emojiBox v-show="extendBox.type == 'emoji'"></emojiBox>
 				<!-- 扩展工具栏 -->
-				<toolsBox v-show="extendBox.type === 'tools'"></toolsBox>
+				<toolsBox :id="id" :isGroup="isGroup" v-show="extendBox.type === 'tools'"></toolsBox>
 			</view>
 		</view>
 	</view>
@@ -24,6 +24,8 @@
 import data from '@/common/data.js';
 import toolsBox from '@/components/toolsBox';
 import emojiBox from '@/components/emojiBox';
+import {mapState} from "vuex"
+import { debounce, stopWatch , sendMsg ,convertFilePath} from "@/utils/index.js"
 // 录音管理器
 const recorderManager = uni.getRecorderManager();
 
@@ -36,9 +38,11 @@ export default {
 	computed:{
 		systemInfo() {
 			return uni.getSystemInfoSync()
-		}
+		},
+		...mapState(['userInfo']),
+		
 	},
-	props: ['fid'],
+	props: ['id','isGroup'],
 	data() {
 		return {
 			inputs: '',
@@ -51,7 +55,14 @@ export default {
 			// 显示发送按钮
 			showSend: false,
 			extendBox: { type: '', hidden: true },
-
+			
+			// 录音状态 0为取消，1为正常发送
+			recordStatus: 1,
+			
+			screenHeight: 0,
+			
+			// 秒表停止方法
+			stopTimer: null
 		};
 	},
 	watch: {
@@ -67,50 +78,25 @@ export default {
 		}
 	},
 	methods: {
-		sendMsg() {
-			const date = new Date();
-			
+		send() {
 			if (this.inputs.trim() === '') {
 				return;
 			}
-			
-			// 触发socket, 该消息格式会沿用到后续的监听器
-			this.$socket.emit('chatMsg', {
-				msg_content: this.inputs,
-				msg_to: this.fid, // 发出去，发别人的id
-				msg_from: uni.getStorageSync('userInfo').uid, // 还需要附上自己的id
-				msg_type: 0,
-				dateTime: date
-			});
-
-			/* 
-				自己发的信息触发更新首页聊天列表,以及聊天室列表，由于是自己发的需要处理 msg_to msg_from 关系，
-				离线消息会是一个数组, 所以在sendBox消息统一作为数组处理
-			*/
-			uni.$emit('homeMsg', {
-				msg_content: this.inputs,
-				dateTime: date,
-				msg_type: 0,
-				msg_from: this.fid //只需提供msg_from
-			});
-
-			uni.$emit('chatroomMsg', {
-				msg_content: this.inputs,
-				dateTime: date,
-				msg_type: 0,
-				msg_from: this.fid, //只需提供msg_from
-				self: 1
-			});
-
+			sendMsg({
+				msg_content : this.inputs,
+				msg_to : this.id,
+				msg_type : 0,
+				isGroup:this.isGroup,
+			})
 			this.inputs = '';
 		},
-		touchmove(detail) {
-			let x = detail.touches[0].pageX;
-			let y = this.systemInfo.screenHeight - detail.touches[0].pageY;
-			console.log(this.systemInfo.screenHeight,this.systemInfo.screenWidth)
-			uni.$emit("dragInRecord",{x,y})
-		},
-
+		
+		touchmove:debounce(function(detail,screenHeigth) {
+				const x = detail.touches[0].pageX;
+				const y =  screenHeigth - detail.touches[0].pageY;
+				uni.$emit("dragInRecord",{x,y})
+			},
+		10),
 		showExtend(type) {
 			if (type === 'emoji') {
 				uni.$emit("showEmoji")
@@ -145,38 +131,74 @@ export default {
 			uni.navigateTo({
 				url: "/pages/recording/index"
 			})
-			recorderManager.start();
+			recorderManager.start({
+				duration: 45000 		// 最大录音时长
+			});
 		},
-		recordEnd() {
+		recordEnd(detail) {
 			console.log("recordEnd")
-			// uni.navigateBack()
-			recorderManager.stop();
+			recorderManager.stop()
+			uni.navigateBack({
+				delta: 1
+			})
+			
 		}
 	},
 	created() {
+		// 监听表情发送
+		uni.$on("emoji", (emoji) => {
+			this.inputs = this.inputs + emoji;
+		})
+		
+		uni.$on("backspace",() => {
+			let temp = [...this.inputs];
+			temp.pop();
+			this.inputs = temp.join('');
+		})
+		
+		
+		console.log("id",this.id)
+		let self = this;
+		this.screenHeight = this.systemInfo.screenHeight
+		uni.$on("changeRecordStatus", status => {
+			this.recordStatus = status;
+		})
+		
+
+		// 进入聊天时随带获取用户名
+		
+		
 		// 并没有相关API获取duration, 只能自己计时
-		recorderManager.onStart(() =>{
+		recorderManager.onStart(() => {
+			this.stopTimer = stopWatch();
 			
+			setTimeout(() => {
+				recorderManager.stop()
+			},3000)
 		})
 		
 		
 		recorderManager.onStop(function (res) {
-			console.log('recorder stop' + JSON.stringify(res));
-			console.log(res)
-			// uni.$emit("chartroomMsg",{
-			// 	msg_content: res.tempFilePath,
-			// 	msg_to: this.fid, // 发出去，发别人的id
-			// 	msg_from: uni.getStorageSync('userInfo').uid, // 还需要附上自己的id
-			// 	msg_type: 1,
-			// 	voice_duration: 
-			// 	dateTime: new Date()
-			// })
+			const voice_duration = self.stopTimer();
+			console.log('recorder stop', "时长",voice_duration, JSON.stringify(res));
+			if(this.recordStatus === 0 || voice_duration == 1) return
+
+			sendMsg({
+				msg_content: convertFilePath(res.tempFilePath)
+			})
+			
 		});
+		
+		recorderManager.onError(err=>{
+			console.log("录音发生错误",err)
+		})
+		
 	},
 	mounted() {
 		const backspaceTop = uni.$on('closeExtend', () => {
 			this.extendBox.hidden = true;
 		});
+		
 	}
 };
 </script>
@@ -232,7 +254,6 @@ export default {
 					display: block;
 					width: 56rpx;
 					height: 56rpx;
-					border: none;
 				}
 			}
 

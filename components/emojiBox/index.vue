@@ -63,12 +63,10 @@ export default {
 	},
 	methods: {
 		enterEmoji(x, y) {
-			this.inputs = this.inputs + this.emojiList[x][y];
+			uni.$emit("emoji",this.emojiList[x][y])
 		},
 		backspace() {
-			let temp = [...this.inputs];
-			temp.pop();
-			this.inputs = temp.join('');
+			uni.$emit("backspace")
 		},
 		longBackspace() {},
 		endBackspace() {},

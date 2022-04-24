@@ -1,16 +1,15 @@
 <template>
 	<view class="message-container">
-		<view class="dateTime">{{item.time}}</view>
 		<view class="content" :class="{ 'content-right': item.self }" :id="'fid' + item.id">
 			<view class="avatar" @tap.stop="userDetail"><image src="@/static/images/Group.png" mode=""></image></view>
 			<view class="info" @tap.stop>
 				<!-- 只有在群聊才显示昵称 -->
 				<!-- <text class="username">kamikore</text> -->
 				<!-- audio -->
-				<view v-if="item.type === 1" class="message audio" @tap="playAudio(item.msg.src)">
+				<view v-if="item.type === 1" class="message audio" @tap="playAudio(item.msg)">
 					<image src="@/static/images/chatroom/audio.png" mode=""></image>
 					<!-- 音频时间，直接从消息字段获取，API返回信息有很大延迟 -->
-					<text>{{ item.msg.clock }}</text>
+					<text>{{ item.voice_duration }}</text>
 				</view>
 
 				<!-- image-->
@@ -25,15 +24,15 @@
 					<!-- <video src="" object-fit="contain" style="width:200rpx;height: 200rpx;border-radius: 12px;position: relative;">
 						<cover-image class="add-img-del" src=""></cover-image>
 					</video> -->
-					<image src="" mode="" @click="videoPlay(item.msg)"></image>
+					<canvas canvas-id="video" @click="videoPlay(item.msg)"></canvas>
 					<text class="videoDuration">{{videoDuration}}</text>
 				</view>
 
 				<!-- file -->
 				<view v-else-if="item.type === 4" class="message file">
 					<view class="fileInfo">
-						<text>filename sdsdsdsdsdsdsdsdsdsdsds</text>
-						<text>size</text>
+						<text>{{item.msg.fileName}}</text>
+						<text>{{item.msg.size}}</text>
 					</view>
 					<image src="" mode=""></image>
 				</view>
@@ -48,15 +47,18 @@
 <script>
 import data from '@/common/data.js';
 import {SecondToTime} from "@/utils"
-import {createInnerAudioContext, DateToDateTime} from "@/utils"
-const innerAudioContext = createInnerAudioContext().getInstance();
-	
+import {createInnerAudioContext} from "@/utils"
+
+// const innerAudioContext = createInnerAudioContext().getInstance();
+// console.log("创建innerAudioContext",innerAudioContext)
+
 export default {
 	name: 'message',
 	props: ['item'],
 	data() {
 		return {
 			videoDuration: "",
+			innerAudioContext: null
 		};
 	},
 	methods: {
@@ -69,6 +71,7 @@ export default {
 				}
 			}
 			
+			console.log("图片预览数组",imgPaths)
 			// 预览图片
 			uni.previewImage({
 				// 点击显示当前图片
@@ -90,12 +93,12 @@ export default {
 			// 函数内的变量执行完会被销毁, 音频状态也就没了
 			// const innerAudioContext = createInnerAudioContext().getInstance();
 			// 点击新的音频会直接播放
-			if (innerAudioContext.paused || innerAudioContext.src != src) {
-				innerAudioContext.src = src;
-				innerAudioContext.play();
+			if (this.innerAudioContext.paused || this.innerAudioContext.src != src) {
+				this.innerAudioContext.src = src;
+				this.innerAudioContext.play();
 				console.log('开始播放');
 			} else {
-				innerAudioContext.pause();
+				this.innerAudioContext.pause();
 				console.log('暂停');
 				// innerAudioContext.destroy();
 				// console.log(innerAudioContext);
@@ -107,11 +110,10 @@ export default {
 			uni.navigateTo({
 				url:`/pages/videoPlayer/index?url=${url}`
 			})
-		}
+		},
+		
 	},
 	created() {
-		
-		// DateToDateTime(this.item.type)
 		
 		switch(this.item.type) {		
 
@@ -127,22 +129,19 @@ export default {
 					}
 				})
 			break;
+			
 		}
 	},
 	mounted() {
+		this.innerAudioContext = createInnerAudioContext().getInstance()
 	},
 	destroyed() {
-		innerAudioContext.destroy();
+		this.innerAudioContext.destroy();
 	}
 };
 </script>
 
 <style lang="scss" scoped>
-.dateTime {
-	color: rgba(39, 40, 650, 0.6);
-	padding: 20rpx 0;
-	text-align: center;
-}
 
 .content {
 	display: flex;
@@ -222,7 +221,7 @@ export default {
 		.video {
 			position: relative;
 			
-			image {
+			canvas {
 				position: relative;
 				max-width: 400rpx;
 				min-height: 200rpx;
@@ -232,7 +231,7 @@ export default {
 				background: #000000;
 				
 				&::before {				
-					content: "sdsd";
+					content: "▶ 按钮";
 					position: absolute;
 					top: 50%;
 					left: 50%;

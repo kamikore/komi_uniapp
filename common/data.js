@@ -1,6 +1,7 @@
 export default {
 	/*
-		消息类型： 0：text , 1: audio, 2: image, 3: video, 4: file ,5: addFriends
+		群聊没有特别类型代号，群消息最后也是分文字、语音...
+		消息类型： 0：text , 1: audio, 2: image, 3: video, 4: file ,5: addFriends, 
 		self: 0 别人， 1 自己
 	*/
 	message: function() {
@@ -57,20 +58,16 @@ export default {
 				id: 8,
 				time: "2:00",
 				type: 1,
-				msg: {
-					src: 'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-hello-uniapp/2cc220e0-c27a-11ea-9dfb-6da8e309e0d8.mp3',
-					clock: 6
-				},
+				msg:  'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-hello-uniapp/2cc220e0-c27a-11ea-9dfb-6da8e309e0d8.mp3',
+				voice_duration: 36,
 				self: 1,
 			},
 			{
 				id: 9,
 				time: "2:00",
 				type: 1,
-				msg: {
-					src: 'https://www.cambridgeenglish.org/images/153149-movers-sample-listening-test-vol2.mp3',
-					clock: 36
-				},
+				msg:  'https://www.cambridgeenglish.org/images/153149-movers-sample-listening-test-vol2.mp3',
+				voice_duration: 30,
 				self: 0,
 			},
 			{
@@ -103,14 +100,16 @@ export default {
 			},
 			{
 				id: 14,
-				time: "3:00",
+				time: new Date(),
 				type: 4,
+				msg:{fileName:"qweojqwot.jpg",size: '55.55kb'},
 				self: 0,
 			},
 			{
 				id: 15,
-				time: "4:00",
+				time: new Date(),
 				type: 4,
+				msg:{fileName:"qweojqwosdsdsdsdsdsdsdsdsdt.jpg",size: '55.55kb'},
 				self: 1,
 			}
 		]

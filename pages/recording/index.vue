@@ -7,20 +7,20 @@
 		</view>
 		<!-- 点击label会触发包裹的button 点击事件, button id 设置了无效！！！！？？？ -->
 		<label id="left" ><button type="default" :class="{active: isCancel}" class="iconfont icon-close-bold"></button></label>
-		<label id="right"><button type="default" :class="{active: unkown}">unknow</button></label>
+		<label id="right"><button type="default" :class="{active: unkown}">文</button></label>
 		<view id="voiceBtn" :class="{active: isRecord}" class="iconfont icon-voice"></view>
-		<volume :style="{transform: transform}"></volume>
+		<volumeBeat></volumeBeat>
 		<view class="mask"></view>
 	</view>
 </template>
 
 <script>
-import volume from "@/components/volume"
+import volumeBeat from "@/components/volumeBeat"
 
 export default {
 	name: 'recording',
 	components:{
-		volume
+		volumeBeat
 	},
 	computed:{
 		systemInfo() {
@@ -52,37 +52,42 @@ export default {
 		let ellipse;
 		const query = uni.createSelectorQuery().in(this);
 		query.select('#voiceBtn').fields({size:true,rect:true,computedStyle:["width","height"]},res=>{
+			//#ifdef H5
 			const a = Number(res.width.split("px")[0])/2;
 			const b = Number(res.height.split("px")[0])/2;
+			//#endif
+			//#ifdef APP
+			const a = Number(res.width.split("px")[0]);
+			const b = Number(res.height.split("px")[0]);
+			//#endif
 			const a_2 = Math.pow(a,2);
 			const b_2 = Math.pow(b,2);
-			
+			// 椭圆方程
 			ellipse = function(x,y) {
 				return ((Math.pow((x-a),2)/a_2)+(Math.pow(y,2)/b_2) <= 1)	
 			}
 		}).exec()
 		
 		uni.$on("dragInRecord",(res) =>{
-			// console.log(ellipse(res.x,res.y))
 			if(ellipse(res.x,res.y)) {
 				this.isRecord = true;
 				this.isCancel = false;
 				this.unkown = false;
+				uni.$emit("changeRecordStatus",1)
 			} else {
 				if(res.x < this.systemInfo.screenWidth/2) {
 					this.isCancel = true;
 					this.isRecord = false;
 					this.unkown = false;
+					uni.$emit("changeRecordStatus",0)
 				}else {
 					this.unkown = true;
 					this.isCancel = false;
-					this.isRecord = false;		
+					this.isRecord = false;	
+					uni.$emit("changeRecordStatus",0)
 				}
 			}
-			
-			
-			
-			
+					
 		})
 	}
 };

@@ -3,7 +3,7 @@
 		<view :class="{ show: show }" class="menu-wrap">
 			<view class="menu">
 				<ul>
-					<li>发起群聊</li>
+					<li @tap="newChat">发起群聊</li>
 					<li @tap="addFriend">添加好友</li>
 					<li>帮助</li>
 					<li>...</li>
@@ -23,8 +23,8 @@ export default {
 	},
 	methods: {
 		closeMenu() {
-			console.log("close")
 			if(this.showMenu) {
+				console.log("dropdown close")
 				this.showMenu = false;
 			}
 		},

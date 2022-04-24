@@ -9,6 +9,8 @@
 	</view>
 </template>
 
+
+
 <script>
 
 export default {
@@ -22,17 +24,18 @@ export default {
 	methods: {
 		goChat() {
 			uni.navigateTo({
-				url:`../chatroom/index?uid=${this.userInfo.user_id}`
+				url:`../chatroom/index?fid=${this.userInfo.user_id}`
 			})
 		},
 		addToContacts() {
 			uni.navigateTo({
-				url: "../addContacts/index"
+				url: `../addContacts/index?fid=${this.userInfo.user_id}`
 			})
 		}
 	},
 	onLoad(option) {
-		if(uni.getStorageSync("contacts").hasOwnProperty(option.uid) || uni.getStorageSync("userInfo").uid == option.uid)  {
+		console.log("userDetail",option)
+		if(uni.getStorageSync("contacts").hasOwnProperty(option.fid) || uni.getStorageSync("userInfo").user_id == option.fid)  {
 			this.isContact = true;
 		}
 		// 判断对象为空
@@ -41,12 +44,13 @@ export default {
 			return;
 		}		
 		uni.request({
-			url: "http://localhost:3000/komi/users/detail",
+			url: "http://120.79.218.59:8080/komi/users/detail",
 			method:"GET",
 			data: option,
 			success: res =>  {
 				// 当前详情页用户信息
 				this.userInfo = res.data
+				console.log("查询detail",this.userInfo)
 			}
 			
 		})

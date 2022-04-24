@@ -21,7 +21,6 @@
 			@netstatus="netstatus"
 			@error="error"
 		></live-pusher>
-		<button class="btn" @click="resume">resume</button>
 		<button class="btn" @click="stop">停止推流</button>
 		<button class="btn" @click="snapshot">快照</button>
 		<button class="btn" @click="startPreview">开启摄像头预览</button>
@@ -62,13 +61,6 @@ export default {
 			this.context.snapshot({
 				success: e => {
 					console.log(JSON.stringify(e));
-				}
-			});
-		},
-		resume: function() {
-			this.context.resume({
-				success: a => {
-					console.log('livePusher.resume:' + JSON.stringify(a));
 				}
 			});
 		},

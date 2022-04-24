@@ -97,7 +97,7 @@ export default {
 		submitForm() {
 			this.$refs.form.validate().then(data=>{
 				uni.request({
-				    url: "http://localhost:3000/komi/users/register",
+				    url: "http://120.79.218.59:8080/komi/users/register",
 					method: "POST",
 				    data,
 				    // header: {
@@ -109,12 +109,20 @@ export default {
 						} else {
 							// 表单置空
 							Object.keys(this.formData).forEach(key=>{this.formData[key]=''})
+							uni.showToast({
+								title:'注册成功',
+								icon:"success"
+							})
 							console.log('注册成功！！');
 						}
 
 				    }
 				});
 			}).catch(err =>{
+				uni.showToast({
+					title:err.msg[0],
+					icon:"error"
+				})
 				console.log('表单错误信息：', err);
 			})
 		}

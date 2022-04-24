@@ -17,14 +17,14 @@ export default {
 	name: "",
 	data() {
 		return {
-			inputValue: "1234@qq.com",
+			inputValue: "uniapp@qq.com",
 			result: {},
 		};
 	},
 	methods: {
 		submit() {
 			uni.request({
-				url: "http://localhost:3000/komi/search/contacts",
+				url: "http://120.79.218.59:8080/komi/search/contacts",
 				method:"GET",
 				data: {
 					submit: this.inputValue
@@ -44,7 +44,7 @@ export default {
 		},
 		clickHandler() {
 			uni.navigateTo({
-				url: `../userDetails/index?uid=${this.result.user_id}`,
+				url: `../userDetails/index?fid=${this.result.user_id}`,
 			})
 		}
 	}

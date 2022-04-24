@@ -5,12 +5,13 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"iconfont": "node src/dev/iconfont.js"
+    "iconfont": "node src/dev/iconfont.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hyoga/uni-socket.io": "^3.0.4",
     "uni-read-pages": "^1.0.5",
     "uni-simple-router": "^2.0.7"
   },

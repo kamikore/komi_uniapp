@@ -3,46 +3,30 @@ import {
 	createRouter
 } from 'uni-simple-router';
 import store from "./store"
+import {socket} from 'main.js'
 
 const router = createRouter({
 	platform: process.env.VUE_APP_PLATFORM,
 	routes: [...ROUTES]
 });
-//全局路由前置守卫
+//全局路由前置守卫 , 早于 APP.vue lanuch 执行
 router.beforeEach((to, from, next) => {
-	store.state.isLogin = true;
-	if (uni.getStorageSync("userInfo")) {
+
+	let userInfo = uni.getStorageSync("userInfo");
+	
+	if (userInfo && !store.state.isLogin) {
+		store.state.userInfo = userInfo;
 		store.state.isLogin = true;
+		store.state.count = uni.getStorageSync(`uid${store.state.userInfo.uid}stickyCount`);
+		if(store.state.isLogin){
+			// 告知服务器我的用户id
+			socket.emit("login",{
+				uid: store.state.userInfo.uid
+			});	
+		}
 	}
-	let isLogin = store.state.isLogin;
-	// const token = uni.getStorageSync("token")
-	// const islogin = uni.getStorageSync("islogin")
 
-	// if (token) {
-	// 	uni.request({
-	// 		url: "http://localhost:3000/komi/users/verify",
-	// 		method: "POST",
-	// 		data: {
-	// 			token,
-	// 		},
-	// 		success: function(res) {
-	// 			if (res.statusCode != 200) {
-	// 				console.log(res.data.errMsg)
-	// 				uni.removeStorageSync("token");
-	// 				uni.setStorageSync("islogin",false)
-	// 				next("/subpages/login/index")
-	// 			} else {
-	// 				console.log("校验成功")
-	// 				if(!uni.getStorageSync("islogin")) {
-	// 					uni.setStorageSync("islogin",true)
-	// 				}
-
-	// 			}
-	// 		}
-	// 	})
-	// } 
-
-	if( to.path.includes("login") || isLogin) {
+	if( to.path.includes("login") || store.state.isLogin) {
 		next();
 	} else {
 		console.log("重定向")

@@ -10,13 +10,13 @@
 								"fontSrc": "./static/iconfont.ttf",
 								"fontSize": "52rpx",
 								"text": "\ue67b",
-								"width": "62rpx"
+								"width": "80rpx"
 							},
 							{
 								"fontSrc": "./static/iconfont.ttf",
 								"fontSize": "52rpx",
 								"text": "\ue63c",
-								"width": "62rpx"
+								"width": "80rpx"
 							}
 						]
 					}
@@ -26,7 +26,10 @@
 		{
 			"path": "pages/login/index",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "default",
+				"app-plus": {
+					"autoBackButton" : "false"
+				}
 			}
 		},
 		{
@@ -63,11 +66,16 @@
 				"app-plus": {
 					"titleNView": {
 						"buttons": [{
-								"fontSize": "24rpx",
-								"text": "编辑"
+								"fontSrc": "./static/iconfont.ttf",
+								"fontSize": "52rpx",
+								"text": "\ue67b",
+								"width": "62rpx"
 							},
 							{
-								"type": "menu" //按钮类型(菜单按钮)  
+								"fontSrc": "./static/iconfont.ttf",
+								"fontSize": "52rpx",
+								"text": "\ue63c",
+								"width": "62rpx"
 							}
 						]
 					}
@@ -81,6 +89,14 @@
 				"navigationBarTitleText": "添加好友",
 				"navigationStyle": "default"
 			}
+		},
+		{
+		    "path" : "pages/groupChat/index",
+		    "style" : {
+		        "navigationBarTitleText": "Group Chat",
+		        "enablePullDownRefresh": false,
+				"navigationStyle":"default"
+		    }
 		},
 		{
 			"path": "pages/userDetails/index",
@@ -143,7 +159,7 @@
 		{
 			"path": "pages/recording/index",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "default"
 			}
 		},
 		{
@@ -159,12 +175,45 @@
 			}
 		},
 		{
-			"path": "pages/me/index",
+			"path": "pages/profile/index",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "default",
+				"app-plus":{
+					"titleNView":{
+						"titleText":"profile",
+						"autoBackButton": "false",
+						"titleAlign":"left",
+						"buttons":[{
+							"text":"pen",
+							"fontSize":"32rpx",
+							"width": "100rpx"
+						}]
+					}
+					
+				}
 			}
 		}
-	],
+       
+        ,{
+            "path" : "pages/groupChats/index",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "群聊",
+				"navigationStyle":"default"
+            }
+            
+        }
+        ,{
+            "path" : "pages/chooseFile/index",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "文件选择",
+                "enablePullDownRefresh": false,
+				"navigationStyle":"default"
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -175,7 +224,7 @@
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "", //启动页面，必选
+			"path": "pages/index/index", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	},
@@ -183,11 +232,11 @@
 		"color": "#7A7E83",
 		"selectedColor": "#3cc51f",
 		"borderStyle": "black",
-		"backgroundColor": "#ffffff",
+		"backgroundColor": "#f8f8f8",
 		"list": [{
 				"pagePath": "pages/index/index",
-				"iconPath": "static/images/聊天.png",
-				"selectedIconPath": "static/images/聊天.png",
+				"iconPath": "static/images/chat.png",
+				"selectedIconPath": "static/images/chat.png",
 				"text": "组件"
 			},
 			{
@@ -205,7 +254,7 @@
 			
 			},
 			{
-				"pagePath": "pages/me/index",
+				"pagePath": "pages/profile/index",
 				"iconPath": "static/images/future.png",
 				"selectedIconPath": "static/images/future.png",
 				"text": "我"

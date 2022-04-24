@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {fetchContact} from "../../api"
+import {fetchContacts} from "../../api"
 export default {
 	name: 'loginForm',
 	data() {
@@ -50,7 +50,7 @@ export default {
 		submitForm() {
 			this.$refs.form.validate().then(data=>{
 				uni.request({
-				    url: "http://localhost:3000/komi/users/login",
+				    url: "http://120.79.218.59:8080/komi/users/login",
 					method: "POST",
 				    data,
 				    // header: {
@@ -60,22 +60,22 @@ export default {
 						const data = res.data;
 						if(res.statusCode != 200) {
 							console.log(data.errMsg)
+							uni.showToast({
+								title:data.errMsg,
+								icon:"error"
+							})
 						} else {
-							console.log(res)
 							uni.$emit("fetchContentList",{uid:data.uid});
+						
 							this.$store.dispatch("login",data)
-							fetchContact();
+							fetchContacts();
 							this.$socket.emit("login",{
 								uid: data.uid
 							});	
-							uni.redirectTo({
-								url:"pages/index/index"
+							uni.switchTab({
+								url:"pages/index/index",
 							})
-							// try {
-							//     uni.setStorageSync('token', res.data.token);
-							// } catch (err) {
-							//     console.log(err)
-							// }
+	
 						}
 				    },
 					fail: res => {

@@ -10,14 +10,18 @@
 			scroll-with-animation="true"
 			:scroll-into-view="'fid' + msgId"
 		>
+		
 			<view class="content-list">
 				<view class="content-list-item" v-for="(item, index) in message_list" :key="item.id">
+					<!-- 消息时间，需要接触到最新的一条消息 -->
+					<view class="dateTime" v-if="(item.time - message_list[index == 0?index:index-1].time ) > 1000">{{dateHandler(item.time)}}</view>
 					<!-- 把消息分割为组件 -->
 					<message :item="item"></message>
 				</view>
 			</view>
 		</scroll-view>
-		<send-box :fid="fid"></send-box>
+		<!-- id 作为当前会话的数据库索引，isGroup 区分是普通聊天还是群聊 -->
+		<send-box :id="id" :isGroup="isGroup"></send-box>
 	</view>
 </template>
 
@@ -31,18 +35,19 @@ export default {
 	name: 'chatroom',
 	components: {
 		sendBox,
-		message
+		message,
 	},
 	data() {
 		return {
 			message_list: data.message(),
 			// 当前聊天用户id
-			fid: 0,
+			id: 0,
 			msgId: 0,
 			scrollTop: 0,
 			old: {
 				scrollTop: 0
-			}
+			},
+			isGroup: false,
 		};
 	},
 	methods: {
@@ -55,11 +60,26 @@ export default {
 		userDetail() {
 			console.log('click');
 		},
+		dateHandler(date) {
+			return DateToDateTime(date)
+		}
 	},
 	onLoad(option) {
-		this.fid = Number(option.uid);
+		console.log('当前消息列表',this.message_list)
+		
+		// 群聊为gid，普通为fid
+		if(option.fid) {
+			this.id = Number(option.fid);
+			this.isGroup = false;
+		} else {
+			this.id = Number(option.gid);
+			this.isGroup = true;
+		}
+		// this.message_list = uni.getStorageSync(`${this.$store.state.userInfo.uid}msgWith${this.id}`)
 
-		// this.scrollTop = 1000;
+		
+
+		// 滚动位置的标识
 		this.msgId = this.message_list.length;
 
 		// 统一处理滚动到某个位置，默认不传参数就是滚动到底
@@ -82,22 +102,23 @@ export default {
 
 		// 聊天室监听自己发的消息，以及当前fid 发来的消息，是监听自己的id
 		uni.$on('chatroomMsg', res => {
-			console.log( DateToDateTime(res.dateTime))
+			const {dateTime , msg_content, msg_type, voice_duration ,self} = res;
+			console.log("聊天室消息",msg_content)
 			this.message_list.push({
 				id: this.msgId + 1,
-				time: DateToDateTime(res.dateTime),
-				msg: res.msg_content,
-				type: res.msg_type,
-				voice_duration: res.voice_duration || null,
-				self: res.self
+				time: dateTime,
+				msg: msg_content,
+				type: msg_type,
+				voice_duration: voice_duration || null,
+				self: self || 0
 			});
+			
+			// 缓存当前与该用户的聊天消息
+			uni.setStorageSync(`${this.$store.state.userInfo.uid}msgWith${this.id}`, this.message_list)
 
 			uni.$emit('scrollTo', { msgId: this.msgId + 1 });
 		});
 	},
-	onUnload() {
-
-	}
 };
 </script>
 
@@ -119,6 +140,13 @@ export default {
 			.content-list-item {
 				display: flex;
 				flex-direction: column;
+				margin-top: 40rpx;
+				
+				.dateTime {
+					color: rgba(39, 40, 650, 0.6);
+					padding: 20rpx 0;
+					text-align: center;
+				}
 			}
 		}
 	}

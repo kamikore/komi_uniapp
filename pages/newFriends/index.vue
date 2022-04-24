@@ -10,7 +10,7 @@
 					</view>
 				</view>
 				<!-- 需要view 包裹，flex 才正常布局 -->
-				<view class=""><button type="default" @click="agreeFriend(val.msg_from.user_id,val.msg_from.nickName)">接受</button></view>
+				<view class=""><button type="default" @click="agreeFriend(val)">接受</button></view>
 			 </view>
 		</view>
 	</view>
@@ -26,10 +26,10 @@ export default {
 		};
 	},
 	methods: {
-		agreeFriend(fid,nickName) {
-			console.log(fid,nickName)
+		agreeFriend(contact) {
+			console.log(contact)
 			// 接受后，发起请求双方入库，并发起请求更新用户列表
-			addContact(fid,nickName)
+			addContact(contact.msg_from instanceof Object?contact.msg_from.user_id:contact.msg_from,contact.msg_content)
 			fetchContact()		
 		}
 	},

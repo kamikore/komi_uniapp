@@ -43,6 +43,7 @@ export default {
 			uni.navigateBack()
 		},
 		videoErrorCallback: function(e) {
+			// 提示弹窗
 			uni.showModal({
 				content: e.target.errMsg,
 				showCancel: false
@@ -98,11 +99,15 @@ export default {
 			width: 100%;
 			display: flex;
 			justify-content: space-around;
+
 			
 			button {
 				width: 160rpx;
 				height: 160rpx;
 				border-radius: 50%;
+				text-align: center;
+				line-height: 160rpx;
+				font-size: 40rpx;
 			}
 		}
 	}
