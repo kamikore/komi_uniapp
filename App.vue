@@ -4,7 +4,6 @@ export default {
 	onLaunch: function() {
 		
 		// const uid = uni.getStorageSync("userInfo").uid;
-	
 		if(this.$store.state.isLogin) {
 			// 获取联系人, 如果用户没有切到contact就没有获取联系人
 			this.$store.dispatch("updateContacts")
@@ -30,11 +29,20 @@ export default {
 @import "@/common/iconfont.css";
 
 /*每个页面公共css */
+
+page {
+	color: #3E4347;
+}
+
 button {
 	padding: 0;
 }
 /* 去除默认的浅边框线 */
 button::after{ border: none;}
+
+i {
+	font-style: normal;
+}
 
 	
 ul {
@@ -81,6 +89,14 @@ li {
 			}
 		}
 	}
+}
+
+.tabbarShadow {
+	position: fixed;
+	bottom: 0px;
+	width: 100%;
+	height: 50px;
+	box-shadow: 0px -1px 24px rgba(0, 0, 0, 0.06);
 }
 
 /* 隐藏滚动可视区滚动条 */

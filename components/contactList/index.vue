@@ -2,7 +2,6 @@
 	<view class="contact-list">
 		<view class="contact-item">
 			<view class="initials">A</view>
-			{{contacts}}
 			<view  v-for="(val, key) in contacts" :key="key" @click="clickHandler(val)">
 				<contact :contact="val"></contact>
 			</view>

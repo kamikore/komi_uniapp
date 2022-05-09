@@ -10,11 +10,12 @@ import {socket} from "../main.js"
  * @param {boolean} msg.isGroup - 消息是否为群组消息      
  */
 export function sendMsg(msg) {
+	console.log(store.state.userInfo)
 	msg.dateTime = new Date();
 	msg.msg_from = store.state.userInfo.uid;
 	
 	
-	console.log("发送消息到：",msg.msg_to, "类型为",msg.msg_type)
+	console.log("发送消息到：",msg.msg_to, "消息内容",msg)
 	if(!msg.isGroup) {
 		// 触发socket, 该消息格式会沿用到后续的监听器
 		socket.emit('chatMsg', msg);
@@ -30,7 +31,8 @@ export function sendMsg(msg) {
    
    msg.msg_from = msg.msg_to
 	uni.$emit('homeMsg', msg);
-
+	
+	console.log("触发chartroomMsg")
 	uni.$emit('chatroomMsg', {
 		...msg,
 		self: 1

@@ -10,11 +10,14 @@
 			scroll-with-animation="true"
 			:scroll-into-view="'fid' + msgId"
 		>
-		
 			<view class="content-list">
 				<view class="content-list-item" v-for="(item, index) in message_list" :key="item.id">
 					<!-- 消息时间，需要接触到最新的一条消息 -->
-					<view class="dateTime" v-if="(item.time - message_list[index == 0?index:index-1].time ) > 1000">{{dateHandler(item.time)}}</view>
+					<view class="dateTime" v-if="(item.time - message_list[index == 0?index:index-1].time ) > 1000">
+						<view class="line"></view>
+						<view style="margin: 0 20rpx;">{{dateHandler(item.time)}}</view>
+						<view class="line"></view>
+					</view>
 					<!-- 把消息分割为组件 -->
 					<message :item="item"></message>
 				</view>
@@ -30,6 +33,8 @@ import data from '@/common/data.js';
 import sendBox from '@/components/sendBox';
 import message from '@/components/message';
 import {DateToDateTime} from "@/utils"
+import {mapState} from 'vuex'
+
 
 export default {
 	name: 'chatroom',
@@ -37,9 +42,10 @@ export default {
 		sendBox,
 		message,
 	},
+	computed:mapState(['userInfo','contacts']),
 	data() {
 		return {
-			message_list: data.message(),
+			message_list: [],
 			// 当前聊天用户id
 			id: 0,
 			msgId: 0,
@@ -64,8 +70,8 @@ export default {
 			return DateToDateTime(date)
 		}
 	},
+
 	onLoad(option) {
-		console.log('当前消息列表',this.message_list)
 		
 		// 群聊为gid，普通为fid
 		if(option.fid) {
@@ -75,13 +81,14 @@ export default {
 			this.id = Number(option.gid);
 			this.isGroup = true;
 		}
-		// this.message_list = uni.getStorageSync(`${this.$store.state.userInfo.uid}msgWith${this.id}`)
 
 		
-
+		this.message_list = uni.getStorageSync(`${this.userInfo.user_id}msgWith${this.id}`) || []
+		
 		// 滚动位置的标识
 		this.msgId = this.message_list.length;
-
+		uni.$off('scrollTo');
+		
 		// 统一处理滚动到某个位置，默认不传参数就是滚动到底
 		uni.$on('scrollTo', res => {
 			if (res) {
@@ -104,6 +111,7 @@ export default {
 		uni.$on('chatroomMsg', res => {
 			const {dateTime , msg_content, msg_type, voice_duration ,self} = res;
 			console.log("聊天室消息",msg_content)
+			console.log(this.message_list)
 			this.message_list.push({
 				id: this.msgId + 1,
 				time: dateTime,
@@ -114,11 +122,21 @@ export default {
 			});
 			
 			// 缓存当前与该用户的聊天消息
-			uni.setStorageSync(`${this.$store.state.userInfo.uid}msgWith${this.id}`, this.message_list)
+			uni.setStorageSync(`${this.userInfo.user_id}msgWith${this.id}`, this.message_list)
 
 			uni.$emit('scrollTo', { msgId: this.msgId + 1 });
 		});
 	},
+	onReady() {
+		uni.setNavigationBarTitle({
+			title: this.contacts[this.id].remarkName,
+			success: ()=> {
+			},
+			fail: (e) => {
+				console.log('title设置失败',e)
+			}
+		});
+	}
 };
 </script>
 
@@ -132,20 +150,40 @@ export default {
 		// #ifdef APP
 		height: calc(100vh - var(--status-bar-height));
 		// #endif
-		background: #f4f4f4;
+		background: #f7f7fc;
 
 		.content-list {
 			// 防止提交栏覆盖消息
 			padding-bottom: 300rpx;
+			
+					
 			.content-list-item {
 				display: flex;
 				flex-direction: column;
 				margin-top: 40rpx;
 				
+				
 				.dateTime {
-					color: rgba(39, 40, 650, 0.6);
-					padding: 20rpx 0;
-					text-align: center;
+					width: 90%;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					align-self: center;
+					font-size: 28rpx;
+					margin-bottom: 24rpx;
+					color: #ADB5BD;
+					
+					text {
+						flex: 1;
+					}
+					
+					.line {
+						width: 40%;
+						height: 1rpx;
+						border-bottom: 1px solid  #EDEDED;
+					}
+					
+					
 				}
 			}
 		}

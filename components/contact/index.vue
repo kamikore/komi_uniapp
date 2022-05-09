@@ -1,6 +1,6 @@
 <template>
 		<view class="contact">
-			<view class="avatar"><image src="../../static/images/chatroom/emoji.png" mode=""></image></view>
+			<view class="avatar"><image :src="contact.avatar || '../../static/images/future.png'" mode=""></image></view>
 			<view class="nickName">{{contact.remarkName || contact.group_name}}</view>
 		</view>
 </template>
@@ -26,20 +26,25 @@ export default {
 .contact {
 	display: flex;
 	align-items: center;
-	padding: 10rpx 20rpx;
+	border-bottom: 1px solid #EDEDED;
+	margin: 32rpx 48rpx;
+	padding-bottom: 24rpx;
+
 	
 	.avatar {
-		height: 60rpx;
+		width: 80rpx;
+		height: 80rpx;
+		margin-right: 24rpx;
 		
 		image {
-			height: 60rpx;
-			width: 60rpx;
-			padding-right: 20rpx;
+			height: 80rpx;
+			width: 80rpx;
 		}
 	}	
 	
 	.nickName {
-		line-height:60rpx ;
+		font-family: "Mulish";
+		line-height: 80rpx ;
 	}
 }
 		

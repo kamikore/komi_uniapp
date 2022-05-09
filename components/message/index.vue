@@ -31,10 +31,10 @@
 				<!-- file -->
 				<view v-else-if="item.type === 4" class="message file">
 					<view class="fileInfo">
-						<text>{{item.msg.fileName}}</text>
-						<text>{{item.msg.size}}</text>
+						<text class="fileName">{{item.msg.fileName}}</text>
+						<text class="size">{{item.msg.size.split('.')[0]+' KB'}}</text>
 					</view>
-					<image src="" mode=""></image>
+					<image :src="fileType(item.msg.type)" mode=""></image>
 				</view>
 
 				<!-- text -->
@@ -58,7 +58,7 @@ export default {
 	data() {
 		return {
 			videoDuration: "",
-			innerAudioContext: null
+			innerAudioContext: null,
 		};
 	},
 	methods: {
@@ -111,6 +111,23 @@ export default {
 				url:`/pages/videoPlayer/index?url=${url}`
 			})
 		},
+		
+		// 文件类型判断
+		fileType(type) {
+			let flag = ''
+			if(['jpg','jepg','png'].indexOf(type) != -1) {
+				flag = 'img'
+			} else if(["mp4",'mkv','rmvb'].indexOf(type) != -1) {
+				flag = 'video'
+			} else if(['mp3','flac'].indexOf(type) != -1) {
+				flag = 'music'
+			} else if(['zip','rar','7z'].indexOf(type) != -1) {
+				flag = 'rar'
+			} else {
+				flag = 'unkonw'
+			}
+			return `../../static/images/fileType/${flag}.png` 
+		}
 		
 	},
 	created() {
@@ -181,20 +198,20 @@ export default {
 			padding: 20rpx 40rpx;
 			// view 默认自带一点小的灰色边框
 			border: 1rpx solid transparent;
-			border-radius: 10rpx;
+			border-radius: 40rpx 40rpx 40rpx 0;
 			word-break: break-all;
 			background: #fff;
 
-			&:after {
-				content: '';
-				position: absolute;
-				left: -22rpx;
-				top: 20rpx;
-				width: 0;
-				height: 0;
-				border: 12rpx solid transparent;
-				border-right-color: #fff;
-			}
+			// &:after {
+			// 	content: '';
+			// 	position: absolute;
+			// 	left: -22rpx;
+			// 	top: 20rpx;
+			// 	width: 0;
+			// 	height: 0;
+			// 	border: 12rpx solid transparent;
+			// 	border-right-color: #fff;
+			// }
 		}
 
 		.audio {
@@ -261,8 +278,6 @@ export default {
 
 			.fileInfo {
 				text {
-					font-size: 36rpx;
-					background: #007aff;
 					/* 需要有宽度 */
 					width: 300rpx;
 					/* 超过了就隐藏 */
@@ -276,13 +291,25 @@ export default {
 					-webkit-box-orient: vertical;
 					// 溢出换行
 					overflow-wrap: break-word;
+				
 				}
+				
+				.fileName {
+					font-size: 32rpx;
+					margin-bottom: 24rpx;
+					letter-spacing: 2rpx;
+				}
+				
+				.size {
+					color: #ADB5BD;
+				}
+				
 			}
+			
 
 			image {
 				width: 100rpx;
 				height: 100rpx;
-				background: #007aff;
 			}
 		}
 	}
@@ -298,14 +325,15 @@ export default {
 		// text-align: left;
 
 		.message {
-			background: #f0ad4e;
+			border-radius: 40rpx 40rpx 0 40rpx;
+			background: #caf3fc;
 
-			&:after {
-				// content: "";
-				left: 100%;
-				transform: rotateY(180deg);
-				border-right-color: #f0ad4e;
-			}
+			// &:after {
+			// 	// content: "";
+			// 	left: 100%;
+			// 	transform: rotateY(180deg);
+			// 	border-right-color: #f0ad4e;
+			// }
 		}
 
 		.audio {

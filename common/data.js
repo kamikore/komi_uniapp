@@ -102,14 +102,14 @@ export default {
 				id: 14,
 				time: new Date(),
 				type: 4,
-				msg:{fileName:"qweojqwot.jpg",size: '55.55kb'},
+				msg:{fileName:"例如图片.jpg",size: '55.55kb'},
 				self: 0,
 			},
 			{
 				id: 15,
 				time: new Date(),
 				type: 4,
-				msg:{fileName:"qweojqwosdsdsdsdsdsdsdsdsdt.jpg",size: '55.55kb'},
+				msg:{fileName:"qweojqwosdsdsdsdsdsdsdssdssdsdsqw41e12sdt.jpg",size: '55.55kb'},
 				self: 1,
 			}
 		]

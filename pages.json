@@ -6,6 +6,9 @@
 				"navigationStyle": "default",
 				"app-plus": {
 					"titleNView": {
+						"titleText":"Chats",
+						"titleAlign":"left",
+						"titleSize":"36rpx",
 						"buttons": [{
 								"fontSrc": "./static/iconfont.ttf",
 								"fontSize": "52rpx",
@@ -65,6 +68,9 @@
 				"navigationStyle": "default",
 				"app-plus": {
 					"titleNView": {
+						"titleText":"Contacts",
+						"titleSize":"36rpx",
+						"titleAlign":"left",
 						"buttons": [{
 								"fontSrc": "./static/iconfont.ttf",
 								"fontSize": "52rpx",
@@ -102,7 +108,10 @@
 			"path": "pages/userDetails/index",
 			"style": {
 				"navigationBarTitleText": "",
-				"navigationStyle": "default"
+				"navigationStyle": "default",
+				"app-plus":{
+					
+				}
 			}
 		},
 		{
@@ -149,6 +158,7 @@
 					"scrollIndicator": "none", //app端隐藏滚动条，H5 无效
 					// "bounce":"none",
 					"titleNView": {
+						"titleAlign":"left",
 						"buttons": [{
 							"type": "menu" //按钮类型(菜单按钮)
 						}]
@@ -169,25 +179,28 @@
 			}
 		},
 		{
-			"path": "pages/moments/index",
+			"path": "pages/discover/index",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/profile/index",
+			"path": "pages/me/index",
 			"style": {
 				"navigationStyle": "default",
 				"app-plus":{
 					"titleNView":{
-						"titleText":"profile",
+						"titleText":"Profile",
 						"autoBackButton": "false",
 						"titleAlign":"left",
-						"buttons":[{
-							"text":"pen",
-							"fontSize":"32rpx",
-							"width": "100rpx"
-						}]
+						"buttons":[
+							{
+								"fontSrc": "./static/iconfont.ttf",
+								"fontSize": "36rpx",
+								"text": "\ueb75",
+								"width": "80rpx"
+							}
+						]
 					}
 					
 				}
@@ -202,8 +215,8 @@
 				"navigationStyle":"default"
             }
             
-        }
-        ,{
+        },
+        {
             "path" : "pages/chooseFile/index",
             "style" :                                                                                    
             {
@@ -212,12 +225,65 @@
 				"navigationStyle":"default"
             }
             
-        }
+        },
+		{
+		    "path" : "pages/userInfo/index",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "个人信息",
+		        "enablePullDownRefresh": false,
+				"navigationStyle":"default"
+		    }
+		    
+		},
+		{
+		    "path" : "pages/editInfo/index",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false,
+				"navigationStyle":"default"
+		    }
+		    
+		},
+		{
+		    "path" : "pages/editMoment/index",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false,
+				"navigationStyle":"custom"
+		    }
+		    
+		},
+		{
+		    "path" : "pages/moments/index",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "朋友圈",
+		        "enablePullDownRefresh": false,
+				"navigationStyle":"default",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent",
+						"buttons": [
+							{
+								"fontSrc": "./static/iconfont.ttf",
+								"fontSize": "48rpx",
+								"text": "\ue600",
+								"width": "80rpx"
+							}
+						]
+					}
+				}
+		    }
+		    
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#F8F8F8"
 	},
 	"condition": { //模式配置，仅开发期间生效
@@ -229,34 +295,52 @@
 		}]
 	},
 	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#3cc51f",
-		"borderStyle": "black",
-		"backgroundColor": "#f8f8f8",
+		"color": "#ADB5BD",
+		"selectedColor": "#002DE3",
+		"borderStyle": "white",
+		"backgroundColor": "#FFFFFF",
+		"fontSize":"12px",
+		"iconfontSrc": "static/iconfont.ttf",
 		"list": [{
 				"pagePath": "pages/index/index",
 				"iconPath": "static/images/chat.png",
-				"selectedIconPath": "static/images/chat.png",
+				"iconfont": {		
+					"fontSize": "24rpx",
+					"text": "\ue67b",
+					"width": "62rpx"			
+				},
 				"text": "组件"
 			},
 			{
 				"pagePath": "pages/contacts/index",
 				"iconPath": "static/images/future.png",
-				"selectedIconPath": "static/images/future.png",
+				"iconfont": {
+					"fontSize": "24rpx",
+					"text": "\ue67b",
+					"width": "62rpx"			
+				},
 				"text": "联系人"
 
 			},
 			{
-				"pagePath": "pages/moments/index",
+				"pagePath": "pages/discover/index",
 				"iconPath": "static/images/future.png",
-				"selectedIconPath": "static/images/future.png",
+				"iconfont": {
+					"fontSize": "24rpx",
+					"text": "\ue67b",
+					"width": "62rpx"			
+				},
 				"text": "discover"
 			
 			},
 			{
-				"pagePath": "pages/profile/index",
+				"pagePath": "pages/me/index",
 				"iconPath": "static/images/future.png",
-				"selectedIconPath": "static/images/future.png",
+				"iconfont": {
+					"fontSize": "24rpx",
+					"text": "\ue67b",
+					"width": "62rpx"			
+				},
 				"text": "我"
 
 			}

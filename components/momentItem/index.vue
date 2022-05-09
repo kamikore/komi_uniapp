@@ -4,11 +4,15 @@
 			<image :src="item.userInfo.avatar" mode=""></image>
 		</view>
 		<view class="info">
-			<text @click="goDetail">{{item.userInfo.remarkName}}</text>
-			<view class="text">{{item.text}}</view>
-			<view class="content">{{item.content}}</view>
+			<view class="">
+				<text class="userName" @click="goDetail">{{item.userInfo.remarkName}}</text>
+				<text class="dateTime">{{item.dateTime}}</text>
+			</view>
+			<view class="content">{{item.text}}</view>
+			<view class="imgs">
+				<image v-for="(img,index) in item.imgs" :key="index" :src="img" mode="aspectFill"></image>
+			</view>
 			<view class="footer">
-				<text>{{item.dateTime}}</text>
 				<view class="operations" :class="{isShow: showOperate}">
 					<button type="default">Like</button>
 					<button type="default">Comment</button>
@@ -46,22 +50,58 @@ export default {
 <style lang="scss" scoped>
 .momentItem {
 	display: flex;
-	padding-bottom: 40rpx;
-	border-bottom: 2rpx #000000 solid;	
+	margin-bottom: 32rpx;
+	border-bottom: 2rpx solid #EDEDED;
 
 	
 	.avatar {
 		image {
-			width: 100rpx;
-			height: 100rpx;
+			width: 96rpx;
+			height: 96rpx;
 			border-radius: 20rpx;
 			background-color: #FFA726;
-			margin-right: 40rpx;
+			margin-right: 20rpx;
 		}
 	}
 	
 	.info {
 		flex: 1;
+		
+		.userName {
+			font-family: 'Mulish';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 32rpx;
+			line-height: 48rpx;
+			color: #3E4347;
+		}
+		
+		.content {
+			margin: 6rpx 0 20rpx 0;
+			// letter-spacing: 1rpx;
+			color: #ADB5BD;
+		}
+		
+		.dateTime {
+			float: right;
+			color: #3E4347;
+		}
+		
+		.imgs {
+			display: flex;
+			flex-wrap: wrap;
+			column-gap: 3%;
+			
+			
+			image {
+				width: 30%;
+				height: 150rpx;
+				object-fit: cover;
+				margin-bottom: 3%;
+				
+			} 
+			
+		}
 		
 		.footer {
 			display: flex;
@@ -82,6 +122,10 @@ export default {
 					font-size: 30rpx;
 					color: #F0F0F0;
 				}
+			}
+			
+			.iconfont {
+				color: #A4A4A4;
 			}
 			
 			.isShow {

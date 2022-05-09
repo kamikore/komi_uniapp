@@ -11,6 +11,12 @@ const actions = {
 	updateGroupChats({commit},playload) {
 		commit("UPDATEGROUPCHATS",playload)
 	},
+	updateAvatar({commit},playload) {
+		commit("UPDATEAVATAR",playload)
+	},
+	updateCover({commit},playload) {
+		commit("UPDATECOVER",playload)
+	},
 }
 
 export default actions

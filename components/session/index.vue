@@ -4,7 +4,7 @@
 		<view class="session-main">
 			<view class="avatar">
 				<!-- 新消息红点，通过伪元素 -->
-				<image src="@/static/images/future.png" mode=""></image>
+				<image :src="item.fid.avatar || '../../static/images/future.png'" mode=""></image>
 			</view>
 			<view class="content">
 				<view class="content-title">
@@ -19,8 +19,8 @@
 						<text class="count">[2条]</text>
 						<text class="msg-content">{{ showMsg() }}</text>
 					</view>
-					<!-- 设置状态，如消息免打扰 -->
-					<icon type="success" size="26" />
+					<!-- 新消息提醒 -->
+					<i class="bubble">{{1}}</i>
 				</view>
 			</view>
 		</view>
@@ -113,9 +113,10 @@ export default {
 		display: flex;
 		position: relative;
 		// column-gap: 20rpx;
-		padding: 0rpx 10rpx;
+		padding: 0rpx 48rpx;
 		
 		.avatar {
+			margin-right: 24rpx;
 			image {
 				width: 96rpx;
 				height: 96rpx;
@@ -124,10 +125,22 @@ export default {
 		
 		.content {
 			flex-grow: 1;
-			padding: 0rpx 10rpx;
 			.content-title {
 				display: flex;
 				justify-content: space-between;
+				
+				.title {
+					line-height: 48rpx;
+					font-size: 32rpx;
+				}
+				
+				.dateTime {
+					line-height: 32rpx;
+					font-size: 24rpx;
+					font-family: 'Mulish';
+					font-style: normal;
+					font-weight: 600;
+				}
 			}
 		
 			#content-detail {
@@ -140,6 +153,24 @@ export default {
 					white-space: nowrap;					/*强制在一行内显示文本*/
 					overflow: hidden;
 					text-overflow: ellipsis;
+					color: #ADB5BD;
+					line-height: 40rpx;
+					font-size: 28rpx;
+				}
+				
+				.bubble {
+					position: relative;
+					width: 44rpx;
+					height: 40rpx;
+					background: #E94242;
+					border-radius: 80rpx;
+					text-align: center;
+					font-family: 'Mulish';
+					font-style: normal;
+					font-weight: 700;
+					font-size: 18rpx;
+					line-height: 40rpx;
+					color: #FFFFFF;
 				}
 			}
 		}

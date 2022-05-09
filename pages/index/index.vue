@@ -19,8 +19,9 @@
 		<text @click="clear">清空</text>
 		<!-- <dropdown-menu></dropdown-menu> -->
 		<sessionList :list="sessionList" ></sessionList>
-		
+		<view class="tabbarShadow"></view>
 	</view>
+	
 </template>
 
 
@@ -110,6 +111,8 @@ export default {
 			}
 
 		});
+		
+
 
 		/* 
 			用于更新chatroom聊天列表，包含别人发的，自己发的
@@ -141,6 +144,8 @@ export default {
 			console.log("当前用户的socket消息", res);
 			uni.$emit('homeMsg', res);
 			uni.$emit("chatroomMsg",res)
+			
+			// uni.setStorageSync("", )
 		});
 
 		// 监听发给自己的好友请求，当前的好友请求只会创建消息列表，并不会入库
@@ -186,5 +191,7 @@ export default {
 	height: calc(100vh - 50px - var(--status-bar-height));
 	// #endif
 	
+	
+
 }
 </style>

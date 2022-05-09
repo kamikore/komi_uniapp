@@ -28,7 +28,18 @@ const mutations = {
 		fetchGroupChats();
 		// 可覆盖
 		state.groupChats = uni.getStorageSync('groupChats')
+	},
+	// 更新用户头像
+	UPDATEAVATAR(state,playload) {
+		state.userInfo.avatar = playload
+		uni.setStorageSync("userInfo",state.userInfo)
+	},
+	// 更新用户朋友圈封面
+	UPDATECOVER(state,playload) {
+		state.userInfo.cover = playload
+		uni.setStorageSync("userInfo",state.userInfo)
 	}
+	
 	
 	
 }

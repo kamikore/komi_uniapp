@@ -209,13 +209,13 @@ export default {
 										value:["doc","wps","docx","xls","xlsx","pdf","pptx"]
 									},{
 										name:'视频',
-										value:["mp4"] 
+										value:["mp4",'mkv','rmvb'] 
 									},{
 										name:'音乐',
 										value:['mp3','flac'] 
 									},{
 										name:'图片',
-										value:['jpg','png'] 
+										value:['jpg','png','jepg'] 
 									}, {
 										name: '压缩包',
 										value:['zip','rar','7z']

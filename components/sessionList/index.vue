@@ -226,7 +226,6 @@ export default {
 		// #endif
 		
 		
-		
 		// 用于非拖拽时的过渡效果
 		.transition {
 			transition: all 0.5s ease; 

@@ -5,6 +5,7 @@
 		
 		<contact-extension></contact-extension>
 		<contact-list :contacts="contacts"></contact-list>
+		<view class="tabbarShadow"></view>
 	</view>
 </template>
 

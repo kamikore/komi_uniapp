@@ -1,6 +1,6 @@
 <template>
-	<view class="sendBox-container">
-		<view class="send-box" :class="{ show: !extendBox.hidden }">
+	<view class="sendBox-container" :class="{ show: !extendBox.hidden }">
+		<view class="send-box" >
 			<view class="nav-bar">
 				<view :class="showVoice ? 'voice' : 'keyboard'" @tap="showMike"><button></button></view>
 				<textarea v-show="showInput" v-model="inputs" auto-height="true" fixed="true" :focus="isfocus" @blur="isfocus = false" />
@@ -211,21 +211,21 @@ export default {
 // 	clear: both;
 // }
 
+.show {
+	transform: translateY(0) !important;
+}
+
 .sendBox-container {
 	position: fixed;
 	bottom: 0;
 	width: 100%;
 	z-index: 1;
-
-	.show {
-		transform: translateY(0) !important;
-	}
+	transform: translateY(450rpx);
+	transition: all 0.1s ease-in-out;
 
 	.send-box {
 		width: 100%;
-		transform: translateY(450rpx);
-		transition: all 0.1s ease-in-out;
-		background-color: #f7f7f5;
+		background-color: #FFFFFF;
 
 		.nav-bar {
 			// height: 100rpx;
@@ -242,7 +242,7 @@ export default {
 					padding: 0;
 					text-align: center;
 					line-height: 60rpx;
-					color: #fff;
+					color: #FFFFFF;
 					background: #f0ad4e;
 				}
 			}
@@ -265,7 +265,7 @@ export default {
 				padding: 20rpx;
 				border-radius: 20rpx;
 				max-height: 160rpx;
-				background: #fff;
+				background: #f7f7fc;
 			}
 
 			.voice {
