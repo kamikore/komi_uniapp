@@ -4,5 +4,6 @@ const getters = {
   userInfo: state => state.userInfo,
   islogin: state => state.islogin,  
   contacts: state => state.contacts,
+  unRead: state => state.unRead,
 }
 export default getters

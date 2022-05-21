@@ -14,6 +14,7 @@
 <script>
 import {mapState} from "vuex"
 import {uploadAvatarOrCover} from "@/api"
+import {filePath2base64} from "@/utils"
 
 
 export default {
@@ -62,12 +63,21 @@ export default {
 					count:1,
 					sizeType:['compressed'],
 					success: (res) => {
+						// #ifdef H5
 						const file = res.tempFiles[0];
 						const reader = new FileReader();
 						reader.readAsDataURL(file); 
 						reader.onload = () => {
 							uploadAvatarOrCover(reader.result,file.type.split("/")[1],'avatar')
 						}
+						// #endif
+						//#ifdef APP
+						filePath2base64(res.tempFiles[0]).then((res) => {
+							uploadAvatarOrCover(res.base64,res.type,'avatar')
+						}, (err) => {
+							console.log("读写错误",err)
+						})
+						// #endif
 					},
 					fail(err) {
 						uni.showToast({
@@ -87,9 +97,7 @@ export default {
 			})
 		}
 	},
-	onUnload() {
-		console.log("unload")
-	}
+
 };
 </script>
 

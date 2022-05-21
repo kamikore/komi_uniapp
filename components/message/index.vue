@@ -1,7 +1,8 @@
 <template>
 	<view class="message-container">
-		<view class="content" :class="{ 'content-right': item.self }" :id="'fid' + item.id">
-			<view class="avatar" @tap.stop="userDetail"><image src="@/static/images/Group.png" mode=""></image></view>
+		<!-- id值关联着 chatroom 当前滚动的位置 -->
+		<view class="content" :class="{ 'content-right': item.self }" :id="'id' + item.id">
+			<view class="avatar" @tap.stop="userDetail"><image :src="avatarSrc" mode="aspectFill"></image></view>
 			<view class="info" @tap.stop>
 				<!-- 只有在群聊才显示昵称 -->
 				<!-- <text class="username">kamikore</text> -->
@@ -29,12 +30,27 @@
 				</view>
 
 				<!-- file -->
-				<view v-else-if="item.type === 4" class="message file">
+				<view v-else-if="item.type === 4" class="message file" @click="getFile">
 					<view class="fileInfo">
 						<text class="fileName">{{item.msg.fileName}}</text>
 						<text class="size">{{item.msg.size.split('.')[0]+' KB'}}</text>
 					</view>
 					<image :src="fileType(item.msg.type)" mode=""></image>
+				</view>
+				
+				
+				<!-- location -->
+				<view 
+					v-else-if="item.type === 6" 
+					class="message location" 
+					@click="openLocation(item.msg.latitude,item.msg.longitude)"
+					style="background-color: #ffffff;"
+				>
+					<view class="locationInfo">
+						<text class="name" >{{item.msg.name}}</text>
+						<text class="address" >{{item.msg.address}}</text>
+					</view>
+					<image src="@/static/images/chatroom/map.png" mode="aspectFit"></image>
 				</view>
 
 				<!-- text -->
@@ -45,7 +61,6 @@
 </template>
 
 <script>
-import data from '@/common/data.js';
 import {SecondToTime} from "@/utils"
 import {createInnerAudioContext} from "@/utils"
 
@@ -55,6 +70,15 @@ import {createInnerAudioContext} from "@/utils"
 export default {
 	name: 'message',
 	props: ['item'],
+	computed: {
+		avatarSrc() {
+			if(this.item.self) {
+				return this.$store.state.userInfo.avatar ||  '../../static/images/future.png'
+			} else {
+				return this.$store.state.contacts[this.item.msg_from].fid.avatar || '../../static/images/future.png'
+			}
+		}
+	},
 	data() {
 		return {
 			videoDuration: "",
@@ -115,7 +139,7 @@ export default {
 		// 文件类型判断
 		fileType(type) {
 			let flag = ''
-			if(['jpg','jepg','png'].indexOf(type) != -1) {
+			if(['jpg','jpeg','png'].indexOf(type) != -1) {
 				flag = 'img'
 			} else if(["mp4",'mkv','rmvb'].indexOf(type) != -1) {
 				flag = 'video'
@@ -126,8 +150,30 @@ export default {
 			} else {
 				flag = 'unkonw'
 			}
+			console.log("文件类型",flag)
 			return `../../static/images/fileType/${flag}.png` 
-		}
+		},
+		
+		// 跳转文件接收页面
+		getFile() {
+			uni.navigateTo({
+				
+			})
+		},
+		
+		// 打开地图显示位置信息,输入纬度，经度
+		 openLocation(latitude,longitude) {
+			 uni.openLocation({
+				 latitude,
+				 longitude,
+				 success: () => {
+					 console.log("接口调用成功")
+				 },
+				 fail: () => {
+				 	error.log("接口调用失败")
+				 }
+			 })
+		 }
 		
 	},
 	created() {
@@ -201,6 +247,13 @@ export default {
 			border-radius: 40rpx 40rpx 40rpx 0;
 			word-break: break-all;
 			background: #fff;
+			font-family: 'Mulish';
+			font-style: normal;
+			font-weight: 400;
+			font-size: 28rpx;
+			line-height: 48rpx;
+			color: #0F1828;
+
 
 			// &:after {
 			// 	content: '';
@@ -311,6 +364,53 @@ export default {
 				width: 100rpx;
 				height: 100rpx;
 			}
+		}
+		
+		.location {
+			padding: 20rpx 0 0 0;
+			
+			.locationInfo {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				padding: 0 20rpx;
+				
+				.name {
+					display: block;
+					font-family: 'Mulish';
+					font-style: normal;
+					font-weight: 600;
+					font-size: 32rpx;
+					line-height: 24px;
+					color: #0F1828;
+					width: 400rpx;
+					white-space: nowrap;					/*强制在一行内显示文本*/
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+				
+				.address {
+					display: block;
+					font-family: 'Mulish';
+					font-style: normal;
+					font-weight: 500;
+					font-size:24rpx;
+					line-height: 40rpx;
+					/* identical to box height, or 125% */				
+					letter-spacing: 0.448px;
+					width: 400rpx;
+					color: #ADB5BD;
+					white-space: nowrap;					/*强制在一行内显示文本*/
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+			}
+			
+			image {
+				width: 100%;
+				height: 200rpx;
+				bottom: 0;
+			}		
 		}
 	}
 }

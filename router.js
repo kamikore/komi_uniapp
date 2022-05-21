@@ -18,6 +18,8 @@ router.beforeEach((to, from, next) => {
 		store.state.userInfo = userInfo;
 		store.state.isLogin = true;
 		store.state.count = uni.getStorageSync(`uid${store.state.userInfo.uid}stickyCount`);
+		store.state.unRead = uni.getStorageSync(`${store.state.userInfo.uid}UnRead`)
+		console.log("触发login")
 		if(store.state.isLogin){
 			// 告知服务器我的用户id
 			socket.emit("login",{

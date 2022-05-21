@@ -5,7 +5,13 @@
 				<view :class="showVoice ? 'voice' : 'keyboard'" @tap="showMike"><button></button></view>
 				<textarea v-show="showInput" v-model="inputs" auto-height="true" fixed="true" :focus="isfocus" @blur="isfocus = false" />
 				<!-- 即使切换了页面，touchend 同样有效 -->
-				<button v-show="!showInput" @touchstart="recordStart" @touchmove="touchmove($event,screenHeight)" @touchend="recordEnd" style="flex-grow: 1;">按住说话</button>
+				<button 
+					v-show="!showInput" 
+					@touchstart="recordStart" 
+					@touchmove="touchmove($event,screenHeight)" 
+					@touchend="recordEnd" 
+					style="flex-grow: 1;"
+				>按住说话</button>
 				<view :class="showEmoji ? 'emoji' : 'keyboard'" @tap="showExtend('emoji')"><button></button></view>
 				<view v-show="!showSend" class="tools" @tap="showExtend('tools')"><button></button></view>
 				<view v-show="showSend" class="send"><button type="default" @click="send">发送</button></view>
@@ -25,7 +31,7 @@ import data from '@/common/data.js';
 import toolsBox from '@/components/toolsBox';
 import emojiBox from '@/components/emojiBox';
 import {mapState} from "vuex"
-import { debounce, stopWatch , sendMsg ,convertFilePath} from "@/utils/index.js"
+import { debounce, stopWatch , sendMsg ,convertFilePath,checkAndroidPermission} from "@/utils/index.js"
 // 录音管理器
 const recorderManager = uni.getRecorderManager();
 
@@ -58,6 +64,8 @@ export default {
 			
 			// 录音状态 0为取消，1为正常发送
 			recordStatus: 1,
+			// 是否为首次授权，首次授权不跳转,但仍然存在问题
+			flag: true,
 			
 			screenHeight: 0,
 			
@@ -127,16 +135,20 @@ export default {
 			this.extendBox.hidden = true;
 		},
 		recordStart() {
-			console.log("recordStart")
-			uni.navigateTo({
-				url: "/pages/recording/index"
-			})
-			recorderManager.start({
-				duration: 45000 		// 最大录音时长
-			});
+			// checkAndroidPermission("android.permission.RECORD_AUDIO").then((res) => {
+			// 	if(!res && !flag) return
+				this.flag = false
+				uni.navigateTo({
+					url: "/pages/recording/index"
+				})
+				recorderManager.start({
+					duration: 45000 		// 最大录音时长
+				});
+			// })
+			
 		},
 		recordEnd(detail) {
-			console.log("recordEnd")
+			console.log("end")
 			recorderManager.stop()
 			uni.navigateBack({
 				delta: 1
@@ -172,9 +184,9 @@ export default {
 		recorderManager.onStart(() => {
 			this.stopTimer = stopWatch();
 			
-			setTimeout(() => {
-				recorderManager.stop()
-			},3000)
+			// setTimeout(() => {
+			// 	recorderManager.stop()
+			// },3000)
 		})
 		
 		
@@ -190,9 +202,11 @@ export default {
 		});
 		
 		recorderManager.onError(err=>{
+			self.stopTimer()
 			console.log("录音发生错误",err)
+			uni.navigateBack()
 		})
-		
+	
 	},
 	mounted() {
 		const backspaceTop = uni.$on('closeExtend', () => {

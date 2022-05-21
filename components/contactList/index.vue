@@ -3,6 +3,7 @@
 		<view class="contact-item">
 			<view class="initials">A</view>
 			<view  v-for="(val, key) in contacts" :key="key" @click="clickHandler(val)">
+				{{val}}
 				<contact :contact="val"></contact>
 			</view>
 		</view>
@@ -45,6 +46,7 @@ export default {
 	.contact-item {
 		.initials{
 			height: 50rpx;
+			width: 100vw;
 			background: #ededed;
 		}
 		

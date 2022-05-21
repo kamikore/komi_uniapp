@@ -1,6 +1,6 @@
 <template>
 		<view class="contact">
-			<view class="avatar"><image :src="contact.avatar || '../../static/images/future.png'" mode=""></image></view>
+			<view class="avatar"><image :src="contact.fid.avatar || '../../static/images/future.png'" mode="aspectFill"></image></view>
 			<view class="nickName">{{contact.remarkName || contact.group_name}}</view>
 		</view>
 </template>

@@ -18,6 +18,8 @@ const store = new Vuex.Store({
 		groupChats:{},
 		// 记录有多少个置顶session
 		count: 0,
+		// 记录session列表未读信息
+		unRead: {fid:{},gid:{}}
     },  
     mutations, 
 	actions,

@@ -1,13 +1,18 @@
 <template>
 	<view
-		class="header-banner" 
-		:class="{expand: isExpand}" 
-		:style="{backgroundImage: `url(${userInfo.cover || '../static/images/moments/cover.jpeg'})`}" 
+		class="header-banner"
+		:class="{expand: isExpand}"
 		@click="expandBanner"
-	>
+	>	
+		<image 
+			class="cover" 
+			:class="{expand: isExpand}"  
+			:src="userInfo.cover || '../../static/images/moments/cover.jpeg'" 
+			mode="aspectFill">
+		</image>
 		<view class="userInfo" v-show="!isExpand">
 			<text>{{userInfo.nickName}}</text>
-			<image @click.stop="goDetail" :src="userInfo.avatar || '../../static/images/test/7.jpg'" mode=""></image>
+			<image @click.stop="goDetail" :src="userInfo.avatar || '../../static/images/test/7.jpg'" mode="aspectFill"></image>
 		</view>
 		<view v-show="isExpand" class="chooseCover" @click.stop="chooseCover">
 			<i class="iconfont icon-img"></i>
@@ -19,6 +24,7 @@
 <script>
 import {mapState} from "vuex"
 import {uploadAvatarOrCover} from "@/api"
+import {filePath2base64} from "@/utils"
 
 export default {
 	name: "momentsBanner",
@@ -36,13 +42,23 @@ export default {
 			uni.chooseImage({
 				count:1,
 				sizeType:['compressed'],
-				success: (res) => {
+				success(res) {
+					// #ifdef H5
 					const file = res.tempFiles[0];
 					const reader = new FileReader();
 					reader.readAsDataURL(file); 
 					reader.onload = () => {
-						uploadAvatarOrCover(this.userInfo.account,reader.result,file.type.split("/")[1],'cover')
+						uploadAvatarOrCover(reader.result,file.type.split("/")[1],'cover')
 					}
+					// #endif 
+					//#ifdef APP
+					filePath2base64(res.tempFiles[0]).then((res) => {
+						uploadAvatarOrCover(res.base64,res.type,'cover')
+					}, (err) => {
+						console.log("读写错误",err)
+					})
+					// #endif
+					this.isExpand = false
 				},
 				fail(err) {
 					uni.showToast({
@@ -68,13 +84,16 @@ export default {
 	
 	.header-banner {
 		position: relative;
-		width: 100%;
+		width: 100vw;
 		height: 30vh;
 		margin-bottom: 100rpx;
 		transition: all 0.2s ease-in-out;
-		background-size: cover;
-		background-repeat: no-repeat;
-		background-position: center;
+		
+		.cover {
+			position: absolute;
+			width: 100vw;
+			transition: all 0.2s ease-in-out;
+		}
 		
 		.userInfo {
 			position: absolute;

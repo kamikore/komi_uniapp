@@ -1,7 +1,7 @@
 export default {
 	/*
 		群聊没有特别类型代号，群消息最后也是分文字、语音...
-		消息类型： 0：text , 1: audio, 2: image, 3: video, 4: file ,5: addFriends, 
+		消息类型： 0：text , 1: audio, 2: image, 3: video, 4: file ,5: addFriends, 6: location
 		self: 0 别人， 1 自己
 	*/
 	message: function() {
@@ -111,6 +111,30 @@ export default {
 				type: 4,
 				msg:{fileName:"qweojqwosdsdsdsdsdsdsdssdssdsdsqw41e12sdt.jpg",size: '55.55kb'},
 				self: 1,
+			},
+			{
+				id:16,
+				time: new Date(),
+				type: 6,
+				msg:{
+					name:"银山大厦",
+					address:"广东省广州市越秀区餐边柜都93-95号",
+					latitude: 23.128822,
+					longitude: 113.271339,
+					self: 0,
+				}
+			},
+			{
+				id:17,
+				time: new Date(),
+				type: 6,
+				msg:{
+					name:"银山大厦",
+					address:"广东省广州市越秀区餐边柜都93-95号",
+					latitude: 23.128822,
+					longitude: 113.271339,
+					self: 0,
+				},
 			}
 		]
 	},

@@ -17,6 +17,12 @@ const actions = {
 	updateCover({commit},playload) {
 		commit("UPDATECOVER",playload)
 	},
+	updateUnRead({commit},playload) {
+		commit("UPDATEUNREAD",playload)
+	},
+	clearUnRead({commit},playload) {
+		commit("CLEARUNREAD",playload)
+	},
 }
 
 export default actions

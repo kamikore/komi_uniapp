@@ -32,6 +32,8 @@ export default {
 
 page {
 	color: #3E4347;
+	font-family: 'Mulish';
+	font-style: normal;
 }
 
 button {
@@ -93,7 +95,15 @@ li {
 
 .tabbarShadow {
 	position: fixed;
-	bottom: 0px;
+	//#ifdef APP
+	bottom: -50px;
+	//#endif
+	
+	
+	//#ifdef H5
+	bottom: 0;
+	//#endif
+	
 	width: 100%;
 	height: 50px;
 	box-shadow: 0px -1px 24px rgba(0, 0, 0, 0.06);

@@ -40,10 +40,11 @@ export function fetchGroupChats() {
 
 
 /**
- * @param {Object} fid  
- * @param {String} nickName
+ * @param {Object} fid  - 对方ID
+ * @param {String} remarkName - 对方给自己的备注
+ * @param {Sting} nickName - 对方名字
  */
-export function addContact(fid,nickName) {
+export function addContact(fid,remarkName,nickName) {
 	const userInfo = uni.getStorageSync("userInfo");
 	uni.request({
 		url: "http://120.79.218.59:8080/komi/users/addContact",
@@ -52,9 +53,10 @@ export function addContact(fid,nickName) {
 		data: {
 			fid,
 			uid: userInfo.uid,
-			// 接受好友，默认以nickName 为备注
-			remarkName: nickName,
+			remarkName,
+			// 自己名字
 			username: userInfo.nickName,
+			nickName,
 		},
 		success: res =>  {
 			if(res.statusCode != 200) {
@@ -86,10 +88,12 @@ export function uploadAvatarOrCover( file ,type, action) {
 			if(res.statusCode != 200) {
 				console.log(res.data.errMsg)
 			} else {
+				// 加上时间戳，触发页面更新
+				const src = res.data + `?flag=${Date.now()}`
 				if(action === 'avatar') {
-					store.dispatch("updateAvatar",res.data)
+					store.dispatch("updateAvatar",src)
 				} else {
-					store.dispatch("updateCover",res.data)
+					store.dispatch("updateCover",src)
 				}
 			}
 		},
@@ -134,48 +138,57 @@ export function uploadUserInfo(field,value) {
  * @param {String} fileTypes- 文件类型 
  */
 export function uploadMoment( files ,content) {
-	uni.request({
-		url: 'http://120.79.218.59:8080/komi/moments/upload',
-		method:"POST",
-		data: {
-			files,
-			content,
-			user_id: store.state.userInfo.uid,
-			account: store.state.userInfo.account,
-			dateTime: new Date(),
-		},
-		success: res =>  {
-			if(res.statusCode != 200) {
-				console.log(res.data.errMsg)
-			} else {
-				console.log("success")
+	return new Promise((resolve,reject) => {
+		uni.request({
+			url: 'http://120.79.218.59:8080/komi/moments/upload',
+			method:"POST",
+			data: {
+				files,
+				content,
+				user_id: store.state.userInfo.uid,
+				account: store.state.userInfo.account,
+				dateTime: new Date(),
+			},
+
+			success: res =>  {
+				if(res.statusCode != 200) {
+					console.log(res.data.errMsg)
+				} else {
+					resolve(res.data)
+				}
+			},
+			fail: (err) => {
+				console.log(err.errMsg)
 			}
-		},
-		fail: (err) => {
-			console.log(err.errMsg)
-		}
+		})
 	})
 }
 
 /**
  * @param {String} uid - 用户id，如果没有返回所有
+ * @param {String} offset - 偏移量，即分页页码
+ * @param {String} amount - 返回记录数量
  */
-export function fetchMoments(uid=null) {
-	uni.request({
-		url: 'http://120.79.218.59:8080/komi/moments/fetch',
-		method:"GET",
-		data: {
-			uid
-		},
-		success: res =>  {
-			if(res.statusCode != 200) {
-				console.log(res.data.errMsg)
-			} else {
-				console.log("success",res)
+export function fetchMoments(uid=null,offset,amount) {
+   return new Promise((resolve,reject) => {
+		uni.request({
+			url: 'http://120.79.218.59:8080/komi/moments/fetch',
+			method:"GET",
+			data: {
+				uid,
+				offset,
+				amount,
+			},
+			success: res =>  {
+				if(res.statusCode != 200) {
+					console.log(res.data.errMsg)
+				} else {
+					resolve(res)
+				}
+			},
+			fail: (err) => {
+				reject(err.errMsg)
 			}
-		},
-		fail: (err) => {
-			console.log(err.errMsg)
-		}
+		})
 	})
 }

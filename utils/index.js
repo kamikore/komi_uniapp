@@ -1,6 +1,6 @@
 import store from "@/store"
 import {socket} from "../main.js"
-
+import permision from "@/js_sdk/wa-permission/permission.js"
 
 /**
  * @param {Object} msg
@@ -10,12 +10,11 @@ import {socket} from "../main.js"
  * @param {boolean} msg.isGroup - 消息是否为群组消息      
  */
 export function sendMsg(msg) {
-	console.log(store.state.userInfo)
+	console.log("发送消息",msg)
 	msg.dateTime = new Date();
 	msg.msg_from = store.state.userInfo.uid;
 	
 	
-	console.log("发送消息到：",msg.msg_to, "消息内容",msg)
 	if(!msg.isGroup) {
 		// 触发socket, 该消息格式会沿用到后续的监听器
 		socket.emit('chatMsg', msg);
@@ -29,10 +28,9 @@ export function sendMsg(msg) {
 		离线消息会是一个数组, 所以在sendBox消息统一作为数组处理
 	*/
    
-   msg.msg_from = msg.msg_to
+	msg.msg_from = msg.msg_to
 	uni.$emit('homeMsg', msg);
 	
-	console.log("触发chartroomMsg")
 	uni.$emit('chatroomMsg', {
 		...msg,
 		self: 1
@@ -163,6 +161,7 @@ export function DateToDateTime(date) {
 	const oneDay = 60*1000*60*24;
 	
 	// new Date() 的对象传递时，另一端变成了普通字符串
+	console.log("传递的Date",date)
 	date = new Date(date);
 	const offset = nowDate - date;
 	let H = date.getHours();
@@ -176,10 +175,10 @@ export function DateToDateTime(date) {
 	if(offset < oneDay) {
 		result = Time; 
 	}
-	else if(offset < 2*oneDay || offset > oneDay) {
+	else if(offset < 2*oneDay && offset > oneDay) {
 		result = `昨天 ${Time}`;
 	}
-	else if(offset > 2*oneDay || offset < 365*oneDay) {
+	else if(offset > 2*oneDay && offset < 365*oneDay) {
 		result = `${DateTime} ${Time}`
 	}
 	else {
@@ -223,13 +222,13 @@ export function filePath2base64(filePath) {
 	const promise = new Promise((resolve,reject) => {
 		plus.io.resolveLocalFileSystemURL(filePath.path,(entry)=>{
 		 entry.file( file =>{  
-				console.log("文件信息",file)
+				console.log("文件信息",file, filePath)
 				const reader = new plus.io.FileReader();  
 				// 以URL编码格式读取文件数据内容
 				reader.readAsDataURL(file); 
 				// 读取结束后回调
 				reader.onloadend = function (e) {  
-					resolve({fileName:filePath.name,type:filePath.type,size: filePath.size,base64:e.target.result})
+					resolve({fileName:file.name,type: file.type.split("/")[1],size: filePath.size,base64:e.target.result})
 				};  
 			})  
 			
@@ -239,4 +238,35 @@ export function filePath2base64(filePath) {
 		})
 	})
 	return promise
+}
+
+/**
+ * @param {String} permisionID - 权限对应值 https://ext.dcloud.net.cn/plugin?id=594
+ */
+export async function checkAndroidPermission(permisionID) {
+    var result = await permision.requestAndroidPermission(permisionID)
+    var strStatus
+    if (result == 1) {
+        strStatus = "已获得授权"
+		return 1
+    } else if (result == 0) {
+        strStatus = "未获得授权"
+    } else {
+        strStatus = "被永久拒绝权限"
+    }
+    uni.showModal({
+		title:"权限申请",
+        content: "应用需要获取位置信息的权限",
+		cancelColor:"#ADB5BD",
+		confirmText:"前往设置",
+		success: (res) => {
+			if (res.confirm) {
+				console.log('用户点击确定');
+				permision.gotoAppPermissionSetting()
+			} else if (res.cancel) {
+				console.log('用户点击取消');
+			}
+		}
+    });
+	return 0
 }

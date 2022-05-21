@@ -7,16 +7,17 @@
 			@clickRight="publish"
 		>
 			<block slot="right">
-				<button  :disabled="!(content || tempPaths.length)">发表</button>
+				<button  :disabled="!(content || tempPaths.length)" >发表</button>
 			</block>
 		</uni-nav-bar>
-		<textarea v-model="content" id="" cols="30" rows="10" placeholder="这一刻的想法..."></textarea>
+		<textarea v-model="content" id="" cols="30" rows="10" mmaxlength="250" placeholder="这一刻的想法..."></textarea>
 		<view class="imgs">
 			<image 
 				v-for="(item,index) in tempPaths" 
 				:key="item" :src="item" 
 				@click="previewImg(index)"
 				mode="aspectFill"
+				:class="index===1 || 4 || 7?'columnGap':''"
 			></image> 
 			<view v-show="tempPaths.length != 9" class="chooseButton" @click="chooseImg"><i class="iconfont icon-add1"></i></view>
 		</view>
@@ -25,6 +26,7 @@
 
 <script>
 import {uploadMoment} from "@/api"
+import {filePath2base64} from "@/utils"
 	
 export default {
 	name: "editMoment",
@@ -43,6 +45,7 @@ export default {
 		publish() {
 			let promises = []
 			this.tempFiles.forEach(file => {
+				// #ifdef H5
 				const promise = new Promise((resolve,reject) => {
 					const reader = new FileReader();
 					reader.onload = () => {
@@ -51,10 +54,26 @@ export default {
 					reader.readAsDataURL(file); 
 				})
 				promises.push(promise)
+				// #endif
+
+				//#ifdef APP
+				const promise = new Promise((resolve,reject) => {
+					filePath2base64(file).then((res) => {
+						resolve({file:res.base64,fileType:res.type})
+					}, (err) => {
+						reject(err.errMsg)
+					})
+				})
+				promises.push(promise)
+			
+				// #endif
 			})
 			Promise.all(promises).then((values) => {
 				this.files = values
-				uploadMoment(this.files,this.content)
+				uploadMoment(this.files,this.content).then((moment)=>{
+					console.log("返回的moment",moment)
+					uni.$emit('updateMoments',moment)
+				})
 			});
 			uni.navigateBack()
 		},
@@ -84,6 +103,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+	.editMoment {
+		padding-top: var(--status-bar-height);
+	}
+	
 	button {
 		line-height: 60rpx;
 		height: 60rpx;
@@ -95,7 +118,7 @@ export default {
 	
 	textarea {
 		height: 200rpx;
-		margin: 20rpx auto;
+		margin: 40rpx auto;
 		padding: 20rpx;
 		background-color: #F7F7FC;
 	}
@@ -103,8 +126,16 @@ export default {
 	.imgs {
 		display: flex;
 		flex-wrap: wrap;
+		// #ifdef H5
 		column-gap: 3%;
+		// #endif
 		margin: 20rpx 80rpx;
+		
+		// #ifdef APP
+		.columnGap {
+			margin: 0 1.5% 3% 1.5%;
+		}
+		// #endif
 		
 		image {
 			width: 30%;
@@ -119,8 +150,8 @@ export default {
 			line-height: 150rpx;
 			text-align: center;
 			margin-bottom: 3%;
-			background-color: #fdfff7;
-			
+			background-color:  #F7F7FC;
+		
 			.iconfont {
 				font-size: 100rpx;
 				font-weight: 500;

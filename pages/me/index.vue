@@ -3,12 +3,12 @@
 		<profile></profile>
 		<view id="switch">
 			<view id="slider" :style="{left: isSwitch?'calc(50% - 4rpx)':'4rpx'}"></view>
-			<button :class="isSwitch?'':'active'" type="default" @click="isSwitch = 0">Chat</button>
+			<button :class="isSwitch?'':'active'" type="default" @click="isSwitch = 0">Moments</button>
 			<button :class="isSwitch?'active':''" type="default" @click="isSwitch = 1">intro</button>
 		</view>
 		<view id="contentBox">
-			<component v-if="!isSwitch" is="momentList"></component>
-			<view class="" v-else>
+			<moment-list v-show="!isSwitch" :moments="moments" :enablePullDownRefresh="false" :uid="userInfo.uid"></moment-list> 
+			<view class="" v-show="isSwitch">
 				<button type="default" @click="goMoments">朋友圈详情</button>
 				<button type="default" @click="logout">退出登录</button>
 			</view>
@@ -19,6 +19,8 @@
 
 
 <script>
+import {mapState} from "vuex"
+import {fetchMoments} from "@/api"
 import profile from "@/components/profile"
 import momentList from "@/components/momentList"
 
@@ -29,9 +31,11 @@ export default {
 		profile,
 		momentList
 	},
+	computed:mapState(['userInfo']),
 	data() {
 		return {
-			isSwitch: 0
+			isSwitch: 0,
+			moments:[]
 		}
 	},
 	methods: {
@@ -42,7 +46,7 @@ export default {
 		},
 		goMoments() {
 			uni.navigateTo({
-				url: '/pages/moments/index'
+				url: `/pages/moments/index?uid=${this.userInfo.uid}`
 			});
 		},
 		logout() {
@@ -61,7 +65,13 @@ export default {
 			});
 		}
 	},
-	
+	onLoad() {
+		fetchMoments().then((res) => {
+			this.moments = res.data
+		}, (err) =>{
+			console.log(err)
+		})
+	},
 	onHide() {
 		this.isSwitch = 0
 	},
@@ -87,7 +97,7 @@ page {
 		
 		#slider {
 			position: absolute;
-			top: 4rpx;
+			top: 6rpx;
 			left: 4rpx;
 			width: 50%;
 			height: 92rpx;
@@ -118,7 +128,7 @@ page {
 		
 		button {
 			width: 50%;
-			line-height: 90rpx;
+			line-height: 120rpx;
 			font-family: 'Mulish';
 			font-style: normal;
 			font-weight: 600;

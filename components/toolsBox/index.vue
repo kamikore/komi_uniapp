@@ -10,7 +10,8 @@
 
 <script>
 import {mapState} from 'vuex';
-import {getVideoPoster, filePath2base64 , sendMsg} from '@/utils/index.js'
+import {getVideoPoster, filePath2base64 , sendMsg,checkAndroidPermission} from '@/utils'
+import permision from "@/js_sdk/wa-permission/permission.js"
 
 // 访问原生插件
 const AfDocument = uni.requireNativePlugin("Aq-ChooseFile");
@@ -45,8 +46,8 @@ export default {
 				},
 				{
 					src: '../../static/images/chatroom/file.png',
-					title: '测试'
-				}
+					title: '清空聊天记录'
+				},
 			];
 		}
 	},
@@ -107,21 +108,27 @@ export default {
 								uni.chooseVideo({
 									sourceType:['camera'],
 									success: res => {
-										uni.$emit('chatroomMsg', {
-											msg_content: res.tempFilePath,
-											dateTime: Date.now(),
-											msg_type: 3,
-											msg_from: this.userInfo.uid, 			
-											self: 1
-										});
+										sendMsg({
+											msg_content : file,
+											msg_to : this.id,
+											msg_type : 2,
+											isGroup:this.isGroup,
+										})
+										// uni.$emit('chatroomMsg', {
+										// 	msg_content: res.tempFilePath,
+										// 	msg_to: this.id, // 发出去，发别人的id
+										// 	msg_from: this.userInfo.uid, // 还需要附上自己的id
+										// 	msg_type: 3,
+										// 	dateTime: Date.now()
+										// });
 										
-										this.$socket.emit('chatMsg', {
-											msg_content: res.tempFilePath,
-											msg_to: this.id, // 发出去，发别人的id
-											msg_from: this.userInfo.uid, // 还需要附上自己的id
-											msg_type: 3,
-											dateTime: Date.now()
-										});
+										// this.$socket.emit('chatMsg', {
+										// 	msg_content: res.tempFilePath,
+										// 	msg_to: this.id, // 发出去，发别人的id
+										// 	msg_from: this.userInfo.uid, // 还需要附上自己的id
+										// 	msg_type: 3,
+										// 	dateTime: Date.now()
+										// });
 										
 									},
 									fail: (err) => {
@@ -132,20 +139,27 @@ export default {
 								uni.chooseImage({
 									sourceType:['camera'],
 									success: res => {
-										uni.$emit('chatroomMsg', {
-											msg_content: res.tempFilePaths[0],
-											dateTime: Date.now(),
-											msg_type: 2,
-											msg_from: this.userInfo.uid, 
-											self: 1
-										});
-										this.$socket.emit('chatMsg', {
+										sendMsg({
 											msg_content: res.tempFilePaths[0],
 											msg_to: this.id, // 发出去，发别人的id
 											msg_from: this.userInfo.uid, // 还需要附上自己的id
 											msg_type: 2,
 											dateTime: Date.now()
-										});
+										})
+										// uni.$emit('chatroomMsg', {
+										// 	msg_content: res.tempFilePaths[0],
+										// 	dateTime: Date.now(),
+										// 	msg_type: 2,
+										// 	msg_from: this.userInfo.uid, 
+										// 	self: 1
+										// });
+										// this.$socket.emit('chatMsg', {
+										// 	msg_content: res.tempFilePaths[0],
+										// 	msg_to: this.id, // 发出去，发别人的id
+										// 	msg_from: this.userInfo.uid, // 还需要附上自己的id
+										// 	msg_type: 2,
+										// 	dateTime: Date.now()
+										// });
 									},
 									fail: (err) => {
 										console.log("发生错误",errMsg)
@@ -165,7 +179,49 @@ export default {
 					});
 					break;
 				case 3:
-					console.log("3")
+					checkAndroidPermission("android.permission.ACCESS_FINE_LOCATION").then((res) => {
+						// 判断是否授权
+						if(!res) return
+						 // 判断是否开启定位
+						if(!permision.checkSystemEnableLocation()) {
+							uni.showModal({
+								title:"提示",
+							    content: "应用不能获取你的位置，可能无法正常使用定位功能，可通过开启定位服务解决",
+								cancelColor:"#ADB5BD",
+								success: (res) => {
+									if (res.confirm) {
+										console.log('用户点击确定');
+									} else if (res.cancel) {
+										console.log('用户点击取消');
+									}
+								}
+							});
+						} 
+						
+						uni.chooseLocation({
+							success: (res) => {
+								const {name,address,latitude,longitude} = res
+								sendMsg({
+									msg_content: {
+										name,
+										address,
+										latitude,
+										longitude
+									},
+									msg_to: this.id, // 发出去，发别人的id
+									msg_from: this.userInfo.uid, // 还需要附上自己的id
+									msg_type: 6,
+									dateTime: Date.now()
+								})						
+							},
+							fail: function(err) {
+								console.log("失败",err.errMsg)
+							},
+							
+						});
+					})
+
+					
 					break;
 				case 4:
 					uni.showActionSheet({
@@ -251,6 +307,7 @@ export default {
 			width: 110rpx;
 			padding: 20rpx 20rpx;
 			border-radius: 40rpx;
+			margin-bottom: 10rpx;
 
 			image {
 				height: 72rpx;

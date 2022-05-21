@@ -30,6 +30,7 @@
 			"path": "pages/login/index",
 			"style": {
 				"navigationStyle": "default",
+				"navigationBarTitleText": "登录",
 				"app-plus": {
 					"autoBackButton" : "false"
 				}
@@ -300,24 +301,32 @@
 		"borderStyle": "white",
 		"backgroundColor": "#FFFFFF",
 		"fontSize":"12px",
+		"fontWeight":"700",
 		"iconfontSrc": "static/iconfont.ttf",
+		"midButton": {
+			"height": "82px",
+			"width": "100px",
+			"iconPath": "static/images/home/midbutton.png",
+			"iconWidth": "75px"
+		},
 		"list": [{
 				"pagePath": "pages/index/index",
 				"iconPath": "static/images/chat.png",
-				"iconfont": {		
-					"fontSize": "24rpx",
-					"text": "\ue67b",
-					"width": "62rpx"			
+				"iconfont": {	
+					"fontSrc": "./static/iconfont.ttf",
+					"fontSize": "24px",
+					"fontWeight":"700",
+					"text": "\ue946"		
 				},
-				"text": "组件"
+				"text": "消息"
 			},
 			{
 				"pagePath": "pages/contacts/index",
 				"iconPath": "static/images/future.png",
 				"iconfont": {
-					"fontSize": "24rpx",
-					"text": "\ue67b",
-					"width": "62rpx"			
+					"fontSrc": "./static/iconfont.ttf",
+					"fontSize": "24px",
+					"text": "\ue7bb"	
 				},
 				"text": "联系人"
 
@@ -326,20 +335,20 @@
 				"pagePath": "pages/discover/index",
 				"iconPath": "static/images/future.png",
 				"iconfont": {
-					"fontSize": "24rpx",
-					"text": "\ue67b",
-					"width": "62rpx"			
+					"fontSrc": "./static/iconfont.ttf",
+					"fontSize": "24px",
+					"text": "\ue6ba"		
 				},
-				"text": "discover"
+				"text": "分享"
 			
 			},
 			{
 				"pagePath": "pages/me/index",
 				"iconPath": "static/images/future.png",
 				"iconfont": {
-					"fontSize": "24rpx",
-					"text": "\ue67b",
-					"width": "62rpx"			
+					"fontSrc": "./static/iconfont.ttf",
+					"fontSize": "24px",
+					"text": "\ue918"	
 				},
 				"text": "我"
 

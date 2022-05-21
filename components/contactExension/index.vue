@@ -38,11 +38,10 @@ export default {
 
 <style lang="scss">
 .contact-extension {
-	width: 100%;
 	// height: 300rpx;
 	
 	.item {
-		width: 100%;
+		width: calc(100% - 40rpx);
 		height: 100rpx;
 		background: #FFFFFF;
 		line-height: 80rpx;

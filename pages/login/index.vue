@@ -6,10 +6,13 @@
 				<view class="header-right" @click="goPage">phone number lr</view>
 			</view>
 		</view> -->
-		<view class="banner">左右头</view>
-		<button type="default" @click="goIndex()">进入主页</button>
-		<loginForm></loginForm>
-		<registerForm></registerForm>
+		<view id="switch">
+			<view id="slider" :style="{left: isSwitch?'calc(50% - 4rpx)':'4rpx'}"></view>
+			<button :class="isSwitch?'':'active'" type="default" @click="switchLogin">Login</button>
+			<button :class="isSwitch?'active':''" type="default" @click="switchRegister">Register</button>
+		</view>
+		<loginForm v-show="!isSwitch"></loginForm>
+		<registerForm v-show="isSwitch"></registerForm>
 	</view>
 </template>
 
@@ -24,29 +27,35 @@ export default {
 	},
 	data() {
 		return {
-			inputStyles: {
-				color: "blue",
-			},
-			placeholderStyle: "font-size: 30rpx"
+			isSwitch: 0,
 		};
 	},
 	methods: {
-		goIndex() {
-			uni.switchTab({
-				url: "/pages/index/index"
-			})
-		},
-		goPage() {
-			console.log("goPage")
-			uni.switchTab({
-				url: "/pages/index/index"
-			})
-		},
-		goBack() {
-			uni.navigateBack({
-				delta: 1
+		switchLogin() {
+			this.isSwitch = 0
+			uni.setNavigationBarTitle({
+				title: "用户登录",
+				success: ()=> {
+					console.log("设置成功")
+				},
+				fail: (e) => {
+					console.log('设置失败',e)
+				}
 			});
-		},	
+		},
+		switchRegister() {
+			this.isSwitch = 1
+			uni.setNavigationBarTitle({
+				title: "用户注册",
+				success: ()=> {
+					console.log("设置成功")
+				},
+				fail: (e) => {
+					console.log('设置失败',e)
+				}
+			});
+		}
+		
 	},
 };
 </script>
@@ -73,10 +82,45 @@ page {
 // 	}
 // }
 
-.banner {
-	width: 100%;
-	height: 200rpx;
-	background: #fff;
+
+
+#switch {
+	position: relative;
+	height: 100rpx;
+	width: calc(100% - 48rpx*2);
+	margin: 24rpx 48rpx 48rpx 48rpx;
+	display: flex;
+	align-items: center;
+	background-color: #ededed;
+	border-radius:24rpx;
+	
+	#slider {
+		position: absolute;
+		top: 5rpx;
+		left: 6rpx;
+		width: 50%;
+		height: 92rpx;
+		background-color: #FFFFFF;
+		border-radius: 20rpx;
+		transition: all 0.5s ease-in-out;
+	}
+	
+	.active {
+		color: #2C37E1;
+	}
+	
+	button {
+		width: 100%;
+		line-height: 90rpx;
+		font-family: 'Mulish';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 32rpx;
+		background-color: transparent;
+		color: #A4A4A4;
+		transition: all 0.5s ease-in-out;
+		
+	}
 }
 
 

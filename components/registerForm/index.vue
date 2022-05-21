@@ -88,9 +88,15 @@ export default {
 				
 			},
 			inputStyles: {
-				color: "blue",
+				styles: {
+					fontFamily: 'Mulish',
+					fontStyle: "normal",
+					fontWeight: 600,
+					fontSize: "32rpx",
+					color: "#0F1828",
+				},
 			},
-			placeholderStyle: "font-size: 30rpx",
+			placeholderStyle: "font-size: 32  rpx",
 		};
 	},
 	methods: {
@@ -131,10 +137,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.registerForm {
+	padding: 20rpx 40rpx;
+	
 	.uni-easyinput {
 		::v-deep .uni-easyinput__content-input {
 			height: 100rpx;
 		}
 	}
 	
+	button {
+		width: 50%;
+		line-height: 100rpx;
+		font-family: 'Mulish';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 32rpx;
+		background-color:#2C37E1;
+		border-radius: 20rpx;
+		color: #FFFFFF;
+		margin-bottom: 48rpx;
+	}
+}
 </style>

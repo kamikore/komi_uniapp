@@ -1,7 +1,7 @@
 <template>
 	<view class="addContacts">
-		<uni-forms :modelValue="formData" ref="form">
-			<uni-forms-item label="发送添加申请" name="content" labelPosition="top">
+		<uni-forms id="form" :modelValue="formData" ref="form">
+			<uni-forms-item label="发送添加申请" label-width="100" name="content" labelPosition="top">
 				<uni-easyinput 
 					type="textarea" 
 					v-model="formData.content" 
@@ -10,7 +10,7 @@
 					placeholder="申请信息"
 				/>
 			</uni-forms-item>
-			<uni-forms-item label="设置备注" name="remarkName" labelPosition="top">
+			<uni-forms-item label="设置备注" name="remarkName" label-width="100" labelPosition="top">
 				<uni-easyinput 
 					type="textarea" 
 					v-model="formData.remarkName" 
@@ -45,20 +45,24 @@ export default {
 			this.$refs.form.validate().then(res=>{
 					console.log('表单数据信息：', res);
 					const userInfo =  uni.getStorageSync("userInfo");
-					console.log(userInfo)
 					this.$socket.emit("addContact",{
 						// 需要满足一个消息的所有字段
 						msg_to: this.fid,
 						msg_from: userInfo.uid,
 						// 发起好友请求的用户信息
-						msg_content: userInfo.nickName,
+						msg_content: this.formData.content || '我是'+userInfo.nickName,
 						msg_type: 5,
+						remarkName: this.formData.remarkName,
+						nickName: userInfo.nickName,
 						dateTime: new Date(),
 					})
 					
 					uni.showToast({
 						title:"发送成功",
-						icon:"success"
+						icon:"success",
+						success() {
+							uni.navigateBack();
+						}
 					})
 				}).catch(err =>{
 					console.log('表单错误信息：', err);
@@ -73,5 +77,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+	#form {
+		margin: 20rpx 40rpx;
+	}
+	
+	button {
+		width: 50%;
+		line-height: 120rpx;
+		font-family: 'Mulish';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 32rpx;
+		background-color:#2C37E1;
+		border-radius: 20rpx;
+		color: #FFFFFF;
+		margin-bottom: 48rpx;
+	}
 	
 </style>

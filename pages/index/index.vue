@@ -12,11 +12,11 @@
 			</view>
 		</view> -->
 			
-		<navigator url="../groupChat/index">进入groupchat</navigator>
+		<!-- <navigator url="../groupChat/index">进入groupchat</navigator>
 		<navigator url="/pages/chatroom/index">进入聊天</navigator>
 		<navigator url="/pages/livePlay/index">视频拉流</navigator>
-		<navigator url="/pages/livePush/index">视频推流</navigator>
-		<text @click="clear">清空</text>
+		<navigator url="/pages/livePush/index">视频推流</navigator> -->
+		<!-- <text @click="clear">清空</text> -->
 		<!-- <dropdown-menu></dropdown-menu> -->
 		<sessionList :list="sessionList" ></sessionList>
 		<view class="tabbarShadow"></view>
@@ -48,6 +48,16 @@ export default {
 		},
 	},
 	onLoad() {
+		// 监听tabbar中间按钮
+		uni.onTabBarMidButtonTap(() => {
+			uni.navigateTo({
+				url: '/pages/index/index',
+				success: res => {},
+				fail: () => {},
+				complete: () => {}
+			});
+		}) 
+		
 		const userInfo = uni.getStorageSync('userInfo');
 		/* 
 			用于更新首页聊天列表, 别人发过来的，自己发的
@@ -59,6 +69,7 @@ export default {
 		
 		uni.$on('homeMsg', res => {
 			console.log("homeMsg",res)
+			
 			// uni.removeStorageSync(`uid${userInfo.uid}contentList`)
 			// 是否传递的是对象
 			if(!res.length) {
@@ -75,23 +86,24 @@ export default {
 				
 				
 				// 更新的会话消息格式
-				let session = {msg:Msg , isRead: false};
+				let session = {msg:Msg};
 				if(Msg.isGroup) {
+					if(Msg.msg_from != Msg.msg_to) this.$store.dispatch('updateUnRead',{id:Msg.group_id,isGroup:true})
 					session.gid = Msg.group_id;
 				} else {
+					if(Msg.msg_from != Msg.msg_to) this.$store.dispatch('updateUnRead',{id:Msg.msg_from, isGroup:false})
 					session.fid = Msg.msg_from;
 				}
-				
 				
 				// 把fid作为key，以及msg最新的一条消息, 需要避免重复推入
 				const index = this.sessionList.findIndex(item => {
 					if(Msg.isGroup && item.gid ===  Msg.group_id) {
 						return true;
-					} else if (typeof item.fid === 'object'?item.fid.user_id: item.fid === Msg.msg_from || Msg.msg_from.user_id) {
+					} else if (item.fid === Msg.msg_from) {
 						return true;
 					}
+					
 				});
-				
 				
 				
 				
@@ -105,7 +117,8 @@ export default {
 				}
 				
 				// 判断delivered 字段是否存在，设置字段为 1
-				if(Msg.delivered && Msg.delivered === 1) {
+				if(Msg.delivered === 0) {
+					console.log("接收到离线消息设置已读")
 					this.$socket.emit("isDelivered", Msg.offline_id)
 				}
 			}
@@ -128,10 +141,10 @@ export default {
 			const newFriends = uni.getStorageSync('newFriends') || {};
 			console.log('更新新的好友列表', res);
 			if ( !newFriends.hasOwnProperty(res.msg_from instanceof Object?res.msg_from.user_id:res.msg_from)) {
-				this.$set(newFriends, res.msg_from.user_id, res);
+				this.$set(newFriends, res.msg_from, res);
 				uni.setStorageSync('newFriends', newFriends);
+				uni.$emit("updateNewFriends")
 			}
-			console.log("更新完成,newFriends")
 			// 判断delivered 字段是否存在，设置字段为 1
 			if(res.delivered === 0) {
 				console.log("触发已读")
@@ -143,9 +156,34 @@ export default {
 		this.$socket.on(`chat${userInfo.uid}`, res => {
 			console.log("当前用户的socket消息", res);
 			uni.$emit('homeMsg', res);
-			uni.$emit("chatroomMsg",res)
 			
-			// uni.setStorageSync("", )
+			if(!res.length) {
+				res = [res];
+			}
+			
+			for (let Msg of res) {
+				const {dateTime , msg_content,msg_from, msg_type, voice_duration ,self} = Msg;
+				let message_list = uni.getStorageSync(`${userInfo.uid}msgWith${msg_from}`) || []
+				console.log("当前messageList 长度",message_list.length)
+				const newMsg = {
+					id: message_list.length + 1,
+					time: dateTime,
+					msg: msg_content,
+					msg_from: msg_from,
+					type: msg_type,
+					voice_duration: voice_duration || null,
+					self: self || 0
+				}
+				
+				
+				message_list.push(newMsg);
+				
+				// 缓存当前与该用户的聊天消息
+				uni.setStorageSync(`${userInfo.uid}msgWith${msg_from}`, message_list)
+				uni.$emit("chatroomMsg",newMsg)
+			}
+			
+			
 		});
 
 		// 监听发给自己的好友请求，当前的好友请求只会创建消息列表，并不会入库

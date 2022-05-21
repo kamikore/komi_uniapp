@@ -3,11 +3,11 @@
 		<profile :contactInfo="contactInfo"></profile>
 		<view id="switch">
 			<view id="slider" :style="{left: isSwitch?'calc(50% - 4rpx)':'4rpx'}"></view>
-			<button :class="isSwitch?'':'active'" type="default" @click="isSwitch = 0">Chat</button>
+			<button :class="isSwitch?'':'active'" type="default" @click="isSwitch = 0">Moments</button>
 			<button :class="isSwitch?'active':''" type="default" @click="isSwitch = 1">intro</button>
 		</view>
 		<view id="contentBox">
-			<component v-if="!isSwitch" is="momentList"></component>
+			<component v-if="!isSwitch" is="momentList" :enablePullDownRefresh="false" :uid="uid?uid:undefined" ></component>
 			<view class="" v-else>
 				<button type="default" @click="goChat">发送消息</button>
 				<button type="default" v-if="!isContact" @click="addToContacts">添加到通讯录</button>
@@ -32,7 +32,8 @@ export default {
 	computed:mapState(['contacts','userInfo']),
 	data() {
 		return {
-			contactInfo:"",
+			contactInfo:null,
+			uid:null,
 			isContact: false,
 			isSwitch: 0
 		};
@@ -51,7 +52,8 @@ export default {
 	},
 	onLoad(option) {
 		console.log("userDetail",option)
-		if(this.contacts.hasOwnProperty(option.fid) || this.userInfo.user_id == option.fid)  {
+		this.uid = option.fid
+		if(this.contacts.hasOwnProperty(option.fid) || this.userInfo.uid == option.fid)  {
 			this.isContact = true;
 		}
 		// 判断对象为空
@@ -88,7 +90,7 @@ export default {
 		
 		#slider {
 			position: absolute;
-			top: 4rpx;
+			top: 6rpx;
 			left: 4rpx;
 			width: 50%;
 			height: 92rpx;
@@ -118,7 +120,7 @@ export default {
 	#contentBox {
 		button {
 			width: 50%;
-			line-height: 90rpx;
+			line-height: 120rpx;
 			font-family: 'Mulish';
 			font-style: normal;
 			font-weight: 600;
@@ -126,6 +128,7 @@ export default {
 			background-color:#2C37E1;
 			border-radius: 20rpx;
 			color: #FFFFFF;
+			margin-bottom: 48rpx;
 		}
 	}
 </style>

@@ -1,7 +1,12 @@
 <template>
 	<view class="profile-container">
 		<view id="profile">
-			<view class="avatar"><image :src="(contactInfo?contactInfo.avatar:userInfo.avatar) || '../../static/images/test/7.jpg'" mode=""></image></view>
+			<view class="avatar">
+				<image 
+					:src="(contactInfo?contactInfo.avatar:userInfo.avatar) || '../../static/images/future.png'" 
+					mode="aspectFill">
+				</image>
+			</view>
 			<view class="info">
 				<text class="nickName">{{ contactInfo?contactInfo.nickName:userInfo.nickName }}</text>
 				<text class="account">{{   contactInfo?contactInfo.account:userInfo.account}}</text>

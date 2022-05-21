@@ -3,113 +3,112 @@
 		视频方案：
 			用户发起后，进行推流，并监听对方接受视频的事件，随后也拉取对方的视频流（对方也会推流）
 	 -->
-	<view>
-		<live-pusher
-			id="livePusher"
-			ref="livePusher"
-			class="livePusher"
-			url=""
-			mode="SD"
-			:muted="true"
-			:enable-camera="true"
-			:auto-focus="true"
-			:beauty="1"
-			whiteness="2"
-			waiting-image="@/static/logo.png"
-			aspect="9:16"
-			@statechange="statechange"
-			@netstatus="netstatus"
-			@error="error"
-		></live-pusher>
-		<button class="btn" @click="stop">停止推流</button>
-		<button class="btn" @click="snapshot">快照</button>
-		<button class="btn" @click="startPreview">开启摄像头预览</button>
-		<button class="btn" @click="stopPreview">关闭摄像头预览</button>
-		<button class="btn" @click="switchCamera">切换摄像头</button>
-		<button type="default" @click="requestFullScreen">进入全屏</button>
-	</view>
+	    <view>
+	        <live-pusher id='livePusher' ref="livePusher" class="livePusher" :url="url"
+	        mode="SD" :muted="false" :enable-camera="true" :auto-focus="true" :beauty="0" whiteness="2"
+	        aspect="9:16" @statechange="statechange" @netstatus="netstatus" @error = "error"
+	        ></live-pusher>
+	        <button class="btn" @click="start">开始推流</button>
+	        <button class="btn" @click="pause">暂停推流</button>
+	        <button class="btn" @click="resume">resume</button>
+	        <button class="btn" @click="stop">停止推流</button>
+	        <button class="btn" @click="snapshot">快照</button>
+	        <button class="btn" @click="startPreview">开启摄像头预览</button>
+	        <button class="btn" @click="stopPreview">关闭摄像头预览</button>
+	        <button class="btn" @click="switchCamera">切换摄像头</button>
+	    </view>
 </template>
 
 <script>
 export default {
 	name: 'livePush',
 	data() {
-		return {};
-	},
+		return {
+			url: "rtmp://120.79.218.59/live/komi"
+		}
+		
+    },
 	onReady() {
 		// 注意：需要在onReady中 或 onLoad 延时
-		this.context = uni.createLivePusherContext('livePusher', this);
+		this.context = uni.createLivePusherContext("livePusher", this);
 	},
 	methods: {
 		statechange(e) {
-			console.log('statechange:' + JSON.stringify(e));
+			console.log("statechange:" + JSON.stringify(e));
 		},
 		netstatus(e) {
-			console.log('netstatus:' + JSON.stringify(e));
+			console.log("netstatus:" + JSON.stringify(e));
 		},
 		error(e) {
-			console.log('error:' + JSON.stringify(e));
+			console.log("error:" + JSON.stringify(e));
+		},
+		start: function() {
+			this.context.start({
+				success: (a) => {
+					console.log("livePusher.start:" + JSON.stringify(a));
+				},
+				fail: (err) => {
+					console.log('fail',err.errMsg)
+				}
+			});
 		},
 		close: function() {
 			this.context.close({
-				success: a => {
-					console.log('livePusher.close:' + JSON.stringify(a));
+				success: (a) => {
+					console.log("livePusher.close:" + JSON.stringify(a));
 				}
 			});
 		},
 		snapshot: function() {
 			this.context.snapshot({
-				success: e => {
+				success: (e) => {
 					console.log(JSON.stringify(e));
+				}
+			});
+		},
+		resume: function() {
+			this.context.resume({
+				success: (a) => {
+					console.log("livePusher.resume:" + JSON.stringify(a));
+				}
+			});
+		},
+		pause: function() {
+			this.context.pause({
+				success: (a) => {
+					console.log("livePusher.pause:" + JSON.stringify(a));
 				}
 			});
 		},
 		stop: function() {
 			this.context.stop({
-				success: a => {
+				success: (a) => {
 					console.log(JSON.stringify(a));
 				}
 			});
 		},
 		switchCamera: function() {
 			this.context.switchCamera({
-				success: a => {
-					console.log('livePusher.switchCamera:' + JSON.stringify(a));
+				success: (a) => {
+					console.log("livePusher.switchCamera:" + JSON.stringify(a));
 				}
 			});
 		},
 		startPreview: function() {
 			this.context.startPreview({
-				success: a => {
-					console.log('livePusher.startPreview:' + JSON.stringify(a));
+				success: (a) => {
+					console.log("livePusher.startPreview:" + JSON.stringify(a));
 				}
 			});
 		},
 		stopPreview: function() {
 			this.context.stopPreview({
-				success: a => {
-					console.log('livePusher.stopPreview:' + JSON.stringify(a));
+				success: (a) => {
+					console.log("livePusher.stopPreview:" + JSON.stringify(a));
 				}
 			});
 		},
-		requestFullScreen() {
-			this.context.requestFullScreen({
-				success: res => {
-					console.log("进入全屏")
-				}
-			})
-		}
-	},
-	onLoad() {
-		// 进入开始推流
-		this.context.start({
-			success: a => {
-				console.log('livePusher.start:' + JSON.stringify(a));
-			},
-			fail: res => {
-				console.log('推流失败', res);
-			}
-		});
+		
 	}
 };
 </script>

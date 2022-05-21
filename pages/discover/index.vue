@@ -1,12 +1,17 @@
 <template>
-	<view class="moments">
-		<momentsBanner></momentsBanner>
-		<moment-list style="height:100%" ></moment-list>
+	<view class="discover">
+		<moment-list 
+			style="height: 100vh" 
+			:moments="moments" 
+			:showBanner="true"
+			:enablePullDownRefresh="true"
+		></moment-list>
 		<view class="tabbarShadow"></view>
 	</view>
 </template>
 
 <script>
+import {fetchMoments} from "@/api"
 import momentsBanner from "@/components/momentsBanner"
 import momentList from "@/components/momentList"
 
@@ -18,18 +23,25 @@ export default {
 	},
 	data() {
 		return {
-			
+			moments:[]
 		};
 	},
 	methods: {
 		
-	}
+	},
+	onLoad() {
+		fetchMoments().then((res) => {
+			this.moments = res.data
+		}, (err) =>{
+			console.log(err)
+		})
+	},
 };
 </script>
 
 <style lang="scss" scoped>
 
-.moments {
+.discover {
 	
 	
 }

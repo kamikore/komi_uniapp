@@ -2,8 +2,8 @@
     "name" : "first-app",
     "appid" : "__UNI__412D37C",
     "description" : "",
-    "versionName" : "1.0.0",
-    "versionCode" : "100",
+    "versionName" : "1.0.1",
+    "versionCode" : 101,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -18,7 +18,10 @@
         },
         /* 模块配置 */
         "modules" : {
-            "LivePusher" : {}
+            "LivePusher" : {},
+            "Geolocation" : {},
+            "Maps" : {},
+            "VideoPlayer" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -47,7 +50,23 @@
             "ios" : {},
             /* SDK配置 */
             "sdkConfigs" : {
-                "ad" : {}
+                "ad" : {},
+                "geolocation" : {
+                    "system" : {
+                        "__platform__" : [ "ios", "android" ]
+                    },
+                    "amap" : {
+                        "__platform__" : [ "ios", "android" ],
+                        "appkey_ios" : "",
+                        "appkey_android" : "0daa3f04991463cd9c361000c9164cad"
+                    }
+                },
+                "maps" : {
+                    "amap" : {
+                        "appkey_ios" : "",
+                        "appkey_android" : "0daa3f04991463cd9c361000c9164cad"
+                    }
+                }
             }
         },
         "nativePlugins" : {
@@ -92,9 +111,10 @@
     "vueVersion" : "2",
     "h5" : {
         "sdkConfigs" : {
+            // 使用地图或位置相关功能必须填写其一
             "maps" : {
                 "qqmap" : {
-                    "key" : ""
+                    "key" : "S3MBZ-4VXKU-LTIVH-245TH-CFA2H-UGBOB"
                 }
             }
         }

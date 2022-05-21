@@ -1,23 +1,24 @@
 <template>
 	<view class="newFriends-container">
+		<!-- <div @click="clearFriends">清空</div> -->
 		<view class="newFriendsList" v-if="newFriends" >
 			 <view class="item" v-for="(val,key) in newFriends" :key="key">
 				<view class="userInfo">
 					<view class="avatar"><image src="../../static/images/chatroom/emoji.png" mode=""></image></view>
 					<view class="info">
-						<view class="nickName">{{val.msg_from.nickName}}</view>
-						<view class="remark">{{val.msg_content}}</view>
+						<view class="nickName">{{val.msg_from instanceof Object?val.msg_from.nickName:val.nickName}}</view>
+						<view class="content">{{val.msg_content}}</view>
 					</view>
 				</view>
 				<!-- 需要view 包裹，flex 才正常布局 -->
-				<view class=""><button type="default" @click="agreeFriend(val)">接受</button></view>
+				<view class=""><button type="default" @click="agreeFriend(val,key)">接受</button></view>
 			 </view>
 		</view>
 	</view>
 </template>
 
 <script>
-import {fetchContact,addContact} from "@/api/index.js"
+import {fetchContacts,addContact} from "@/api/index.js"
 export default {
 	name: "newFriends",
 	data() {
@@ -26,15 +27,24 @@ export default {
 		};
 	},
 	methods: {
-		agreeFriend(contact) {
-			console.log(contact)
+		agreeFriend(contact,key) {
+			console.log("接受",contact)
+			// newFriends 包含对方给自己设置的 remarkName,对方请求内容content，对方名字nickName, 对方ID msg_from
 			// 接受后，发起请求双方入库，并发起请求更新用户列表
-			addContact(contact.msg_from instanceof Object?contact.msg_from.user_id:contact.msg_from,contact.msg_content)
-			fetchContact()		
+			addContact(contact.msg_from instanceof Object?contact.msg_from.user_id:contact.msg_from,contact.remarkName,contact.nickName)
+			delete this.newFriends[key]
+			uni.setStorageSync("newFriends",this.newFriends);
+			fetchContacts()		
+			uni.navigateBack()
+		},
+		clearFriends() {
+			uni.clearStorageSync("newFriends")
 		}
 	},
 	onLoad() {
-
+		uni.$on("updateNewFriends" ,() => {
+			this.newFriends = uni.getStorageSync("newFriends")
+		})
 	},
 	onShow() {
 		const newFriends = uni.getStorageSync("newFriends");
@@ -42,6 +52,7 @@ export default {
 		if(Object.keys(newFriends).length != 0) {
 			this.newFriends = newFriends;
 		}
+		console.log("newFriends",this.newFriends)
 	},
 	onNavigationBarButtonTap() {
 		uni.navigateTo({
@@ -83,7 +94,7 @@ export default {
 					font-size: 32rpx;
 				}
 				
-				.remark {
+				.content {
 					font-size: 28rpx;
 					color: #8F939C;
 				}

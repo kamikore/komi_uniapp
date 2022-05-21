@@ -5,15 +5,14 @@
 			:class="[!isDrag? 'transition' : '', item.isTop?'stickyOnTop':'']"
 			:style="{transform: sessionStyle[index]}"
 			v-for="(item, index) in list"
-			:key="item.gid || (typeof item.fid === 'object'?item.fid.user_id: item.fid)"
+			:key="item.isGroup?item.gid:item.fid"
 			@tap="goChatroom(index)"
 			@touchstart="dragStart($event,index)"
 			@touchend="dragEnd(index)"
 			@touchmove="dragHandler($event, index)"
 			:ref="index"
 		>
-		
-		{{item}}
+		<!-- {{item}} -->
 			<!-- 提供item，以及index, 展开item，避免session中引用嵌套太多 -->
 			<session :item="{...item,index}"></session>
 		</view>
@@ -63,7 +62,7 @@ export default {
 					});
 				} else {
 					uni.navigateTo({
-						url: `pages/chatroom/index?fid=${this.list[index].fid instanceof Object? this.list[index].fid.user_id:this.list[index].fid}`
+						url: `pages/chatroom/index?fid=${this.list[index].fid}`
 					});
 				}
 				
@@ -206,6 +205,10 @@ export default {
 			uni.setStorageSync(`uid${this.$store.state.userInfo.uid}stickyCount`,count)
 			uni.setStorageSync(`uid${this.$store.state.userInfo.uid}sessionList`,this.list)
 		})
+		
+		uni.$on("deleteSession",index => {
+			this.list.splice(index,1)
+		})
 	},
 	mounted() {
 		this.getDOM()
@@ -221,8 +224,8 @@ export default {
 		// #endif
 		
 		// #ifdef APP
-		height: calc(100vh - var(--status-bar-height));
-		padding-bottom: 100rpx;
+		height: calc(100vh - 50px - var(--status-bar-height));
+		padding-bottom: 50px;
 		// #endif
 		
 		

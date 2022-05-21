@@ -8,16 +8,17 @@
 			@tap="closeExtend"
 			@scroll="scrollHandler"
 			scroll-with-animation="true"
-			:scroll-into-view="'fid' + msgId"
+			:scroll-into-view="'id' + msgId"
 		>
 			<view class="content-list">
 				<view class="content-list-item" v-for="(item, index) in message_list" :key="item.id">
 					<!-- 消息时间，需要接触到最新的一条消息 -->
-					<view class="dateTime" v-if="(item.time - message_list[index == 0?index:index-1].time ) > 1000">
+					<view class="dateTime" v-if="(index === 0 || (new Date(item.time) - new Date(message_list[index-1].time)) >= 30000)">
 						<view class="line"></view>
-						<view style="margin: 0 20rpx;">{{dateHandler(item.time)}}</view>
+						<view style="margin: 0 40rpx;"><text>{{dateHandler(item.time)}}</text></view>
 						<view class="line"></view>
 					</view>
+					<!-- {{index?item.time-message_list[index-1].time:'0'}} -->
 					<!-- 把消息分割为组件 -->
 					<message :item="item"></message>
 				</view>
@@ -72,7 +73,6 @@ export default {
 	},
 
 	onLoad(option) {
-		
 		// 群聊为gid，普通为fid
 		if(option.fid) {
 			this.id = Number(option.fid);
@@ -83,7 +83,8 @@ export default {
 		}
 
 		
-		this.message_list = uni.getStorageSync(`${this.userInfo.user_id}msgWith${this.id}`) || []
+		this.message_list = uni.getStorageSync(`${this.userInfo.uid}msgWith${this.id}`) || []
+		console.log("获取缓存消息列表",this.message_list)
 		
 		// 滚动位置的标识
 		this.msgId = this.message_list.length;
@@ -108,22 +109,24 @@ export default {
 		uni.$off('chatroomMsg');
 
 		// 聊天室监听自己发的消息，以及当前fid 发来的消息，是监听自己的id
-		uni.$on('chatroomMsg', res => {
-			const {dateTime , msg_content, msg_type, voice_duration ,self} = res;
-			console.log("聊天室消息",msg_content)
-			console.log(this.message_list)
-			this.message_list.push({
-				id: this.msgId + 1,
-				time: dateTime,
-				msg: msg_content,
-				type: msg_type,
-				voice_duration: voice_duration || null,
-				self: self || 0
-			});
+		uni.$on('chatroomMsg', newMsg => {
+			console.log("聊天室消息", newMsg, "当前msgID",this.msgId)
+			const {dateTime , msg_content, msg_type, voice_duration ,self, msg_from} = newMsg;
+			if(!newMsg.id) {
+				newMsg = {
+					id: this.msgId + 1	,
+					time: dateTime,
+					msg: msg_content,
+					type: msg_type,
+					msg_from,
+					voice_duration: voice_duration || null,
+					self: self || 0
+				}
+			}
 			
-			// 缓存当前与该用户的聊天消息
-			uni.setStorageSync(`${this.userInfo.user_id}msgWith${this.id}`, this.message_list)
-
+			this.message_list.push(newMsg);
+			// // 缓存当前与该用户的聊天消息
+			uni.setStorageSync(`${this.userInfo.uid}msgWith${this.id}`, this.message_list)
 			uni.$emit('scrollTo', { msgId: this.msgId + 1 });
 		});
 	},
@@ -136,7 +139,12 @@ export default {
 				console.log('title设置失败',e)
 			}
 		});
-	}
+		this.$store.dispatch('clearUnRead',{isGroup:this.isGroup,id:this.id})
+	},
+	// beforeRouteLeave(to,from,next) {
+		
+	// 	next()
+	// }
 };
 </script>
 
@@ -174,11 +182,11 @@ export default {
 					color: #ADB5BD;
 					
 					text {
-						flex: 1;
+						white-space: nowrap;
 					}
 					
 					.line {
-						width: 40%;
+						width: 25%;
 						height: 1rpx;
 						border-bottom: 1px solid  #EDEDED;
 					}

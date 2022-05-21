@@ -1,18 +1,15 @@
 <template>
 	<view class="moments">
-		<momentsBanner></momentsBanner>
-		<moment-list style="height:100%" ></moment-list>
+		<moment-list style="height:100vh" :showBanner="true" :enablePullDownRefresh="true" ></moment-list>
 	</view>
 </template>
 
 <script>
-import momentsBanner from "@/components/momentsBanner"
 import momentList from "@/components/momentList"
 
 export default {
 	name: "moments",
 	components:{
-		momentsBanner,
 		momentList
 	},
 	data() {

@@ -38,6 +38,31 @@ const mutations = {
 	UPDATECOVER(state,playload) {
 		state.userInfo.cover = playload
 		uni.setStorageSync("userInfo",state.userInfo)
+	},
+	// 更新未读信息数据
+	UPDATEUNREAD(state,playload) {
+		if(!(typeof state.unRead === 'object')) {
+			state.unRead = {fid:{},gid:{}}
+		}
+		if(playload.isGroup) {
+			state.unRead.gid[playload.id]?state.unRead.gid[playload.id]+=1:state.unRead.gid[playload.id] = 1
+		} else {
+			state.unRead.fid[playload.id]?state.unRead.fid[playload.id]+=1:state.unRead.fid[playload.id] = 1
+		}
+		
+		uni.setStorageSync(`${state.userInfo.uid}UnRead`,state.unRead)
+	},
+	// 清除未读信息
+	CLEARUNREAD(state,playload) {
+		
+		if(!(typeof state.unRead === 'object')) return
+		if(playload.isGroup) {
+			state.unRead.gid[playload.id]?state.unRead.gid[playload.id] = 0:''
+		} else {
+			state.unRead.fid[playload.id]?state.unRead.fid[playload.id] = 0:''
+		}
+		console.log("清空未读",state.unRead)
+		uni.setStorageSync(`${state.userInfo.uid}UnRead`,state.unRead)
 	}
 	
 	
