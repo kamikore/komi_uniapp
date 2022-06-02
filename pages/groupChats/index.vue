@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<contact-list :contacts="groupChats"></contact-list>
+		<contact-list :contacts="groupChats" :isGroup="true"></contact-list>
 	</view>
 </template>
 

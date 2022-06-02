@@ -1,6 +1,6 @@
 <template>
 	<view class="momentItem">
-		<view class="avatar"><image :src="item.uid.avatar" mode=""></image></view>
+		<view class="avatar"><image :src="item.uid.avatar" mode="aspectFill"></image></view>
 		<view class="info">
 			<view class="">
 				<text class="userName" @click="goDetail">{{ contacts[item.uid.user_id] ? contacts[item.uid.user_id].remarkName : item.uid.nickName }}</text>
@@ -57,7 +57,8 @@ export default {
 		},
 		 dateFormat(date) {
 			 return DateToDateTime(date)
-		 }
+		 },
+
 		
 	},
 	created() {
@@ -150,7 +151,7 @@ export default {
 		.footer {
 			display: flex;
 			justify-content: flex-end;
-			column-gap: 20rpx;
+			// column-gap: 20rpx;
 
 			.operations {
 				display: flex;
@@ -185,6 +186,7 @@ export default {
 				line-height: 30rpx;
 				text-align: center;
 				color: #334d5c;
+				margin-left: 20rpx;
 			}
 
 			.isShow {

@@ -3,12 +3,13 @@
 		<view class="contact-item">
 			<view class="initials">A</view>
 			<view  v-for="(val, key) in contacts" :key="key" @click="clickHandler(val)">
-				{{val}}
-				<contact :contact="val"></contact>
+				<!-- {{val}} -->
+				<contact :contact="val" :isGroup="isGroup"></contact>
 			</view>
 		</view>
 	</view>
 </template>
+
 
 <script>
 import contact from "@/components/contact"
@@ -18,7 +19,7 @@ export default {
 	components:{
 		contact
 	},
-	props: ["contacts"],
+	props: ["contacts","isGroup"],
 	data() {
 		return {
 			

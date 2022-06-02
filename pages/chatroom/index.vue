@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import data from '@/common/data.js';
 import sendBox from '@/components/sendBox';
 import message from '@/components/message';
 import {DateToDateTime} from "@/utils"
@@ -43,7 +42,7 @@ export default {
 		sendBox,
 		message,
 	},
-	computed:mapState(['userInfo','contacts']),
+	computed:mapState(['userInfo','contacts','groupChats']),
 	data() {
 		return {
 			message_list: [],
@@ -69,10 +68,11 @@ export default {
 		},
 		dateHandler(date) {
 			return DateToDateTime(date)
-		}
+		},
 	},
 
 	onLoad(option) {
+		console.log(option)
 		// 群聊为gid，普通为fid
 		if(option.fid) {
 			this.id = Number(option.fid);
@@ -82,9 +82,14 @@ export default {
 			this.isGroup = true;
 		}
 
+		if(this.isGroup) {
+			this.message_list = uni.getStorageSync(`${this.userInfo.uid}groupmsgWith${this.id}`) || []
+			console.log("群组信息",this.message_list)
+		} else {
+			this.message_list = uni.getStorageSync(`${this.userInfo.uid}msgWith${this.id}`) || []
+		}
 		
-		this.message_list = uni.getStorageSync(`${this.userInfo.uid}msgWith${this.id}`) || []
-		console.log("获取缓存消息列表",this.message_list)
+		// console.log("获取缓存消息列表",this.message_list)
 		
 		// 滚动位置的标识
 		this.msgId = this.message_list.length;
@@ -110,7 +115,7 @@ export default {
 
 		// 聊天室监听自己发的消息，以及当前fid 发来的消息，是监听自己的id
 		uni.$on('chatroomMsg', newMsg => {
-			console.log("聊天室消息", newMsg, "当前msgID",this.msgId)
+			// console.log("聊天室消息", newMsg, "当前msgID",this.msgId)
 			const {dateTime , msg_content, msg_type, voice_duration ,self, msg_from} = newMsg;
 			if(!newMsg.id) {
 				newMsg = {
@@ -120,19 +125,24 @@ export default {
 					type: msg_type,
 					msg_from,
 					voice_duration: voice_duration || null,
-					self: self || 0
+					self: self || 0,
+					isGroup: this.isGroup
 				}
 			}
 			
 			this.message_list.push(newMsg);
-			// // 缓存当前与该用户的聊天消息
+			if(this.isGroup) {
+				uni.setStorageSync(`${this.userInfo.uid}groupmsgWith${this.id}`,this.message_list)
+			} else {
+				uni.setStorageSync(`${this.userInfo.uid}msgWith${this.id}`, this.message_list)
+			}
 			uni.setStorageSync(`${this.userInfo.uid}msgWith${this.id}`, this.message_list)
 			uni.$emit('scrollTo', { msgId: this.msgId + 1 });
 		});
 	},
 	onReady() {
 		uni.setNavigationBarTitle({
-			title: this.contacts[this.id].remarkName,
+			title: this.isGroup?this.groupChats[this.id].group_name:this.contacts[this.id].remarkName,
 			success: ()=> {
 			},
 			fail: (e) => {
@@ -140,7 +150,16 @@ export default {
 			}
 		});
 		this.$store.dispatch('clearUnRead',{isGroup:this.isGroup,id:this.id})
+		
 	},
+	onPullDownRefresh() {
+		console.log("下拉刷新")
+		uni.startPullDownRefresh({
+			success: () => {
+				console.log("下拉处理")
+			}
+		})
+	}
 	// beforeRouteLeave(to,from,next) {
 		
 	// 	next()
@@ -150,16 +169,17 @@ export default {
 
 <style lang="scss" scoped>
 .chatroom-container {
+	
 	.message-content-list {
 		// #ifdef H5
 		height: calc(100vh - var(--window-top));
 		// #endif
-
-		// #ifdef APP
+		
+		// #ifdef APP-PLUS
 		height: calc(100vh - var(--status-bar-height));
 		// #endif
 		background: #f7f7fc;
-
+		
 		.content-list {
 			// 防止提交栏覆盖消息
 			padding-bottom: 300rpx;

@@ -28,7 +28,7 @@
 <script>
 import dropdownMenu from '@/components/dropdownMenu';
 import sessionList from '@/components/sessionList';
-import {stickyOnTop} from "@/utils"
+import {stickyOnTop,saveFile} from "@/utils"
 
 export default {
 	components: {
@@ -50,12 +50,9 @@ export default {
 	onLoad() {
 		// 监听tabbar中间按钮
 		uni.onTabBarMidButtonTap(() => {
-			uni.navigateTo({
-				url: '/pages/index/index',
-				success: res => {},
-				fail: () => {},
-				complete: () => {}
-			});
+			uni.switchTab({
+				url:'/pages/index/index',
+			})
 		}) 
 		
 		const userInfo = uni.getStorageSync('userInfo');
@@ -143,6 +140,7 @@ export default {
 			if ( !newFriends.hasOwnProperty(res.msg_from instanceof Object?res.msg_from.user_id:res.msg_from)) {
 				this.$set(newFriends, res.msg_from, res);
 				uni.setStorageSync('newFriends', newFriends);
+				this.$store.dispatch("updateContacts")
 				uni.$emit("updateNewFriends")
 			}
 			// 判断delivered 字段是否存在，设置字段为 1
@@ -153,8 +151,10 @@ export default {
 		});
 
 		// 监听发过来的消息
-		this.$socket.on(`chat${userInfo.uid}`, res => {
+		this.$socket.on(`chat${userInfo.uid}`, async res => {
 			console.log("当前用户的socket消息", res);
+			// 文件类型资源地址，转为本地保存，但H5也不支持本地save，需要两个手机
+			
 			uni.$emit('homeMsg', res);
 			
 			if(!res.length) {
@@ -162,24 +162,52 @@ export default {
 			}
 			
 			for (let Msg of res) {
-				const {dateTime , msg_content,msg_from, msg_type, voice_duration ,self} = Msg;
-				let message_list = uni.getStorageSync(`${userInfo.uid}msgWith${msg_from}`) || []
-				console.log("当前messageList 长度",message_list.length)
+				let message_list
+				const {
+						dateTime , 
+						msg_content,
+						msg_from, 
+						msg_type, 
+						localURL, 
+						voice_duration ,
+						self,
+						isGroup,
+						group_id
+					} = Msg;
+				if(msg_type === 1 || msg_type === 2 || msg_type === 3 || msg_type === 4) {	
+					// 转换socket发送收到的
+					msg_content = await saveFile(msg_content)
+				}
+				
+				if(isGroup) {
+					message_list = uni.getStorageSync(`${userInfo.uid}groupmsgWith${group_id}`) || []
+				} else {
+					message_list = uni.getStorageSync(`${userInfo.uid}msgWith${msg_from}`) || []
+				}
+				 
 				const newMsg = {
 					id: message_list.length + 1,
 					time: dateTime,
 					msg: msg_content,
-					msg_from: msg_from,
+					msg_from,
 					type: msg_type,
+					localURL,
 					voice_duration: voice_duration || null,
-					self: self || 0
+					self: self || 0,
+					group_id,
+					isGroup,
 				}
 				
 				
 				message_list.push(newMsg);
+				if(isGroup) {
+					// 缓存当前与该群组的聊天消息
+					uni.setStorageSync(`${userInfo.uid}groupmsgWith${group_id}`, message_list)
+				} else {
+					// 缓存当前与该用户的聊天消息
+					uni.setStorageSync(`${userInfo.uid}msgWith${msg_from}`, message_list)
+				}
 				
-				// 缓存当前与该用户的聊天消息
-				uni.setStorageSync(`${userInfo.uid}msgWith${msg_from}`, message_list)
 				uni.$emit("chatroomMsg",newMsg)
 			}
 			
@@ -202,10 +230,13 @@ export default {
 		}
 	},
 	mounted() {
-
-
-	
-		
+		// #ifdef APP-PLUS
+		uni.getSavedFileList({
+			success: (res) => {
+				console.log(res)
+			}
+		})
+		// #endif
 	},
 	onShow() {
 		// onShow 判断赋空数组，因为data很快就执行了

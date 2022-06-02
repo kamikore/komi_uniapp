@@ -5,7 +5,7 @@
 		<checkbox-group @change="checkboxChange">
 			<label class="checkbox" v-for="(val,key) in contacts" :key="key">
 				<view>
-					{{val}}
+					<!-- {{val}} -->
 					<!-- value 类型为string -->
 					<checkbox :value="`${val.fid.user_id}`" color="#F0AD4E" />
 				</view>

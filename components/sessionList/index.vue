@@ -208,6 +208,8 @@ export default {
 		
 		uni.$on("deleteSession",index => {
 			this.list.splice(index,1)
+			console.log(this.list)
+			uni.setStorageSync(`uid${this.$store.state.userInfo.uid}sessionList`,this.list)
 		})
 	},
 	mounted() {

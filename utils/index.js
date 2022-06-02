@@ -10,7 +10,6 @@ import permision from "@/js_sdk/wa-permission/permission.js"
  * @param {boolean} msg.isGroup - 消息是否为群组消息      
  */
 export function sendMsg(msg) {
-	console.log("发送消息",msg)
 	msg.dateTime = new Date();
 	msg.msg_from = store.state.userInfo.uid;
 	
@@ -20,6 +19,7 @@ export function sendMsg(msg) {
 		socket.emit('chatMsg', msg);
 	
 	} else {
+		msg.group_id = msg.msg_to
 		socket.emit('groupChatMsg', msg);
 	}
 
@@ -27,8 +27,15 @@ export function sendMsg(msg) {
 		自己发的信息触发更新首页聊天列表,以及聊天室列表，由于是自己发的需要处理 msg_to msg_from 关系，
 		离线消息会是一个数组, 所以在sendBox消息统一作为数组处理
 	*/
-   
 	msg.msg_from = msg.msg_to
+	// 如果消息为文件类型，转换为本地永久路径,目前但针对APP
+	// #ifdef APP-PLUS
+	if(msg.msg_type === 1 || msg.msg_type === 2 || msg.msg_type === 3 || msg.msg_type === 4) {
+		msg.msg_content = msg.localURL
+	}
+	// #endif
+
+	
 	uni.$emit('homeMsg', msg);
 	
 	uni.$emit('chatroomMsg', {
@@ -36,14 +43,6 @@ export function sendMsg(msg) {
 		self: 1
 	});
 
-	
-}
-
-
-/**
- * @param {Object} filePath - 转换的文件路径
- */
-export function convertFilePath(filePath) {
 	
 }
 
@@ -77,24 +76,24 @@ export function stickyOnTop(sessionList,session,index) {
 
 // 单例模式， 采用立即执行函数
 export function createInnerAudioContext() {
-			// 隐藏的Class的构造函数
-			function InnerAudioContext() {
-				return uni.createInnerAudioContext();
+	// 隐藏的Class的构造函数
+	function InnerAudioContext() {
+		return uni.createInnerAudioContext();
+	}
+	//保存在闭包环境，相当模拟了私有的方法和变量，只有返回的函数可调用
+	// 未初始化的单例对象
+	let innerAudioContext;
+
+	return {
+		// 创建/获取单例对象的函数
+		getInstance: function() {
+			if (!innerAudioContext) {
+				innerAudioContext = new InnerAudioContext();
 			}
-			//保存在闭包环境，相当模拟了私有的方法和变量，只有返回的函数可调用
-			// 未初始化的单例对象
-			let innerAudioContext;
-		
-			return {
-				// 创建/获取单例对象的函数
-				getInstance: function() {
-					if (!innerAudioContext) {
-						innerAudioContext = new InnerAudioContext();
-					}
-					return innerAudioContext;
-				}
-			}
+			return innerAudioContext;
 		}
+	}
+}
 
 	
 
@@ -161,7 +160,6 @@ export function DateToDateTime(date) {
 	const oneDay = 60*1000*60*24;
 	
 	// new Date() 的对象传递时，另一端变成了普通字符串
-	console.log("传递的Date",date)
 	date = new Date(date);
 	const offset = nowDate - date;
 	let H = date.getHours();
@@ -196,6 +194,7 @@ export function getVideoPoster(filePath) {
 
 }
 
+
 export function stopWatch() {
     let startTime = new Date().getTime();
     let count = 0;
@@ -216,19 +215,19 @@ export function stopWatch() {
 }
 
 /**
- * @param {Object} path - 文件路径
+ * @param {Object} filePath - 文件路径
  */
-export function filePath2base64(filePath) {
+export function filePath2base64(file) {
 	const promise = new Promise((resolve,reject) => {
-		plus.io.resolveLocalFileSystemURL(filePath.path,(entry)=>{
-		 entry.file( file =>{  
-				console.log("文件信息",file, filePath)
+		plus.io.resolveLocalFileSystemURL(file.path,(entry)=>{
+		 entry.file( fileData =>{  
+				console.log("文件信息",fileData, file)
 				const reader = new plus.io.FileReader();  
 				// 以URL编码格式读取文件数据内容
-				reader.readAsDataURL(file); 
+				reader.readAsDataURL(fileData); 
 				// 读取结束后回调
 				reader.onloadend = function (e) {  
-					resolve({fileName:file.name,type: file.type.split("/")[1],size: filePath.size,base64:e.target.result})
+					resolve({fileName:fileData.name,type: fileData.type.split("/")[1],size: fileData.size, base64:e.target.result})
 				};  
 			})  
 			
@@ -239,6 +238,43 @@ export function filePath2base64(filePath) {
 	})
 	return promise
 }
+
+/**
+ * @param {String} url - 资源地址
+ */
+export function saveFile(url) {
+	return new Promise((resolve,reject) => {
+		// #ifdef H5
+		uni.downloadFile({
+			url,
+			success: (res) => {
+				if (res.statusCode === 200) {
+					// const blob = new Blob(res.tempFilePath, {type : 'audio/mpeg'})
+					// const url = URL.createObjectURL(blob);
+					resolve(url)
+				}
+			}
+		})
+		// #endif
+		
+		// #ifdef APP-PLUS
+		uni.downloadFile({
+			url,
+			success: ({tempFilePath}) => {
+				uni.saveFile({
+					tempFilePath,
+					success: ({savedFilePath}) => {
+						console.log("保存地址",savedFilePath)
+						resolve(savedFilePath)
+					}
+				})
+			}
+		})
+		// #endif
+	})
+}
+
+
 
 /**
  * @param {String} permisionID - 权限对应值 https://ext.dcloud.net.cn/plugin?id=594

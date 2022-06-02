@@ -10,6 +10,7 @@ export default {
 				time: "19:00",
 				msg: 'sdsdsd',
 				type: 0,
+				isGroup: false,
 				self: 0,
 			},
 			{
@@ -17,6 +18,7 @@ export default {
 				time: "20:00",
 				msg: "https://img.cdn.aliyun.dcloud.net.cn/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20200317.mp4",
 				type: 3,
+				isGroup: false,
 				self: 1,
 			},
 			{
@@ -25,6 +27,7 @@ export default {
 				type: 0,
 				msg: '236236236236',
 				self: 0,
+				isGroup: false,
 			},
 			{
 				id: 4,
@@ -32,6 +35,7 @@ export default {
 				type: 0,
 				msg: '21489719582',
 				self: 0,
+				isGroup: false,
 			},
 			{
 				id: 5,
@@ -39,6 +43,7 @@ export default {
 				type: 0,
 				msg: 'joiymoncxiobnxidf1234',
 				self: 0,
+				isGroup: false,
 			},
 			{
 				id: 6,
@@ -46,6 +51,7 @@ export default {
 				type: 0,
 				msg: '12874h12othr01235n1odgsdgseeti50',
 				self: 1,
+				isGroup: false,
 			},
 			{
 				id: 7,
@@ -53,6 +59,7 @@ export default {
 				type: 0,
 				msg: 'zxcvzxvxcvxcv aszfasf',
 				self: 0,
+				isGroup: false,
 			},
 			{
 				id: 8,
@@ -61,6 +68,7 @@ export default {
 				msg:  'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-hello-uniapp/2cc220e0-c27a-11ea-9dfb-6da8e309e0d8.mp3',
 				voice_duration: 36,
 				self: 1,
+				isGroup: false,
 			},
 			{
 				id: 9,
@@ -69,6 +77,7 @@ export default {
 				msg:  'https://www.cambridgeenglish.org/images/153149-movers-sample-listening-test-vol2.mp3',
 				voice_duration: 30,
 				self: 0,
+				isGroup: false,
 			},
 			{
 				id: 10,
@@ -76,6 +85,7 @@ export default {
 				type: 2,
 				msg: '../../static/images/test/1.jpg',
 				self: 0,
+				isGroup: false,
 			},
 			{
 				id: 11,
@@ -83,6 +93,7 @@ export default {
 				type: 2,
 				msg: '../../static/images/test/2.jpg',
 				self: 1,
+				isGroup: false,
 			},
 			{
 				id: 12,
@@ -90,6 +101,7 @@ export default {
 				msg: "https://img.cdn.aliyun.dcloud.net.cn/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20200317.mp4",
 				type: 3,
 				self: 0,
+				isGroup: false,
 			},
 			{
 				id: 13,
@@ -97,6 +109,7 @@ export default {
 				msg: "https://img.cdn.aliyun.dcloud.net.cn/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20200317.mp4",				
 				type: 3,
 				self: 1,
+				isGroup: false,
 			},
 			{
 				id: 14,
@@ -104,6 +117,7 @@ export default {
 				type: 4,
 				msg:{fileName:"例如图片.jpg",size: '55.55kb'},
 				self: 0,
+				isGroup: false,
 			},
 			{
 				id: 15,
@@ -111,6 +125,7 @@ export default {
 				type: 4,
 				msg:{fileName:"qweojqwosdsdsdsdsdsdsdssdssdsdsqw41e12sdt.jpg",size: '55.55kb'},
 				self: 1,
+				isGroup: false,
 			},
 			{
 				id:16,
@@ -122,7 +137,8 @@ export default {
 					latitude: 23.128822,
 					longitude: 113.271339,
 					self: 0,
-				}
+				},
+				isGroup: false,
 			},
 			{
 				id:17,
@@ -135,6 +151,7 @@ export default {
 					longitude: 113.271339,
 					self: 0,
 				},
+				isGroup: false,
 			}
 		]
 	},

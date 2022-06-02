@@ -14,7 +14,7 @@ import {getVideoPoster, filePath2base64 , sendMsg,checkAndroidPermission} from '
 import permision from "@/js_sdk/wa-permission/permission.js"
 
 // 访问原生插件
-const AfDocument = uni.requireNativePlugin("Aq-ChooseFile");
+var AfDocument = uni.requireNativePlugin("Aq-ChooseFile");
 
 export default {
 	name: 'toolsBox',
@@ -51,13 +51,47 @@ export default {
 			];
 		}
 	},
-	props:['id'],
 	data() {
 		return {
-			
 		};
 	},
 	methods: {
+		// file 转换base64，filePath 作为savefile参数
+		sendFileMsg(file,fileType,type) {
+			// #ifdef H5
+				const reader = new FileReader();
+				reader.readAsDataURL(file); 
+				reader.onload = () => {
+					sendMsg({
+						msg_content : reader.result,
+						msg_to : this.id,
+						msg_type : type,
+						fileType,
+						isGroup:this.isGroup,
+					})
+				}
+			// #endif
+			
+			// #ifdef APP-PLUS
+			uni.saveFile({
+				tempFilePath:file.path,
+				success: (result) => {
+					filePath2base64(file).then((res) => {
+						sendMsg({
+							msg_content : res.base64,
+							msg_to : this.id,
+							msg_type : type,
+							fileType,
+							localURL: result.savedFilePath,
+							isGroup:this.isGroup,
+						})
+					}, (err) => {
+						console.log("读写错误",err)
+					})
+				}
+			})
+			//  #endif
+		},
 		selectTool(index) {
 			switch (index) {
 				case 0:
@@ -65,30 +99,10 @@ export default {
 						count:5,
 						sourceType:['album'],
 						success: (res) => {
-							const {tempFilePaths} = res;
-							tempFilePaths.forEach((file) => {
-								
-								sendMsg({
-									msg_content : file,
-									msg_to : this.id,
-									msg_type : 2,
-									isGroup:this.isGroup,
-								})
-								// uni.$emit('chatroomMsg', {
-								// 	msg_content: file,
-								// 	dateTime: Date.now(),
-								// 	msg_type: 2,
-								// 	msg_from: this.userInfo.uid, 
-								// 	self: 1
-								// });
-								
-								// this.$socket.emit('chatMsg', {
-								// 	msg_content: file,
-								// 	msg_to: this.id, // 发出去，发别人的id
-								// 	msg_from: this.userInfo.uid, // 还需要附上自己的id
-								// 	msg_type: 2,
-								// 	dateTime: Date.now()
-								// });
+							console.log("图片选择",res)
+							const {tempFiles} = res;
+							tempFiles.forEach((file) => {
+								this.sendFileMsg(file,'png',2)
 							})
 							
 						},
@@ -103,33 +117,14 @@ export default {
 						title:'选择拍摄类型',
 						itemList: ['拍照', '录像'],
 						success: res => {
-							getVideoPoster(res.tempFilePath)
+							// 获取视频封面
+							// getVideoPoster(res.tempFilePath)
 							if(res.tapIndex) {
 								uni.chooseVideo({
 									sourceType:['camera'],
 									success: res => {
-										sendMsg({
-											msg_content : file,
-											msg_to : this.id,
-											msg_type : 2,
-											isGroup:this.isGroup,
-										})
-										// uni.$emit('chatroomMsg', {
-										// 	msg_content: res.tempFilePath,
-										// 	msg_to: this.id, // 发出去，发别人的id
-										// 	msg_from: this.userInfo.uid, // 还需要附上自己的id
-										// 	msg_type: 3,
-										// 	dateTime: Date.now()
-										// });
-										
-										// this.$socket.emit('chatMsg', {
-										// 	msg_content: res.tempFilePath,
-										// 	msg_to: this.id, // 发出去，发别人的id
-										// 	msg_from: this.userInfo.uid, // 还需要附上自己的id
-										// 	msg_type: 3,
-										// 	dateTime: Date.now()
-										// });
-										
+										console.log("拍摄",res)
+										this.sendFileMsg({path:res.tempFilePath},'mp4',3)
 									},
 									fail: (err) => {
 										console.log('发生错误',errMsg)
@@ -139,27 +134,7 @@ export default {
 								uni.chooseImage({
 									sourceType:['camera'],
 									success: res => {
-										sendMsg({
-											msg_content: res.tempFilePaths[0],
-											msg_to: this.id, // 发出去，发别人的id
-											msg_from: this.userInfo.uid, // 还需要附上自己的id
-											msg_type: 2,
-											dateTime: Date.now()
-										})
-										// uni.$emit('chatroomMsg', {
-										// 	msg_content: res.tempFilePaths[0],
-										// 	dateTime: Date.now(),
-										// 	msg_type: 2,
-										// 	msg_from: this.userInfo.uid, 
-										// 	self: 1
-										// });
-										// this.$socket.emit('chatMsg', {
-										// 	msg_content: res.tempFilePaths[0],
-										// 	msg_to: this.id, // 发出去，发别人的id
-										// 	msg_from: this.userInfo.uid, // 还需要附上自己的id
-										// 	msg_type: 2,
-										// 	dateTime: Date.now()
-										// });
+										this.sendFileMsg(res.tempFiles[0],'png',2)
 									},
 									fail: (err) => {
 										console.log("发生错误",errMsg)
@@ -173,7 +148,6 @@ export default {
 					})
 					break;
 				case 2:
-					console.log('2');
 					uni.navigateTo({
 						url: '/pages/livePush/index'
 					});
@@ -227,21 +201,23 @@ export default {
 					uni.showActionSheet({
 						title:'文件选择',
 						itemList:['手机存储','手机相册'],
-						success: tapIndex => {
+						success: ({tapIndex}) => {
 							if(tapIndex) {
 								AfDocument.openMode({
 									size: '10', //选择总数量
-									paths:['/storage/emulated/0/Pictures'],
-									isDown:true,//是否下钻（true 筛选当前目录以下的所有文件，fales 只筛选当前目录文件） 
-									types:[
+				                    paths:['/storage/emulated/0/Pictures','/storage/emulated/0/DCIM'],   //自定义选择目录
+				                    isDown:true,//是否下钻（true 筛选当前目录以下的所有文件，fales 只筛选当前目录文件） 
+				                    types:[
 									{
-										name:'图片',
-										value:['jpg','png'] 
-									},
-									{
-										name:'视频',
-										value:["mp4"] 
-									}]
+				                        name:'视频',
+				                        value:["mp4"] 
+				                    },{
+				                        name:'音乐',
+				                        value:['mp3','flac'] 
+				                    },{
+				                        name:'图片',
+				                        value:['jpg','png','jpeg'] 
+				                    }]
 								},(res)=>{
 									console.log("文件路径",JSON.stringify(res))
 									res.res.forEach( file => {
@@ -259,7 +235,8 @@ export default {
 							} else {
 								AfDocument.openMode({
 									size: '10', //选择总数量
-									isDown:false,//是否下钻（true 筛选当前目录以下的所有文件，fales 只筛选当前目录文件） 
+									paths:['/storage/emulated/0/Download'],
+									isDown:true,//是否下钻（true 筛选当前目录以下的所有文件，fales 只筛选当前目录文件） 
 									types:[{
 										name:'文档',
 										value:["doc","wps","docx","xls","xlsx","pdf","pptx"]
@@ -283,6 +260,16 @@ export default {
 						}
 					})
 					break;
+				case 5:
+				
+					if(this.isGroup) {
+							console.log("清除ID",this.id)
+						uni.removeStorageSync(`${this.userInfo.uid}groupmsgWith${this.id}`)
+					} else {
+						uni.removeStorageSync(`${this.userInfo.uid}msgWith${this.id}`)
+					}
+					
+					break;
 			}
 		},
 		
@@ -298,7 +285,7 @@ export default {
 	justify-content: center;
 	row-gap: 40rpx;
 	padding: 0 20rpx;
-	padding-top: 60rpx;
+	padding-top: 30rpx;
 
 	.tool {
 		text-align: center;
@@ -317,6 +304,7 @@ export default {
 		}
 
 		text {
+			white-space: nowrap;
 			color: #708090;
 		}
 	}

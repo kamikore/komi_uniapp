@@ -1,6 +1,6 @@
 <template>
 	<view class="videoPlayer-container">
-		<video :src="videoUrl" controls></video>
+		<video :src="videoUrl" controls autoplay="true"></video>
 	</view>
 </template>
 
@@ -29,11 +29,11 @@ export default {
 	video {
 		width: 100vw;
 		// #ifdef H5
-		height: calc(100vh - var(--window-top) - var(--window-bottom));
+		height: 100vh;
 		// #endif
 		
 		// #ifdef APP
-		height: calc(100vh - 50px -  var(--status-bar-height));
+		height: 100vh;
 		// #endif
 	}
 </style>

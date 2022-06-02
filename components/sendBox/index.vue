@@ -31,7 +31,7 @@ import data from '@/common/data.js';
 import toolsBox from '@/components/toolsBox';
 import emojiBox from '@/components/emojiBox';
 import {mapState} from "vuex"
-import { debounce, stopWatch , sendMsg ,convertFilePath,checkAndroidPermission} from "@/utils/index.js"
+import { debounce, stopWatch , sendMsg ,filePath2base64,checkAndroidPermission} from "@/utils/index.js"
 // 录音管理器
 const recorderManager = uni.getRecorderManager();
 
@@ -64,8 +64,8 @@ export default {
 			
 			// 录音状态 0为取消，1为正常发送
 			recordStatus: 1,
-			// 是否为首次授权，首次授权不跳转,但仍然存在问题
-			flag: true,
+			// 判断touchmove 是否执行了
+			flag: false,
 			
 			screenHeight: 0,
 			
@@ -98,13 +98,6 @@ export default {
 			})
 			this.inputs = '';
 		},
-		
-		touchmove:debounce(function(detail,screenHeigth) {
-				const x = detail.touches[0].pageX;
-				const y =  screenHeigth - detail.touches[0].pageY;
-				uni.$emit("dragInRecord",{x,y})
-			},
-		10),
 		showExtend(type) {
 			if (type === 'emoji') {
 				uni.$emit("showEmoji")
@@ -135,25 +128,27 @@ export default {
 			this.extendBox.hidden = true;
 		},
 		recordStart() {
+			recorderManager.start({
+				duration: 45000 		// 最大录音时长
+			});
 			// checkAndroidPermission("android.permission.RECORD_AUDIO").then((res) => {
 			// 	if(!res && !flag) return
-				this.flag = false
 				uni.navigateTo({
-					url: "/pages/recording/index"
+					url: "/pages/recording/index",
 				})
-				recorderManager.start({
-					duration: 45000 		// 最大录音时长
-				});
+		
 			// })
 			
 		},
+		touchmove:debounce(function(detail,screenHeigth) {
+				const x = detail.touches[0].pageX;
+				const y =  screenHeigth - detail.touches[0].pageY;
+				uni.$emit("dragInRecord",{x,y})
+			},
+		10),
 		recordEnd(detail) {
-			console.log("end")
-			recorderManager.stop()
-			uni.navigateBack({
-				delta: 1
-			})
-			
+			uni.navigateBack()
+			recorderManager.stop()		
 		}
 	},
 	created() {
@@ -169,7 +164,6 @@ export default {
 		})
 		
 		
-		console.log("id",this.id)
 		let self = this;
 		this.screenHeight = this.systemInfo.screenHeight
 		uni.$on("changeRecordStatus", status => {
@@ -190,20 +184,46 @@ export default {
 		})
 		
 		
-		recorderManager.onStop(function (res) {
+		recorderManager.onStop((res) => {
 			const voice_duration = self.stopTimer();
 			console.log('recorder stop', "时长",voice_duration, JSON.stringify(res));
-			if(this.recordStatus === 0 || voice_duration == 1) return
-
-			sendMsg({
-				msg_content: convertFilePath(res.tempFilePath)
-			})
+			if(this.recordStatus === 0 || voice_duration <= 1) {
+				if(voice_duration <= 1) {
+					uni.navigateBack()
+					uni.showToast({
+						icon:'error',
+						title:'说话时间太短',
+					})
+				}
+				return 
+			}
 			
+			// #ifdef APP-PLUS
+			uni.saveFile({
+			    tempFilePath: res.tempFilePath,
+			    success: (result) => {
+					filePath2base64({path:result.savedFilePath}).then((file) => {
+						sendMsg({
+							msg_content: file.base64,
+							msg_to : this.id,
+							msg_type : 1,
+							voice_duration,
+							fileType: 'mp3',
+							localURL: result.savedFilePath,
+							isGroup:this.isGroup
+						})
+					},(err) => {
+						console.log("读写错误",err)
+					})
+			    }
+			});
+			// #endif
+		
 		});
 		
 		recorderManager.onError(err=>{
-			self.stopTimer()
 			console.log("录音发生错误",err)
+			self.stopTimer()
 			uni.navigateBack()
 		})
 	

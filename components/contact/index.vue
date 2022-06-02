@@ -1,7 +1,7 @@
 <template>
 		<view class="contact">
-			<view class="avatar"><image :src="contact.fid.avatar || '../../static/images/future.png'" mode="aspectFill"></image></view>
-			<view class="nickName">{{contact.remarkName || contact.group_name}}</view>
+			<view class="avatar"><image :src="avatarSrc" mode="aspectFill"></image></view>
+			<view class="nickName">{{isGroup?contact.group_name:contact.remarkName}}</view>
 		</view>
 </template>
 
@@ -9,8 +9,16 @@
 	
 export default {
 	name: "contact",
-	props: {
-		contact: Object
+	props: ['contact','isGroup'],
+	computed: {
+		avatarSrc() {
+			if(this.isGroup) {
+				return '../../static/images/future.png'
+			} else {
+				return this.contact.fid.avatar || '../../static/images/future.png'
+			}
+			
+		}
 	},
 	data() {
 		return {
@@ -18,7 +26,8 @@ export default {
 		};
 	},
 	methods: {
-	}
+	},
+	
 };
 </script>
 

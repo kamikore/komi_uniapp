@@ -13,7 +13,7 @@
 								"fontSrc": "./static/iconfont.ttf",
 								"fontSize": "52rpx",
 								"text": "\ue67b",
-								"width": "80rpx"
+								"width": "100rpx"
 							},
 							{
 								"fontSrc": "./static/iconfont.ttf",
@@ -155,6 +155,7 @@
 			"path": "pages/chatroom/index",
 			"style": {
 				"navigationBarTitleText": "",
+				"enablePullDownRefresh": true,
 				"app-plus": {
 					"scrollIndicator": "none", //app端隐藏滚动条，H5 无效
 					// "bounce":"none",
@@ -176,7 +177,13 @@
 		{
 			"path": "pages/videoPlayer/index",
 			"style": {
-				"navigationStyle": "custom"
+				"navigationStyle": "default",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+				
 			}
 		},
 		{
@@ -316,7 +323,9 @@
 					"fontSrc": "./static/iconfont.ttf",
 					"fontSize": "24px",
 					"fontWeight":"700",
-					"text": "\ue946"		
+					"text": "\ue946",
+					"color": "#666666",
+					"selectedColor": "#002DE3"
 				},
 				"text": "消息"
 			},
@@ -326,7 +335,9 @@
 				"iconfont": {
 					"fontSrc": "./static/iconfont.ttf",
 					"fontSize": "24px",
-					"text": "\ue7bb"	
+					"text": "\ue7bb",
+					"color": "#666666",
+					"selectedColor": "#002DE3"
 				},
 				"text": "联系人"
 
@@ -337,7 +348,9 @@
 				"iconfont": {
 					"fontSrc": "./static/iconfont.ttf",
 					"fontSize": "24px",
-					"text": "\ue6ba"		
+					"text": "\ue6ba",
+					"color": "#666666",
+					"selectedColor": "#002DE3"
 				},
 				"text": "分享"
 			
@@ -348,7 +361,9 @@
 				"iconfont": {
 					"fontSrc": "./static/iconfont.ttf",
 					"fontSize": "24px",
-					"text": "\ue918"	
+					"text": "\ue918",
+					"color": "#666666",
+					"selectedColor": "#002DE3"
 				},
 				"text": "我"
 

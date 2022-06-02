@@ -4,7 +4,8 @@
 		<view class="session-main">
 			<view class="avatar">
 				<!-- 新消息红点，通过伪元素 -->
-				<image :src="contacts[item.fid].fid.avatar || '../../static/images/future.png'" mode="aspectFill"></image>
+				<image v-if="item.msg.isGroup" src="../../static/images/future.png" mode="aspectFill"></image>
+				<image v-else :src="contacts[item.fid].fid.avatar || '../../static/images/future.png'" mode="aspectFill"></image>
 			</view>
 			<view class="content">
 				<view class="content-title">
@@ -136,6 +137,7 @@ export default {
 		},
 	},
 	mounted() {
+		console.log("当前session",this.item)
 	}
 };
 </script>

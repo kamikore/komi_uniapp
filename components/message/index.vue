@@ -8,9 +8,15 @@
 				<!-- <text class="username">kamikore</text> -->
 				<!-- audio -->
 				<view v-if="item.type === 1" class="message audio" @tap="playAudio(item.msg)">
-					<image src="@/static/images/chatroom/audio.png" mode=""></image>
+					<!-- <image src="@/static/images/chatroom/audio.png" mode=""></image> -->
+					<!-- 语音播放效果 -->
+					<div class="voicePlay">
+					 	 <div class="layer1"></div>
+					 	 <div class="layer2" :class="voicePlay?'active':''"></div>
+					 	 <div class="layer3" :class="voicePlay?'active':''"></div>
+					 </div>
 					<!-- 音频时间，直接从消息字段获取，API返回信息有很大延迟 -->
-					<text>{{ item.voice_duration }}</text>
+					<text>{{ item.voice_duration  + '“'}}</text>
 				</view>
 
 				<!-- image-->
@@ -83,18 +89,29 @@ export default {
 		return {
 			videoDuration: "",
 			innerAudioContext: null,
+			voicePlay: false,
 		};
 	},
 	methods: {
 		// 图片处理
 		previewImage(url) {
+			console.log(this.item)
+			console.log("图片预览",url)
 			const imgPaths =[];
-			for(const item of data.message()) {
+			let msgList = [];
+			if(this.item.isGroup) {
+				msgList = uni.getStorageSync(`${this.$store.state.userInfo.uid}groupmsgWith${this.item.group_id}`)
+			} else {
+				msgList = uni.getStorageSync(`${this.$store.state.userInfo.uid}msgWith${this.item.msg_from}`)
+			}
+			 
+			for(const item of msgList) {
 				if(item.type === 2 ) {
 					imgPaths.push(item.msg)
 				}
 			}
 			
+
 			console.log("图片预览数组",imgPaths)
 			// 预览图片
 			uni.previewImage({
@@ -114,14 +131,18 @@ export default {
 		},
 		
 		playAudio(src) {
+			console.log("播放音频路径",src)
+			
 			// 函数内的变量执行完会被销毁, 音频状态也就没了
 			// const innerAudioContext = createInnerAudioContext().getInstance();
 			// 点击新的音频会直接播放
 			if (this.innerAudioContext.paused || this.innerAudioContext.src != src) {
+				this.voicePlay = true;
 				this.innerAudioContext.src = src;
 				this.innerAudioContext.play();
 				console.log('开始播放');
 			} else {
+				this.voicePlay = false;
 				this.innerAudioContext.pause();
 				console.log('暂停');
 				// innerAudioContext.destroy();
@@ -131,6 +152,7 @@ export default {
 		
 		// 视频播放
 		videoPlay(url) {
+			console.log("视频播放路径",url)
 			uni.navigateTo({
 				url:`/pages/videoPlayer/index?url=${url}`
 			})
@@ -177,10 +199,10 @@ export default {
 		
 	},
 	created() {
-		
 		switch(this.item.type) {		
 
 			case 3: 
+				console.log("视频信息",this.item)
 				uni.getVideoInfo({
 					src: this.item.msg,
 					success: (res) => {
@@ -197,6 +219,10 @@ export default {
 	},
 	mounted() {
 		this.innerAudioContext = createInnerAudioContext().getInstance()
+		// 注册自然播放结束事件
+		this.innerAudioContext.onEnded(() => {
+			this.voicePlay = false
+		})
 	},
 	destroyed() {
 		this.innerAudioContext.destroy();
@@ -271,11 +297,87 @@ export default {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			width: 100rpx;
+			width: 160rpx;
 
-			image {
-				width: 28rpx;
-				height: 36rpx;
+			// image {
+			// 	width: 28rpx;
+			// 	height: 36rpx;
+			// }
+			
+			.voicePlay {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				
+				@keyframes showLayer2 {
+				  0% { opacity: 0;}
+				  30% { opacity: 1;}
+				  100% { opacity: 0;}
+				}
+				@keyframes showLayer3 {
+				  0% { opacity: 0;}
+				  60% { opacity: 1;}
+				  100% { opacity: 0;}
+				}
+				
+				.active.layer2 {
+					animation: showLayer2 1s ease-in-out infinite;
+				}
+				
+				.active.layer3 {
+					animation: showLayer3 1s ease-in-out infinite;
+				}
+				
+				.layer1 {
+				  width: 40rpx;
+				  height: 40rpx;
+				  border-style: solid;
+				  border-top-color: transparent;
+				  border-left-color: transparent;
+				  border-bottom-color: transparent;
+				  border-radius: 50%;
+				  box-sizing: border-box;
+				  vertical-align: middle;
+				  display: inline-block;
+				  color:#A2A2A2;
+				}
+				
+				.layer2 {
+				  width: 60rpx;
+				  height: 60rpx;
+				  border-style: solid;
+				  border-top-color: transparent;
+				  border-left-color: transparent;
+				  border-bottom-color: transparent;
+				  border-radius: 50%;
+				  box-sizing: border-box;
+				  vertical-align: middle;
+				  display: inline-block;
+				  margin-left: -44rpx;
+				  opacity: 1;
+				  color:#A2A2A2;
+				}
+			
+
+				.layer3 {
+				  width: 80rpx;
+				  height: 80rpx;
+				  border-style: solid;
+				  border-top-color: transparent;
+				  border-left-color: transparent;
+				  border-bottom-color: transparent;
+				  border-radius: 50%;
+				  box-sizing: border-box;
+				  vertical-align: middle;
+				  display: inline-block;
+				  margin-left: -64rpx;
+				  opacity: 1;
+				  color:#A2A2A2;
+				}
+			}
+			
+			text {
+				
 			}
 		}
 
@@ -301,7 +403,7 @@ export default {
 				background: #000000;
 				
 				&::before {				
-					content: "▶ 按钮";
+					content: "▶ 播放";
 					position: absolute;
 					top: 50%;
 					left: 50%;

@@ -1346,51 +1346,63 @@ var render = function() {
             "v-uni-view",
             { staticClass: _vm._$g(2, "sc"), attrs: { _i: 2 } },
             [
-              _c("v-uni-image", {
-                attrs: { src: _vm._$g(3, "a-src"), mode: "aspectFill", _i: 3 }
-              })
+              _vm._$g(3, "i")
+                ? _c("v-uni-image", {
+                    attrs: {
+                      src: _vm._$g(3, "a-src"),
+                      mode: "aspectFill",
+                      _i: 3
+                    }
+                  })
+                : _c("v-uni-image", {
+                    attrs: {
+                      src: _vm._$g(4, "a-src"),
+                      mode: "aspectFill",
+                      _i: 4
+                    }
+                  })
             ],
             1
           ),
           _c(
             "v-uni-view",
-            { staticClass: _vm._$g(4, "sc"), attrs: { _i: 4 } },
+            { staticClass: _vm._$g(5, "sc"), attrs: { _i: 5 } },
             [
               _c(
                 "v-uni-view",
-                { staticClass: _vm._$g(5, "sc"), attrs: { _i: 5 } },
+                { staticClass: _vm._$g(6, "sc"), attrs: { _i: 6 } },
                 [
-                  _vm._$g(6, "i")
+                  _vm._$g(7, "i")
                     ? _c(
-                        "v-uni-text",
-                        { staticClass: _vm._$g(6, "sc"), attrs: { _i: 6 } },
-                        [_vm._v(_vm._$g(6, "t0-0"))]
-                      )
-                    : _c(
                         "v-uni-text",
                         { staticClass: _vm._$g(7, "sc"), attrs: { _i: 7 } },
                         [_vm._v(_vm._$g(7, "t0-0"))]
+                      )
+                    : _c(
+                        "v-uni-text",
+                        { staticClass: _vm._$g(8, "sc"), attrs: { _i: 8 } },
+                        [_vm._v(_vm._$g(8, "t0-0"))]
                       ),
                   _c(
                     "v-uni-text",
-                    { staticClass: _vm._$g(8, "sc"), attrs: { _i: 8 } },
-                    [_vm._v(_vm._$g(8, "t0-0"))]
+                    { staticClass: _vm._$g(9, "sc"), attrs: { _i: 9 } },
+                    [_vm._v(_vm._$g(9, "t0-0"))]
                   )
                 ],
                 1
               ),
               _c(
                 "v-uni-view",
-                { attrs: { id: "content-detail", _i: 9 } },
+                { attrs: { id: "content-detail", _i: 10 } },
                 [
                   _c(
                     "v-uni-view",
-                    { staticClass: _vm._$g(10, "sc"), attrs: { _i: 10 } },
+                    { staticClass: _vm._$g(11, "sc"), attrs: { _i: 11 } },
                     [
                       _c(
                         "v-uni-text",
-                        { staticClass: _vm._$g(11, "sc"), attrs: { _i: 11 } },
-                        [_vm._v(_vm._$g(11, "t0-0"))]
+                        { staticClass: _vm._$g(12, "sc"), attrs: { _i: 12 } },
+                        [_vm._v(_vm._$g(12, "t0-0"))]
                       )
                     ],
                     1
@@ -1402,14 +1414,14 @@ var render = function() {
                         {
                           name: "show",
                           rawName: "v-show",
-                          value: _vm._$g(12, "v-show"),
-                          expression: "_$g(12,'v-show')"
+                          value: _vm._$g(13, "v-show"),
+                          expression: "_$g(13,'v-show')"
                         }
                       ],
-                      staticClass: _vm._$g(12, "sc"),
-                      attrs: { _i: 12 }
+                      staticClass: _vm._$g(13, "sc"),
+                      attrs: { _i: 13 }
                     },
-                    [_vm._v(_vm._$g(12, "t0-0"))]
+                    [_vm._v(_vm._$g(13, "t0-0"))]
                   )
                 ],
                 1
@@ -1422,25 +1434,12 @@ var render = function() {
       ),
       _c(
         "v-uni-view",
-        { attrs: { id: "btn-group", _i: 13 } },
+        { attrs: { id: "btn-group", _i: 14 } },
         [
           _c(
             "v-uni-button",
             {
               staticStyle: { background: "#2176FF" },
-              attrs: { plain: "true", _i: 14 },
-              on: {
-                click: function($event) {
-                  return _vm.$handleViewEvent($event, { stop: true })
-                }
-              }
-            },
-            [_vm._v(_vm._$g(14, "t0-0"))]
-          ),
-          _c(
-            "v-uni-button",
-            {
-              staticStyle: { background: "#fbb547" },
               attrs: { plain: "true", _i: 15 },
               on: {
                 click: function($event) {
@@ -1453,8 +1452,21 @@ var render = function() {
           _c(
             "v-uni-button",
             {
-              staticStyle: { background: "#fc3935" },
+              staticStyle: { background: "#fbb547" },
               attrs: { plain: "true", _i: 16 },
+              on: {
+                click: function($event) {
+                  return _vm.$handleViewEvent($event, { stop: true })
+                }
+              }
+            },
+            [_vm._v(_vm._$g(16, "t0-0"))]
+          ),
+          _c(
+            "v-uni-button",
+            {
+              staticStyle: { background: "#fc3935" },
+              attrs: { plain: "true", _i: 17 },
               on: {
                 click: function($event) {
                   return _vm.$handleViewEvent($event, { stop: true })
@@ -4276,10 +4288,7 @@ var render = function() {
                   }
                 }
               },
-              [
-                _vm._v(_vm._$g("3-" + $30, "t0-0")),
-                _c("contact", { attrs: { _i: "4-" + $30 } })
-              ],
+              [_c("contact", { attrs: { _i: "4-" + $30 } })],
               1
             )
           })
@@ -4323,7 +4332,7 @@ __webpack_require__.r(__webpack_exports__);
 Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
 var _contact = _interopRequireDefault(__webpack_require__(/*! @/components/contact */ 122));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var _default =
 {
-  name: "contactList", props: ["contacts"],
+  name: "contactList", props: ["contacts", "isGroup"],
   data: function data() {
     return {
       wxsProps: {} };
@@ -4466,7 +4475,7 @@ __webpack_require__.r(__webpack_exports__);
 Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default =
 
 {
-  name: "contact", props: ["contact"],
+  name: "contact", props: ["contact", "isGroup"],
   data: function data() {
     return {
       wxsProps: {} };
@@ -5392,7 +5401,6 @@ var render = function() {
                     "v-uni-view",
                     { attrs: { _i: "5-" + $30 } },
                     [
-                      _vm._v(_vm._$g("5-" + $30, "t0-0")),
                       _c("v-uni-checkbox", {
                         attrs: {
                           value: _vm._$g("6-" + $30, "a-value"),
@@ -6535,7 +6543,7 @@ var render = function() {
         { staticClass: _vm._$g(1, "sc"), attrs: { _i: 1 } },
         [
           _c("v-uni-image", {
-            attrs: { src: _vm._$g(2, "a-src"), mode: "", _i: 2 }
+            attrs: { src: _vm._$g(2, "a-src"), mode: "aspectFill", _i: 2 }
           })
         ],
         1
@@ -6753,7 +6761,7 @@ if(false) {}
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ./node_modules/css-loader/dist/runtime/api.js */ 15);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\n.momentItem[data-v-a176b99e] {\r\n  display: flex;\r\n  margin-bottom: 32rpx;\r\n  border-bottom: 2rpx solid #ededed;\n}\n.momentItem .avatar uni-image[data-v-a176b99e] {\r\n  width: 96rpx;\r\n  height: 96rpx;\r\n  border-radius: 20rpx;\r\n  background-color: #ffa726;\r\n  margin-right: 20rpx;\n}\n.momentItem .info[data-v-a176b99e] {\r\n  flex: 1;\n}\n.momentItem .info .userName[data-v-a176b99e] {\r\n  font-family: 'Mulish';\r\n  font-style: normal;\r\n  font-weight: 600;\r\n  font-size: 32rpx;\r\n  line-height: 48rpx;\r\n  color: #3e4347;\n}\n.momentItem .info .content[data-v-a176b99e] {\r\n  margin: 6rpx 0 20rpx 0;\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\r\n  display: -webkit-box;\r\n  /* ！！！！弹性伸缩盒子模型显示*/\r\n  -webkit-line-clamp: 2;\r\n  /*限制一个块元素显示的文本行数*/\r\n  -webkit-box-orient: vertical;\r\n  /*设置或检索伸缩盒对象的子元素的排列方式*/\r\n  /* 某些情况需要加上换行处理 */\r\n  word-break: break-word;\r\n  /* 换行模式 */\r\n  overflow-wrap: break-word;\r\n  font-family: 'Mulish';\r\n  font-style: normal;\r\n  font-weight: 400;\r\n  font-size: 32rpx;\r\n  line-height: 40rpx;\r\n  /* or 143% */\r\n  color: #ADB5BD;\n}\n.momentItem .info .dateTime[data-v-a176b99e] {\r\n  float: right;\r\n  font-family: 'Mulish';\r\n  font-style: normal;\r\n  font-weight: 600;\r\n  font-size: 24rpx;\r\n  line-height: 32rpx;\r\n  /* identical to box height, or 133% */\r\n  color: #3E4347;\n}\n.momentItem .info .imgs[data-v-a176b99e] {\r\n  display: flex;\r\n  flex-wrap: wrap;\n}\n.momentItem .info .imgs .columnGap[data-v-a176b99e] {\r\n  margin: 0 1.5% 3% 1.5%;\n}\n.momentItem .info .imgs uni-image[data-v-a176b99e] {\r\n  width: 30%;\r\n  height: 150rpx;\r\n  object-fit: cover;\r\n  margin-bottom: 3%;\r\n  background-color: #f0f0f0;\n}\n.momentItem .info .footer[data-v-a176b99e] {\r\n  display: flex;\r\n  justify-content: flex-end;\r\n  -webkit-column-gap: 20rpx;\r\n          column-gap: 20rpx;\n}\n.momentItem .info .footer .operations[data-v-a176b99e] {\r\n  display: flex;\r\n  border-radius: 10rpx;\r\n  overflow: hidden;\r\n  -webkit-transform: scaleX(0);\r\n          transform: scaleX(0);\r\n  transition: all 0.1s ease;\r\n  -webkit-transform-origin: right;\r\n          transform-origin: right;\n}\n.momentItem .info .footer .operations .active[data-v-a176b99e] {\r\n  color: crimson;\n}\n.momentItem .info .footer .operations uni-button[data-v-a176b99e] {\r\n  background-color: #2e2e2e;\r\n  border-radius: 0;\r\n  padding: 0 20rpx;\r\n  font-size: 30rpx;\r\n  color: #f0f0f0;\n}\n.momentItem .info .footer .operations uni-button .iconfont[data-v-a176b99e] {\r\n  padding: 0 10rpx;\n}\n.momentItem .info .footer .icon-menu[data-v-a176b99e] {\r\n  background-color: #e8e8e8;\r\n  width: 46rpx;\r\n  height: 30rpx;\r\n  border-radius: 6rpx;\r\n  line-height: 30rpx;\r\n  text-align: center;\r\n  color: #334d5c;\n}\n.momentItem .info .footer .isShow[data-v-a176b99e] {\r\n  -webkit-transform: scaleX(1);\r\n          transform: scaleX(1);\n}\r\n", ""]);
+exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\n.momentItem[data-v-a176b99e] {\r\n  display: flex;\r\n  margin-bottom: 32rpx;\r\n  border-bottom: 2rpx solid #ededed;\n}\n.momentItem .avatar uni-image[data-v-a176b99e] {\r\n  width: 96rpx;\r\n  height: 96rpx;\r\n  border-radius: 20rpx;\r\n  background-color: #ffa726;\r\n  margin-right: 20rpx;\n}\n.momentItem .info[data-v-a176b99e] {\r\n  flex: 1;\n}\n.momentItem .info .userName[data-v-a176b99e] {\r\n  font-family: 'Mulish';\r\n  font-style: normal;\r\n  font-weight: 600;\r\n  font-size: 32rpx;\r\n  line-height: 48rpx;\r\n  color: #3e4347;\n}\n.momentItem .info .content[data-v-a176b99e] {\r\n  margin: 6rpx 0 20rpx 0;\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\r\n  display: -webkit-box;\r\n  /* ！！！！弹性伸缩盒子模型显示*/\r\n  -webkit-line-clamp: 2;\r\n  /*限制一个块元素显示的文本行数*/\r\n  -webkit-box-orient: vertical;\r\n  /*设置或检索伸缩盒对象的子元素的排列方式*/\r\n  /* 某些情况需要加上换行处理 */\r\n  word-break: break-word;\r\n  /* 换行模式 */\r\n  overflow-wrap: break-word;\r\n  font-family: 'Mulish';\r\n  font-style: normal;\r\n  font-weight: 400;\r\n  font-size: 32rpx;\r\n  line-height: 40rpx;\r\n  /* or 143% */\r\n  color: #ADB5BD;\n}\n.momentItem .info .dateTime[data-v-a176b99e] {\r\n  float: right;\r\n  font-family: 'Mulish';\r\n  font-style: normal;\r\n  font-weight: 600;\r\n  font-size: 24rpx;\r\n  line-height: 32rpx;\r\n  /* identical to box height, or 133% */\r\n  color: #3E4347;\n}\n.momentItem .info .imgs[data-v-a176b99e] {\r\n  display: flex;\r\n  flex-wrap: wrap;\n}\n.momentItem .info .imgs .columnGap[data-v-a176b99e] {\r\n  margin: 0 1.5% 3% 1.5%;\n}\n.momentItem .info .imgs uni-image[data-v-a176b99e] {\r\n  width: 30%;\r\n  height: 150rpx;\r\n  object-fit: cover;\r\n  margin-bottom: 3%;\r\n  background-color: #f0f0f0;\n}\n.momentItem .info .footer[data-v-a176b99e] {\r\n  display: flex;\r\n  justify-content: flex-end;\n}\n.momentItem .info .footer .operations[data-v-a176b99e] {\r\n  display: flex;\r\n  border-radius: 10rpx;\r\n  overflow: hidden;\r\n  -webkit-transform: scaleX(0);\r\n          transform: scaleX(0);\r\n  transition: all 0.1s ease;\r\n  -webkit-transform-origin: right;\r\n          transform-origin: right;\n}\n.momentItem .info .footer .operations .active[data-v-a176b99e] {\r\n  color: crimson;\n}\n.momentItem .info .footer .operations uni-button[data-v-a176b99e] {\r\n  background-color: #2e2e2e;\r\n  border-radius: 0;\r\n  padding: 0 20rpx;\r\n  font-size: 30rpx;\r\n  color: #f0f0f0;\n}\n.momentItem .info .footer .operations uni-button .iconfont[data-v-a176b99e] {\r\n  padding: 0 10rpx;\n}\n.momentItem .info .footer .icon-menu[data-v-a176b99e] {\r\n  background-color: #e8e8e8;\r\n  width: 46rpx;\r\n  height: 30rpx;\r\n  border-radius: 6rpx;\r\n  line-height: 30rpx;\r\n  text-align: center;\r\n  color: #334d5c;\r\n  margin-left: 20rpx;\n}\n.momentItem .info .footer .isShow[data-v-a176b99e] {\r\n  -webkit-transform: scaleX(1);\r\n          transform: scaleX(1);\n}\r\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -8121,7 +8129,7 @@ if(false) {}
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ./node_modules/css-loader/dist/runtime/api.js */ 15);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\n.toolsBox[data-v-23c3a06e] {\r\n  display: grid;\r\n  grid-template-columns: repeat(4, 25%);\r\n  align-items: center;\r\n  justify-content: center;\r\n  row-gap: 40rpx;\r\n  padding: 0 20rpx;\r\n  padding-top: 60rpx;\n}\n.toolsBox .tool[data-v-23c3a06e] {\r\n  text-align: center;\n}\n.toolsBox .tool uni-button[data-v-23c3a06e] {\r\n  height: 110rpx;\r\n  width: 110rpx;\r\n  padding: 20rpx 20rpx;\r\n  border-radius: 40rpx;\r\n  margin-bottom: 10rpx;\n}\n.toolsBox .tool uni-button uni-image[data-v-23c3a06e] {\r\n  height: 72rpx;\r\n  width: 72rpx;\r\n  background-size: cover;\n}\n.toolsBox .tool uni-text[data-v-23c3a06e] {\r\n  color: #708090;\n}\r\n", ""]);
+exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\n.toolsBox[data-v-23c3a06e] {\r\n  display: grid;\r\n  grid-template-columns: repeat(4, 25%);\r\n  align-items: center;\r\n  justify-content: center;\r\n  row-gap: 40rpx;\r\n  padding: 0 20rpx;\r\n  padding-top: 30rpx;\n}\n.toolsBox .tool[data-v-23c3a06e] {\r\n  text-align: center;\n}\n.toolsBox .tool uni-button[data-v-23c3a06e] {\r\n  height: 110rpx;\r\n  width: 110rpx;\r\n  padding: 20rpx 20rpx;\r\n  border-radius: 40rpx;\r\n  margin-bottom: 10rpx;\n}\n.toolsBox .tool uni-button uni-image[data-v-23c3a06e] {\r\n  height: 72rpx;\r\n  width: 72rpx;\r\n  background-size: cover;\n}\n.toolsBox .tool uni-text[data-v-23c3a06e] {\r\n  white-space: nowrap;\r\n  color: #708090;\n}\r\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -8867,7 +8875,7 @@ if(false) {}
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ./node_modules/css-loader/dist/runtime/api.js */ 15);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\n.content[data-v-30f9169f] {\r\n  display: flex;\n}\n.content .avatar[data-v-30f9169f] {\r\n  display: block;\r\n  padding: 0 20rpx;\n}\n.content .avatar uni-image[data-v-30f9169f] {\r\n  width: 80rpx;\r\n  height: 80rpx;\r\n  border-radius: 20rpx;\n}\n.content .info[data-v-30f9169f] {\r\n  border: 0;\r\n  max-width: 75%;\n}\n.content .info .username[data-v-30f9169f] {\r\n  display: block;\r\n  margin-bottom: 20rpx;\n}\n.content .info .message[data-v-30f9169f] {\r\n  position: relative;\r\n  padding: 20rpx 40rpx;\r\n  border: 1rpx solid transparent;\r\n  border-radius: 40rpx 40rpx 40rpx 0;\r\n  word-break: break-all;\r\n  background: #fff;\r\n  font-family: 'Mulish';\r\n  font-style: normal;\r\n  font-weight: 400;\r\n  font-size: 28rpx;\r\n  line-height: 48rpx;\r\n  color: #0F1828;\n}\n.content .info .audio[data-v-30f9169f] {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  width: 100rpx;\n}\n.content .info .audio uni-image[data-v-30f9169f] {\r\n  width: 28rpx;\r\n  height: 36rpx;\n}\n.content .info .image uni-image[data-v-30f9169f] {\r\n  max-width: 400rpx;\r\n  min-height: 200rpx;\r\n  max-height: 400rpx;\r\n  min-height: 300rpx;\n}\n.content .info .video[data-v-30f9169f] {\r\n  position: relative;\n}\n.content .info .video uni-canvas[data-v-30f9169f] {\r\n  position: relative;\r\n  max-width: 400rpx;\r\n  min-height: 200rpx;\r\n  max-height: 400rpx;\r\n  min-height: 300rpx;\r\n  border-radius: 24rpx;\r\n  background: #000000;\n}\n.content .info .video uni-canvas[data-v-30f9169f]::before {\r\n  content: \"▶ 按钮\";\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 50%;\r\n  -webkit-transform: translate(-50%, -50%);\r\n          transform: translate(-50%, -50%);\r\n  font-size: 32rpx;\r\n  color: #FFFFFF;\n}\n.content .info .video .videoDuration[data-v-30f9169f] {\r\n  position: absolute;\r\n  right: 20rpx;\r\n  bottom: 20rpx;\r\n  font-size: 32rpx;\r\n  color: #F0F0F0;\r\n  z-index: 1;\n}\n.content .info .file[data-v-30f9169f] {\r\n  display: flex;\r\n  -webkit-column-gap: 40rpx;\r\n          column-gap: 40rpx;\n}\n.content .info .file .fileInfo uni-text[data-v-30f9169f] {\r\n  /* 需要有宽度 */\r\n  width: 300rpx;\r\n  /* 超过了就隐藏 */\r\n  overflow: hidden;\r\n  /* 超过了就显示省略号 */\r\n  text-overflow: ellipsis;\r\n  /* webkit内核的浏览器 */\r\n  display: -webkit-box;\r\n  -webkit-line-clamp: 2;\r\n  -webkit-box-orient: vertical;\r\n  overflow-wrap: break-word;\n}\n.content .info .file .fileInfo .fileName[data-v-30f9169f] {\r\n  font-size: 32rpx;\r\n  margin-bottom: 24rpx;\r\n  letter-spacing: 2rpx;\n}\n.content .info .file .fileInfo .size[data-v-30f9169f] {\r\n  color: #ADB5BD;\n}\n.content .info .file uni-image[data-v-30f9169f] {\r\n  width: 100rpx;\r\n  height: 100rpx;\n}\n.content .info .location[data-v-30f9169f] {\r\n  padding: 20rpx 0 0 0;\n}\n.content .info .location .locationInfo[data-v-30f9169f] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  justify-content: space-between;\r\n  padding: 0 20rpx;\n}\n.content .info .location .locationInfo .name[data-v-30f9169f] {\r\n  display: block;\r\n  font-family: 'Mulish';\r\n  font-style: normal;\r\n  font-weight: 600;\r\n  font-size: 32rpx;\r\n  line-height: 24px;\r\n  color: #0F1828;\r\n  width: 400rpx;\r\n  white-space: nowrap;\r\n  /*强制在一行内显示文本*/\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\n}\n.content .info .location .locationInfo .address[data-v-30f9169f] {\r\n  display: block;\r\n  font-family: 'Mulish';\r\n  font-style: normal;\r\n  font-weight: 500;\r\n  font-size: 24rpx;\r\n  line-height: 40rpx;\r\n  /* identical to box height, or 125% */\r\n  letter-spacing: 0.448px;\r\n  width: 400rpx;\r\n  color: #ADB5BD;\r\n  white-space: nowrap;\r\n  /*强制在一行内显示文本*/\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\n}\n.content .info .location uni-image[data-v-30f9169f] {\r\n  width: 100%;\r\n  height: 200rpx;\r\n  bottom: 0;\n}\n.content-right[data-v-30f9169f] {\r\n  justify-content: flex-end;\n}\n.content-right .info[data-v-30f9169f] {\r\n  order: -1;\n}\n.content-right .info .message[data-v-30f9169f] {\r\n  border-radius: 40rpx 40rpx 0 40rpx;\r\n  background: #caf3fc;\n}\n.content-right .info .audio uni-image[data-v-30f9169f] {\r\n  order: 1;\r\n  -webkit-transform: rotateY(180deg);\r\n          transform: rotateY(180deg);\n}\n.content-right .info .file .fileInfo[data-v-30f9169f] {\r\n  text-align: left;\n}\r\n", ""]);
+exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\n.content[data-v-30f9169f] {\r\n  display: flex;\n}\n.content .avatar[data-v-30f9169f] {\r\n  display: block;\r\n  padding: 0 20rpx;\n}\n.content .avatar uni-image[data-v-30f9169f] {\r\n  width: 80rpx;\r\n  height: 80rpx;\r\n  border-radius: 20rpx;\n}\n.content .info[data-v-30f9169f] {\r\n  border: 0;\r\n  max-width: 75%;\n}\n.content .info .username[data-v-30f9169f] {\r\n  display: block;\r\n  margin-bottom: 20rpx;\n}\n.content .info .message[data-v-30f9169f] {\r\n  position: relative;\r\n  padding: 20rpx 40rpx;\r\n  border: 1rpx solid transparent;\r\n  border-radius: 40rpx 40rpx 40rpx 0;\r\n  word-break: break-all;\r\n  background: #fff;\r\n  font-family: 'Mulish';\r\n  font-style: normal;\r\n  font-weight: 400;\r\n  font-size: 28rpx;\r\n  line-height: 48rpx;\r\n  color: #0F1828;\n}\n.content .info .audio[data-v-30f9169f] {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  width: 100rpx;\n}\n.content .info .audio uni-image[data-v-30f9169f] {\r\n  width: 28rpx;\r\n  height: 36rpx;\n}\n.content .info .image uni-image[data-v-30f9169f] {\r\n  max-width: 400rpx;\r\n  min-height: 200rpx;\r\n  max-height: 400rpx;\r\n  min-height: 300rpx;\n}\n.content .info .video[data-v-30f9169f] {\r\n  position: relative;\n}\n.content .info .video uni-canvas[data-v-30f9169f] {\r\n  position: relative;\r\n  max-width: 400rpx;\r\n  min-height: 200rpx;\r\n  max-height: 400rpx;\r\n  min-height: 300rpx;\r\n  border-radius: 24rpx;\r\n  background: #000000;\n}\n.content .info .video uni-canvas[data-v-30f9169f]::before {\r\n  content: \"▶ 播放\";\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 50%;\r\n  -webkit-transform: translate(-50%, -50%);\r\n          transform: translate(-50%, -50%);\r\n  font-size: 32rpx;\r\n  color: #FFFFFF;\n}\n.content .info .video .videoDuration[data-v-30f9169f] {\r\n  position: absolute;\r\n  right: 20rpx;\r\n  bottom: 20rpx;\r\n  font-size: 32rpx;\r\n  color: #F0F0F0;\r\n  z-index: 1;\n}\n.content .info .file[data-v-30f9169f] {\r\n  display: flex;\r\n  -webkit-column-gap: 40rpx;\r\n          column-gap: 40rpx;\n}\n.content .info .file .fileInfo uni-text[data-v-30f9169f] {\r\n  /* 需要有宽度 */\r\n  width: 300rpx;\r\n  /* 超过了就隐藏 */\r\n  overflow: hidden;\r\n  /* 超过了就显示省略号 */\r\n  text-overflow: ellipsis;\r\n  /* webkit内核的浏览器 */\r\n  display: -webkit-box;\r\n  -webkit-line-clamp: 2;\r\n  -webkit-box-orient: vertical;\r\n  overflow-wrap: break-word;\n}\n.content .info .file .fileInfo .fileName[data-v-30f9169f] {\r\n  font-size: 32rpx;\r\n  margin-bottom: 24rpx;\r\n  letter-spacing: 2rpx;\n}\n.content .info .file .fileInfo .size[data-v-30f9169f] {\r\n  color: #ADB5BD;\n}\n.content .info .file uni-image[data-v-30f9169f] {\r\n  width: 100rpx;\r\n  height: 100rpx;\n}\n.content .info .location[data-v-30f9169f] {\r\n  padding: 20rpx 0 0 0;\n}\n.content .info .location .locationInfo[data-v-30f9169f] {\r\n  display: flex;\r\n  flex-direction: column;\r\n  justify-content: space-between;\r\n  padding: 0 20rpx;\n}\n.content .info .location .locationInfo .name[data-v-30f9169f] {\r\n  display: block;\r\n  font-family: 'Mulish';\r\n  font-style: normal;\r\n  font-weight: 600;\r\n  font-size: 32rpx;\r\n  line-height: 24px;\r\n  color: #0F1828;\r\n  width: 400rpx;\r\n  white-space: nowrap;\r\n  /*强制在一行内显示文本*/\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\n}\n.content .info .location .locationInfo .address[data-v-30f9169f] {\r\n  display: block;\r\n  font-family: 'Mulish';\r\n  font-style: normal;\r\n  font-weight: 500;\r\n  font-size: 24rpx;\r\n  line-height: 40rpx;\r\n  /* identical to box height, or 125% */\r\n  letter-spacing: 0.448px;\r\n  width: 400rpx;\r\n  color: #ADB5BD;\r\n  white-space: nowrap;\r\n  /*强制在一行内显示文本*/\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\n}\n.content .info .location uni-image[data-v-30f9169f] {\r\n  width: 100%;\r\n  height: 200rpx;\r\n  bottom: 0;\n}\n.content-right[data-v-30f9169f] {\r\n  justify-content: flex-end;\n}\n.content-right .info[data-v-30f9169f] {\r\n  order: -1;\n}\n.content-right .info .message[data-v-30f9169f] {\r\n  border-radius: 40rpx 40rpx 0 40rpx;\r\n  background: #caf3fc;\n}\n.content-right .info .audio uni-image[data-v-30f9169f] {\r\n  order: 1;\r\n  -webkit-transform: rotateY(180deg);\r\n          transform: rotateY(180deg);\n}\n.content-right .info .file .fileInfo[data-v-30f9169f] {\r\n  text-align: left;\n}\r\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -9445,7 +9453,12 @@ var render = function() {
     { staticClass: _vm._$g(0, "sc"), attrs: { _i: 0 } },
     [
       _c("v-uni-video", {
-        attrs: { src: _vm._$g(1, "a-src"), controls: true, _i: 1 }
+        attrs: {
+          src: _vm._$g(1, "a-src"),
+          controls: true,
+          autoplay: "true",
+          _i: 1
+        }
       })
     ],
     1
@@ -9539,7 +9552,7 @@ if(false) {}
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ./node_modules/css-loader/dist/runtime/api.js */ 15);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\nuni-video[data-v-7996ade6] {\r\n  width: 100vw;\r\n  height: calc(100vh - 50px -  var(--status-bar-height));\n}\r\n", ""]);
+exports.push([module.i, "@charset \"UTF-8\";\r\n/**\r\n * 这里是uni-app内置的常用样式变量\r\n *\r\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\r\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\r\n *\r\n */\r\n/**\r\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\r\n *\r\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\r\n */\r\n/* 颜色变量 */\r\n/* 行为相关颜色 */\r\n/* 文字基本颜色 */\r\n/* 背景颜色 */\r\n/* 边框颜色 */\r\n/* 尺寸变量 */\r\n/* 文字尺寸 */\r\n/* 图片尺寸 */\r\n/* Border Radius */\r\n/* 水平间距 */\r\n/* 垂直间距 */\r\n/* 透明度 */\r\n/* 文章场景相关 */\nuni-video[data-v-7996ade6] {\r\n  width: 100vw;\r\n  height: 100vh;\n}\r\n", ""]);
 // Exports
 module.exports = exports;
 
