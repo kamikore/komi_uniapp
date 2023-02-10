@@ -6,6 +6,7 @@
 					:src="(contactInfo?contactInfo.avatar:userInfo.avatar) || '../../static/images/future.png'" 
 					mode="aspectFill">
 				</image>
+				{{(contactInfo?contactInfo.avatar:userInfo.avatar) || '../../static/images/future.png'}}
 			</view>
 			<view class="info">
 				<text class="nickName">{{ contactInfo?contactInfo.nickName:userInfo.nickName }}</text>

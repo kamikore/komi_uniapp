@@ -48,10 +48,9 @@ export default {
 			uni.setNavigationBarTitle({
 				title: "用户注册",
 				success: ()=> {
-					console.log("设置成功")
 				},
 				fail: (e) => {
-					console.log('设置失败',e)
+					console.log('切换失败',e)
 				}
 			});
 		}

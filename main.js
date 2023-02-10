@@ -23,20 +23,28 @@ const socket = io('http://120.79.218.59:8080', {
   transports: [ 'websocket', 'polling' ],
   timeout: 5000,
 });
-// const socket = io('http://120.79.218.59:8080')
+
 Vue.prototype.$socket = socket;
 Vue.prototype.$store = store;
+
+
+socket.open((err) => {
+	// console.log('success',res)
+	console.log('err',err)
+});
 
 socket.on('connect', () => {
 	console.log('my socketID: ' + socket.id)
 	uni.setStorageSync("socketID", socket.id)	
 })
 
-// 主动刷新，关闭没法触发，断开服务器可以
+// 主动刷新，关闭没法触发，断开服务器可以 与socket.close() 同义
 socket.on("disconnect", (reason) => {
 	uni.removeStorageSync("socketID")
 	console.log("断开连接:",reason)
 });
+
+
 
 
 App.mpType = 'app'
