@@ -10,11 +10,12 @@
 			<text class="content">{{ item.content }}</text>
 			<view class="imgs" v-if="item.filesPath">
 				<image 
-					v-for="(img, index) in item.filesPath.split(',')" 
+					v-for="(url, index) in item.filesPath.split(',')" 
 					:key="index" 
-					:src="img" 
+					:src="url" 
 					mode="aspectFill"
 					:class="index===1 || 4 || 7?'columnGap':''"
+					@click="previewImage(url,item.filesPath.split(','))"
 				>
 				</image>
 			</view>
@@ -47,6 +48,25 @@ export default {
 		goDetail() {
 			uni.navigateTo({
 				url: `/pages/userDetails/index?uid=${this.item.uid.user_id}`
+			});
+		},
+		previewImage(currUrl,imgUrls) {
+			console.log("点击的图片",currUrl,"图片数组",imgUrls)
+			
+			// 预览图片
+			uni.previewImage({
+				// 点击显示当前图片
+				current: currUrl,
+				urls: imgUrls,
+				longPressActions: {
+					itemList: ['发送给朋友', '保存图片', '收藏'],
+					success: function(data) {
+						console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+					},
+					fail: function(err) {
+						console.log('长按错误', err.errMsg);
+					}
+				}
 			});
 		},
 		clickLike() {

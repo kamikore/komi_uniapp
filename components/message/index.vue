@@ -199,6 +199,7 @@ export default {
 		
 	},
 	created() {
+		console.log("消息类型", this.item)
 		switch(this.item.type) {		
 
 			case 3: 
