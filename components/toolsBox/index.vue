@@ -73,9 +73,11 @@ export default {
 			// #endif
 			
 			// #ifdef APP-PLUS
+			// 把临时文件转为持久保存
 			uni.saveFile({
 				tempFilePath:file.path,
 				success: (result) => {
+					console.log("img -> base64",result)
 					filePath2base64(file).then((res) => {
 						sendMsg({
 							msg_content : res.base64,
@@ -102,7 +104,7 @@ export default {
 							console.log("图片选择",res)
 							const {tempFiles} = res;
 							tempFiles.forEach((file) => {
-								this.sendFileMsg(file,'png',2)
+								this.sendFileMsg(file,'jpg',2)
 							})
 							
 						},
